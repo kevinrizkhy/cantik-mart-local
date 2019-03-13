@@ -78,6 +78,17 @@ var debt = new Chart(ctx, {
       labels: gon.labels,
       datasets: [
       	{
+	        label: 'Penjualan',
+	        data: gon.sales_data,
+	        backgroundColor: [
+	            'rgba(255, 159, 64, 0.2)',
+	          ],
+	        borderColor: [
+	            'rgba(255, 159, 64, 1)',
+	          ],
+	        borderWidth: 2
+	     },
+      	{
 	        label: 'Hutang',
 	        data: gon.debt_data,
 	        backgroundColor: [

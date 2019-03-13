@@ -7,7 +7,8 @@ class Finance < ApplicationRecord
     Receivables: 3,
     Operational: 4,
     Fix_cost: 5,
-    Tax: 6
+    Tax: 6,
+    Transactions: 7
   }
 
   belongs_to :store
@@ -19,5 +20,7 @@ class Finance < ApplicationRecord
   OPERATIONAL=4
   FIX_COST=5
   TAX=6
-
+  TRANSACTIONS = 7
+  
+  belongs_to :order, optional: true
 end

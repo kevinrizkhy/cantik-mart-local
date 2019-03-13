@@ -8,18 +8,24 @@ KEUANGAN
 - tabel equity bulan sebelumnya 
 
 2. Sales
-	- Transaksi Toko (POS)
-	- Nilai dari HPP (Harga Beli)
-	- Cash Debit / Credit (input user)
+	Transaksi Toko (POS) => table ?
+- Nilai dari HPP (Harga Beli)
+- Cash Debit / Credit (input user)
 
 3. Aset 
 	input user
 
 4. Hutang (X)
-- Invoice Order 
+- custom url to set new nominal or paid off
+	add column fooreignkey to order
+	add column status bool
+	sum all nominal where date < search & status false
+	Invoice Order 
 	Input User
 
 5. Piutang
+- custom url to set new nominal or paid off
+	sum all nominal where date < search & status false
 	Input User
 
 6. Operasional
@@ -33,23 +39,23 @@ KEUANGAN
 	Input User
 
 9. Saldo Kas
-	- Semua dari 1-8
+- Semua dari 1-8
 
 10. Saldo Bank
-	- Saldo Kas
-	- Input User
+- Saldo Kas
+- Input User
 
 11. Stok
-	- Nilai barang yang dimiliki
+- Nilai barang yang dimiliki
 
 12. Stok Loss
-	- Nilai Barang Loss (Opname Stock)
-	- Retur yang Loss
+- Nilai Barang Loss (Opname Stock)
+- Retur yang Loss
 
 13. Profit & Loss
-	+ Sales
-	- COGS
-	- Operational
-	- Fix Cost
-	- Tax
-	- Stock Loss
++ Sales
+- COGS
+- Operational
+- Fix Cost
+- Tax
+- Stock Loss

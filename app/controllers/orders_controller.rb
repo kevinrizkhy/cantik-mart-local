@@ -132,6 +132,10 @@ class OrdersController < ApplicationController
     end
     order.total = new_total
     order.date_receive = Time.now
+    Finance.create nominal: new_total, user: current_user, 
+    store: current_user.store, date_created: DateTime.now, 
+    order_id: params[:id], finance_type: Finance::DEBT,
+    description: "#"+order.invoice+" ("+new_total.to_s+")"
     order.save!
     return redirect_to order_items_path(id: params[:id])
   end
@@ -151,11 +155,9 @@ class OrdersController < ApplicationController
     return redirect_back_no_access_right unless order.present?
     return redirect_back_no_access_right if order.date_receive.nil? || order.date_paid_off.present?
     order_invs = InvoiceTransaction.where(invoice: order.invoice)
-    # order_invs = OrderInv.where(order_id: params[:id])
     pay = order.total.to_i - order_invs.sum(:nominal) 
     return redirect_back_no_access_right if (params[:order_pay][:nominal].to_i > pay) || (params[:order_pay][:nominal].to_i < 1000)
     order_inv = InvoiceTransaction.new 
-    
     order_inv.invoice = order.invoice
     order_inv.transaction_type = 0
     order_inv.transaction_invoice = "PAID-" + Time.now.to_i.to_s
@@ -163,10 +165,15 @@ class OrdersController < ApplicationController
     order_inv.nominal = params[:order_pay][:nominal]
     order_inv.save!
     pay = order.total.to_i - order_invs.sum(:nominal) 
+    finance_pay = Finance.find_by(order_id: params[:id])
+    finance_pay.nominal = pay
     if pay <= 0
-      order.date_paid_off = Time.now
+      order.date_paid_off = Time.now 
+      finance_pay.nominal = pay
+      finance_pay.status = true
       order.save!
     end
+    finance_pay.save!
     return redirect_to order_items_path(id: params[:id])
   end
 

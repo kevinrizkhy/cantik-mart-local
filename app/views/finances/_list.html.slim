@@ -8,4 +8,9 @@ tr
   	td #{finance.nominal}
   	td 0
   td #{finance.date_created}
-  td #{finance.description}
+  - if finance.finance_type == "Debt"
+      td 
+        a href="#{order_items_path(id: finance.order_id)}"
+          | #{finance.description}
+  - else
+      td #{finance.description}

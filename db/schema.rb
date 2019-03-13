@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_12_064423) do
+ActiveRecord::Schema.define(version: 2019_03_13_085245) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,6 +43,9 @@ ActiveRecord::Schema.define(version: 2019_03_12_064423) do
     t.integer "finance_type", default: 1, null: false
     t.datetime "date_created"
     t.string "description"
+    t.boolean "status", default: false
+    t.bigint "order_id"
+    t.index ["order_id"], name: "index_finances_on_order_id"
     t.index ["store_id"], name: "index_finances_on_store_id"
     t.index ["user_id"], name: "index_finances_on_user_id"
   end
@@ -243,6 +246,7 @@ ActiveRecord::Schema.define(version: 2019_03_12_064423) do
     t.bigint "id_card", default: 123456789123456, null: false
     t.integer "sex", default: 0, null: false
     t.bigint "store_id"
+    t.integer "salary", default: 0
     t.index ["email"], name: "index_users_on_email"
     t.index ["remember_token"], name: "index_users_on_remember_token"
     t.index ["store_id"], name: "index_users_on_store_id"
