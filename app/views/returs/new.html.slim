@@ -1,0 +1,64 @@
+h2
+  | BUAT RETUR
+= form_for :retur, url: returs_path, method: "POST" do |form|
+  .row
+    .col-md-6
+      .form-group
+        label for="from" Dari
+        input type="text" class="form-control" disabled=true value="#{current_user.store.name}"
+    .col-md-6
+      .form-group
+        label for="from" Kepada
+        select onchange="changeSupplier()" class="selectpicker form-control" data-show-subtext="true" data-live-search="true" data-live-search-style="startsWith"  name="retur[supplier_id]" id="supplierId"
+          - @suppliers.each do |supplier|
+            - if supplier.id == @supplier_id
+              option data-subtext="#{supplier.address}" value="#{supplier.id}" selected="selected"
+                | #{supplier.pic}
+            -else
+              option data-subtext="#{supplier.address}" value="#{supplier.id}"
+                | #{supplier.pic}
+        / input type="text" class="form-control" disabled=true value="GUDANG"
+  hr style="bretur-top: 1px solid black;"
+  .row
+    .col-md-12.text-right
+      button type="button" class="btn btn-primary" onclick="addNewRowRetur()"
+        | + Item
+    .col-md-12  
+      table.table id="myTable"
+        tr
+          th
+            | Item - Kategori
+          th
+            | Jumlah
+          th
+            | Deskripsi
+          th
+        - idx = 0
+        tr
+          td
+            select class="selectpicker form-control" data-show-subtext="true" data-live-search="true" name="retur[retur_items][#{idx}][item_id]"
+              - @supplier_items.each do |supplier_item|
+                option data-subtext="#{supplier_item.item.item_cat.name}" value="#{supplier_item.item.id}" 
+                  | #{supplier_item.item.name}
+          td
+            input type="number" required=true class="form-control" id="quantity" name="retur[retur_items][#{idx}][quantity]"
+          td
+            input type="textarea" class="form-control" id="description" name="retur[retur_items][#{idx}][description]"
+          td
+            i.fa.fa-trash.text-danger onclick="removeThisRow(this)"
+        tr
+          td
+            select class="selectpicker form-control" data-show-subtext="true" data-live-search="true" name="retur[retur_items][#{idx+1}][item_id]"
+              - @supplier_items.each do |supplier_item|
+                option data-subtext="#{supplier_item.item.item_cat.name}" value="#{supplier_item.item.id}" 
+                  | #{supplier_item.item.name}
+          td
+            input type="number" required=true class="form-control" id="quantity" name="retur[retur_items][#{idx+1}][quantity]"
+          td
+            input type="textarea" class="form-control" id="description" name="retur[retur_items][#{idx+1}][description]"
+          td
+            i.fa.fa-trash.text-danger onclick="removeThisRow(this)"
+
+    .col-md-12.text-center
+      .form-group.text-center
+        = form.submit "Buat Retur", class: "btn btn-primary"

@@ -1,0 +1,10 @@
+tr
+  td #{user.name}
+  td #{user.address}
+  td #{user.phone}
+  td #{user.sex}
+  td
+    a href='#{edit_user_path(id: user.id)}' 
+    	button.btn.btn-primary type="button" 
+	       	| Edit
+

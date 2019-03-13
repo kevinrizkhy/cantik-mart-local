@@ -1,0 +1,14 @@
+- retur = @complain_items.first.complain
+.row
+  .col
+    h2
+      | Daftar Item Retur (#{retur.invoice})
+table class="table"
+  thead
+    th Kode
+    th Name
+    th Kuantiti
+    th Alasan Retur
+  tbody
+    = render partial: 'list', collection: @complain_items, as: :ret_item
+= paginate @complain_items

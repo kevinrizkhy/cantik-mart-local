@@ -1,0 +1,29 @@
+.row
+  .col.text-left
+    h2
+      | Daftar Transaksi #{"(PENCARIAN '"+@search+"')" if @search.present?}
+  .col.text-right
+    a href="#{new_transaction_path}"
+      button.btn.btn-primary type="button" 
+        i.fas.fa-plus 
+        |   Buat Transaksi
+= form_for :transfer, url: transfers_path, method: 'GET' do |form|
+  .row
+    .col-md-4
+    .col-md-4
+      input type="text" class="form-control" id="search" name="search"
+    .col-md-4
+      button class="btn btn-primary"
+        | Cari
+table class="table"
+  thead
+    th Invoice
+    th Tanggal
+    th Toko
+    th Member
+    th Jumlah Item
+    th Total
+    th Action
+  tbody
+    = render partial: 'list', collection: @transactions, as: :transaction
+= paginate @transactions

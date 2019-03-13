@@ -1,0 +1,10 @@
+tr
+  td #{order_item.item.code} 
+  td #{order_item.item.name}
+  td #{order_item.quantity}
+  td #{order_item.price}
+  td #{order_item.price.to_i * order_item.quantity.to_i}
+  td #{order_item.receive}
+  td.text-danger 
+  	| #{order_item.receive.to_i * order_item.price.to_i}
+

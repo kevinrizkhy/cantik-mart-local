@@ -1,0 +1,23 @@
+= form_for :store_item, url: stocks_path, method: 'GET' do |form|
+  .row
+    .col
+      h2
+        | Daftar Stok Barang
+    .col
+      input type="text" class="form-control" id="search" name="search"
+    .col
+      button class="btn btn-primary"
+        | Cari
+
+table class="table"
+  thead
+    th Kode
+    th Name
+    th Kategori
+    th Stok
+    th Limit
+    th Harga
+    th Aksi
+  tbody
+    = render partial: 'list', collection: @inventories, as: :inventory
+= paginate @inventories

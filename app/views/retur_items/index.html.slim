@@ -1,0 +1,33 @@
+- retur_id = @retur_items.first.retur.id
+- retur = @retur_items.first.retur
+.row
+  .col
+    h2
+      | Daftar Item Retur (#{@retur_items.first.retur.invoice})
+  .col.text-right
+  - if retur.date_approve.present? && retur.date_picked.present?
+    a href="#{retur_feedback_path(id: retur_id)}"
+      button class="btn btn-primary"
+        | FEEDBACK
+    |  &nbsp &nbsp 
+  - if retur.date_approve.nil?
+    a href="#{retur_confirmation_path(id: retur_id)}"
+      button class="btn btn-warning"
+        | KONFIRMASI
+    |  &nbsp &nbsp 
+  - if retur.date_picked.nil? && retur.date_approve.present?
+    = form_for :retur_items, url: "#{retur_picked_path(id: retur_id)}", method: "POST" do |form|
+      .col
+        = form.submit "Ambil", class: "btn btn-success"
+table class="table"
+  thead
+    th Kode
+    th Name
+    th Kuantiti
+    th Konfirmasi Jumlah
+    th Alasan Retur
+    th Hasil
+    th Nominal
+  tbody
+    = render partial: 'list', collection: @retur_items, as: :ret_item
+= paginate @retur_items

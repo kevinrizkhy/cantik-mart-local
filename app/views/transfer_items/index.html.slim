@@ -1,0 +1,37 @@
+- transfer_id = @transfer_items.first.transfer.id
+.row
+  .col
+    h2
+      | Daftar Item Transfer (#{@transfer_items.first.transfer.invoice})
+    .col-md-6.text-right
+    / a href="#{transfer_feedback_path(id: transfer_id)}"
+      / button class="btn btn-primary"
+        / | FEEDBACK
+    / |  
+  - if @transfer_items.first.transfer.date_approve.nil? && @transfer_items.first.transfer.to_store.id == current_user.store.id
+    .col.text-right
+      a href="#{transfer_confirmation_path(id: transfer_id)}"
+        button class="btn btn-warning"
+          | KONFIRMASI
+    |  
+  - transfer = @transfer_items.first.transfer 
+    .col.text-right
+  - if transfer.date_approve.present? && transfer.date_picked.nil? && @transfer_items.first.transfer.to_store.id == current_user.store.id
+    .col.text-right
+      a href="#{transfer_picked_path(id: transfer_id)}"
+        button class="btn btn-warning"
+          | SIAPKAN BARANG
+    |  
+    / = form_for :transfer_items, url: "#{transfer_picked_path(id: transfer_id)}", method: "POST" do |form|
+      / = form.submit "Ambil", class: "btn btn-success"
+table class="table"
+  thead
+    th Kode
+    th Name
+    th Kuantiti
+    th Jumlah Kirim
+    th Jumlah Terima
+    th Keterangan
+  tbody
+    = render partial: 'list', collection: @transfer_items, as: :trf_item
+= paginate @transfer_items

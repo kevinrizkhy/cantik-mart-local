@@ -1,0 +1,10 @@
+tr
+  td #{retur.invoice}
+  td #{retur.member.name}
+  td #{retur.total_items}
+  td #{retur.date_created.to_date}
+  td
+    a href='#{complain_items_path(id: retur.id)}'
+      button class="btn btn-primary"
+        | Item
+

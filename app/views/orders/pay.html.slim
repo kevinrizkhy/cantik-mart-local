@@ -1,0 +1,17 @@
+.row
+  .col.text-left
+    h2
+      | Pembayarang Order #{@order.invoice}
+  .col.text-right.text-danger
+    h2
+      b
+        | KEKURANGAN : #{number_to_currency(@pay, unit: "Rp. ")}
+= form_for :order_pay, url: order_paid_path, method: "POST" do |form|
+  .form-group
+    label for="nominal" Nominal yang Dibayarkan
+    = form.number_field :nominal, required: true, class: "form-control", id: "nominal"
+  .form-group
+    label for="date" Tanggal Pembayaran
+    input type="date" class="form-control" name="order_pay[date_paid]" value="#{Date.today}"
+  .form-group
+    = form.submit "Bayar", class: "btn btn-primary"

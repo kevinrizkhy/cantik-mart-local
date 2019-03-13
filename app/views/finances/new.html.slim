@@ -1,0 +1,26 @@
+h2
+  | TAMBAH PENGElUARANG / PEMASUKANN (KEUANGAN)
+= form_for :finance, url: finances_path, method: "POST" do |form|
+  .form-group
+    label for="nominal" Nominal
+    = form.number_field :nominal, required: true, class: "form-control", id: "nominal"
+  .form-group
+    label for="description" Deskripsi
+    = form.text_field :description, required: true, class: "form-control", id: "description"
+  .form-group
+      label for="type" Tipe
+      select name="finance[finance_type]" required=true class="form-control" data-live-search="true" data-live-search-style="startsWith" class="selectpicker form_control"
+        option value="Asset"
+          | Aset 
+        option value="Debt"
+          | Hutang 
+        option value="Receivables"
+          | Piutang 
+        option value="Operational"
+          | Operasinal 
+        option value="Fix_cost"
+          | Biaya Pasti (Selain Gaji) 
+        option value="Tax"
+          | Pajak 
+  .form-group
+    = form.submit "Tambah", class: "btn btn-primary"

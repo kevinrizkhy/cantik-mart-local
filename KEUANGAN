@@ -1,0 +1,55 @@
+KEUANGAN
+
+0. Harga Beli
+	( ( Stok lama * Harga Beli Lama ) + ( Stok Baru * Harga Beli Baru )) / ( Stok Lama + Stok Baru )
+
+1. Lap. Perubahan Modal Aset
+	input user
+- tabel equity bulan sebelumnya 
+
+2. Sales
+	- Transaksi Toko (POS)
+	- Nilai dari HPP (Harga Beli)
+	- Cash Debit / Credit (input user)
+
+3. Aset 
+	input user
+
+4. Hutang (X)
+- Invoice Order 
+	Input User
+
+5. Piutang
+	Input User
+
+6. Operasional
+	Input User
+
+7. Fix Cost
+- Gaji Karyawan (Table Users)
+	Input User
+
+8. Tax
+	Input User
+
+9. Saldo Kas
+	- Semua dari 1-8
+
+10. Saldo Bank
+	- Saldo Kas
+	- Input User
+
+11. Stok
+	- Nilai barang yang dimiliki
+
+12. Stok Loss
+	- Nilai Barang Loss (Opname Stock)
+	- Retur yang Loss
+
+13. Profit & Loss
+	+ Sales
+	- COGS
+	- Operational
+	- Fix Cost
+	- Tax
+	- Stock Loss

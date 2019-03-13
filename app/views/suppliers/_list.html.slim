@@ -1,0 +1,15 @@
+tr
+  	td #{supplier.pic}
+  	td #{supplier.address}
+  	td #{supplier.phone}
+  	td
+	    | &nbsp &nbsp
+	    a href='#{supplier_items_path(id: supplier.id)}'
+	    	button.btn.btn-primary type="button" 
+		        | Item
+	    | &nbsp &nbsp
+		a href='#{new_order_path(supplier_id: supplier.id)}'
+	    	button.btn.btn-primary type="button" 
+		        | Order
+
+

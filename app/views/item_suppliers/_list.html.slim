@@ -1,0 +1,10 @@
+tr
+  	td #{inventory.supplier.pic}
+  	td #{inventory.supplier.address}
+  	td #{inventory.supplier.phone}
+  	td
+		a href='#{new_order_path(supplier_id: inventory.supplier.id)}'
+	    	button.btn.btn-primary type="button"
+		        | Order
+
+

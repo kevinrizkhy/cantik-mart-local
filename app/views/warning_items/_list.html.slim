@@ -1,0 +1,26 @@
+tr
+  td #{inventory.item.code}
+  td #{inventory.item.name}
+  td #{inventory.item.item_cat.name}
+  td #{inventory.stock}
+  td #{inventory.min_stock}
+  td 
+    - supplier_items = SupplierItem.where(item_id: inventory.item.id)
+    - supplier_items.each do |supplier_item|
+      	- if supplier_items.last == supplier_item
+        	| #{supplier_item.supplier.pic}
+      	- else
+        	| #{supplier_item.supplier.pic},&nbsp
+  td
+    - if @ongoing_orders.present?
+      - @ongoing_orders.each do |order|
+        - total = 0
+        - order.order_items.each do |order_item|
+          -if order_item.item.id == inventory.item.id
+            - total += order_item.quantity
+        | #{total}
+  td
+    a href='#{new_order_path(item_id: inventory.id)}'
+      button.btn.btn-primary type="button" 
+            | Order
+

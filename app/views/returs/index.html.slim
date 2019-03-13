@@ -1,0 +1,37 @@
+.row
+  .col.text-left
+    h2
+      | Daftar Retur
+  .col.text-right
+    a href="#{complains_path}"
+      button.btn.btn-success type="button" 
+        |   Daftar Retur Member
+    | &nbsp &nbsp
+    a href="#{new_retur_path}"
+      button.btn.btn-primary type="button" 
+        i.fas.fa-plus 
+        |   Buat Retur
+        
+= form_for :retur, url: returs_path, method: 'GET' do |form|
+  .row  
+    .col-md-4
+    .col-md-4
+      input type="text" class="form-control" id="search" name="search"
+    .col-md-4
+      button class="btn btn-primary"
+        | Cari
+
+table class="table"
+  thead
+    th Invoice
+    th Dari
+    th Kepada
+    th Total Item
+    th Tgl. Buat
+    th Tgl. Konfirmasi
+    th Tgl. Ambil
+    th Selesai
+    th Action
+  tbody
+    = render partial: 'list', collection: @returs, as: :retur
+= paginate @returs

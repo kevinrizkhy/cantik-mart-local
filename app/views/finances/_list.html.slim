@@ -1,0 +1,11 @@
+tr
+  td #{finance.user.name} (#{finance.store.name})
+  td #{finance.finance_type}
+  - if finance.finance_type != "Receivables"
+  	td 0
+  	td #{finance.nominal}
+  - else
+  	td #{finance.nominal}
+  	td 0
+  td #{finance.date_created}
+  td #{finance.description}

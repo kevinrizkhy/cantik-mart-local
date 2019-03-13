@@ -1,0 +1,27 @@
+h2
+  | UBAH ITEM - #{@member.name}
+= form_for :member, url: member_path(id: @member.id), method: "PUT" do |form|
+  .form-group
+    label for="name" Nama
+    = form.text_field :name, required: true, class: "form-control", id: "name"
+  .form_group
+    label for="address" Alamat
+    = form.text_field :address, required: true, class: "form-control", id: "address"
+  .form-group
+    label for="phone" Phone
+    = form.number_field :phone, required: true, class: "form-control", id: "phone"
+  .form-group
+    label for="sex" Sex
+    select name="member[sex]" required=true
+      option value=0
+        | Laki - laki
+      option value=1
+        | Perempuan
+  .form-group
+    label for="id-card" KTP
+    = form.text_field :id_card, required: true, class: "form-control", id: "id-card"
+  .form-group
+    label for="card-card" Nomor Kartu
+    = form.text_field :card_number, required: true, class: "form-control", id: "card_number"
+  .form-group
+    = form.submit "Ubah Member - #{@member.name}", class: "btn btn-primary"

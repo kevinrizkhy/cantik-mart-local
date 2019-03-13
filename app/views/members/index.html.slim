@@ -1,0 +1,28 @@
+.row
+  .col.text-left
+    h2
+      | Daftar Member
+  .col.text-right
+    a href="#{new_member_path}"
+      button.btn.btn-primary type="button" 
+        i.fas.fa-plus 
+        |   Tambah Member
+= form_for :member, url: members_path, method: 'GET' do |form|
+  .row
+    .col
+    .col
+      input type="text" class="form-control" id="search" name="search"
+    .col
+      button class="btn btn-primary"
+        | Cari
+table class="table"
+  thead
+    th Name
+    th Nomor Kartu
+    th Alamat
+    th Nomor Telepon
+    th Jenis Kelamin
+    th Action
+  tbody
+    = render partial: 'list', collection: @members, as: :member
+= paginate @members

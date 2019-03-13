@@ -1,0 +1,14 @@
+h2
+  | TAMBAH SUPPLIER ITEM - #{@supplier.pic}
+- if @items.present?
+  = form_for :supplier_item, url: supplier_items_path(id: @supplier.id), method: "POST" do |form|
+    .form-group
+      label for="item" Item
+      select name="supplier_item[item_id]" required=true class="form-control" data-live-search="true" data-live-search-style="startsWith" class="selectpicker"
+        - @items.each do |item|
+          option value="#{item.id}"
+            | #{item.name}      
+    .form-group
+      = form.submit "Tambah Item", class: "btn btn-primary"
+- else
+  | Semua item telah dimiliki oleh supplier "#{@supplier.pic}".

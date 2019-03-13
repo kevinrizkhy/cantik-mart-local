@@ -1,0 +1,14 @@
+tr
+  td #{ret_item.item.code} 
+  td #{ret_item.item.name}
+  td #{ret_item.quantity}
+  td #{ret_item.accept_item}
+  td #{ret_item.description}
+  td 
+    - if ret_item.feedback.nil?  
+      | -
+    - else
+      | #{ret_item.feedback}
+  td
+    | #{ret_item.nominal}
+

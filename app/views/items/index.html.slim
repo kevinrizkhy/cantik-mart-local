@@ -1,0 +1,65 @@
+.row
+  .col
+    h2
+      | Daftar Barang
+  .col.text-right
+    a href="#{item_cats_path}"
+      button.btn.btn-success type="button" 
+        | Kategori
+    | &nbsp
+    a href="#{new_item_path}"
+      button.btn.btn-primary type="button" 
+        i.fas.fa-plus 
+        |   Tambah Barang
+= form_for :items, url: items_path, method: 'GET' do |form|
+  .row
+    .col-2
+    .col
+      input type="text" class="form-control" id="search" name="search" value="#{@search}"
+    .col
+      select[class="form-control" id="order_by" name="order_by"]
+        option[value="code" select]
+          | urutkan KODE
+        option[value="name"]
+          | urutkan NAMA
+        option[value="brand"]
+          | urutkan MEREK
+        option[value="category_id"]
+          | urutkan KATEGORI
+        option[value="sell_price"]
+          | urutkan HARGA
+    .col
+      select[class="form-control" id="order_type" name="order_type"]
+        option[value="asc"]
+          | secara A - Z
+        option[value="desc"]
+          | secara Z - A
+    .col
+      button class="btn btn-primary"
+        | Cari
+    .col-2
+    br
+- if @search.present?
+  .col-md-12.text-center
+    | Pencarian "
+    b
+      | #{@search}
+    | " berdasarkan 
+    b
+      | #{@order_by} 
+    | secara 
+    b
+      | #{@order_type} 
+    br
+table class="table"
+  thead
+    th Kode
+    th Name
+    th Merek
+    th Kategori
+    th Beli
+    th Jual
+    th Action
+  tbody
+    = render partial: 'list', collection: @items, as: :item
+= paginate @items

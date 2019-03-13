@@ -1,0 +1,8 @@
+h2
+  | UBAH ITEM CATEGORY- #{@item_cat.name}
+= form_for :item_cat, url: item_path(id: @item_cat.id), method: "PUT" do |form|
+  .form-group
+    label for="name" Nama
+    = form.text_field :name, required: true, class: "form-control", id: "name"
+  .form-group
+    = form.submit "Ubah Item - #{@item_cat.name}", class: "btn btn-primary"

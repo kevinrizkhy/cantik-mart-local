@@ -1,0 +1,28 @@
+.row
+  .col
+    h2       
+      | Daftar Toko
+  .col.text-right
+    a href="#{new_store_path}"
+      button.btn.btn-primary type="button" 
+        i.fas.fa-plus 
+        |   Tambah Toko
+
+= form_for :store, url: stores_path, method: 'GET' do |form|
+  .row
+    .col
+    .col  
+      input type="text" class="form-control" id="search" name="search"
+    .col  
+      button class="btn btn-primary"
+        | Cari
+table class="table"
+  thead
+    th Name
+    th Tipe
+    th Alamat
+    th Telepon
+    th Action
+  tbody
+    = render partial: 'list', collection: @stores, as: :store
+= paginate @stores

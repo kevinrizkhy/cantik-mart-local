@@ -1,0 +1,16 @@
+tr
+  td #{transaction.invoice}
+  td #{transaction.date_created.to_date}
+  td #{transaction.user.store.name}
+  td 
+    - if transaction.member.nil?
+      | -
+    - else 
+      | #{transaction.member.name}
+  td #{transaction.items}
+  td #{transaction.grand_total}
+  td
+    a href='#{transaction_items_path(id: transaction.id)}'
+      button class="btn btn-primary"
+        | Item
+

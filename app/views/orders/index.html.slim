@@ -1,0 +1,38 @@
+.row
+  .col-md-6.text-left
+    h2
+      | Daftar Order
+  .col-md-6.text-right
+    a href="#{new_order_path}"
+      button.btn.btn-primary type="button" 
+        i.fas.fa-plus 
+        |   Buat Order
+        
+= form_for :order, url: orders_path, method: 'GET' do |form|
+  .row  
+    .col-md-4
+    .col-md-4
+      input type="text" class="form-control" id="search" name="search"
+    .col-md-4
+      button class="btn btn-primary"
+        | Cari
+- if @type != "" && @type.present?
+  .row
+    .col.text-center
+      p
+        | Pencarian order yang #{@type}.
+
+
+table class="table"
+  thead
+    th Invoice
+    th Supplier
+    th Total Item
+    th Total
+    th Tgl. Buat
+    th Tgl. Terima
+    th Tgl. Lunas
+    th Action
+  tbody
+    = render partial: 'list', collection: @orders, as: :order
+= paginate @orders

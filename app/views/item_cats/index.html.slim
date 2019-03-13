@@ -1,0 +1,24 @@
+.row
+  .col
+    h2
+      | Daftar Kategori Barang
+  .col.text-right
+    a href="#{new_item_cat_path}"
+      button.btn.btn-primary type="button" 
+        i.fas.fa-plus 
+        |   Tambah Kategori
+= form_for :item_cats, url: item_cats_path, method: 'GET' do |form|
+  .row
+    .col
+    .col
+      input type="text" class="form-control" id="search" name="search"
+    .col
+      button class="btn btn-primary"
+        | Cari
+table class="table"
+  thead
+    th Name
+    th Action
+  tbody
+    = render partial: 'list', collection: @item_cats, as: :item_cat
+= paginate @item_cats
