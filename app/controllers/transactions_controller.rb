@@ -36,11 +36,14 @@ class TransactionsController < ApplicationController
     discount = 0
     total = 0
     grand_total = 0
+    hpp_total = 0
 
-    count_item = items.collect {|ind| ind[1]}.each {|a| item+=a.to_i}
-    count_discount = items.collect {|ind| ind[3]}.each {|a| discount+=a.to_i}
-    count_total = items.collect {|ind| ind[2]}.each {|a| total+=a.to_i}
-    count_grand_total = items.collect {|ind| ind[4]}.each {|a| grand_total+=a.to_i}
+    items.each do |trx_item|
+      item += trx_item[1].to_i
+      discount += trx_item[1].to_i * trx_item[3].to_i
+      total += trx_item[1].to_i * trx_item[2].to_i
+      grand_total += trx_item[4].to_i
+    end
 
     trx = Transaction.new
     trx.invoice = "TRX-" + Time.now.to_i.to_s
@@ -77,12 +80,15 @@ class TransactionsController < ApplicationController
       transaction_id: trx.id,
       quantity: item_par[1], 
       price: item_par[2],
-      discount: item_par[3]
+      discount: item_par[3],
+      date_created: DateTime.now
       store_stock = StoreItem.find_by(store: current_user.store, item: item)
+      hpp_total += item_par[1].to_i * item.buy.to_i
       next if store_stock.nil?
       store_stock.stock = store_stock.stock.to_i - item_par[1].to_i
       store_stock.save!
     end
+    trx.hpp_total = hpp_total
     trx.save!
 
     render status: 200, json: {

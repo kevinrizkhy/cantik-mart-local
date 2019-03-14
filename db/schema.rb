@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_13_085245) do
+ActiveRecord::Schema.define(version: 2019_03_14_070733) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -185,6 +185,7 @@ ActiveRecord::Schema.define(version: 2019_03_13_085245) do
     t.integer "price", null: false
     t.integer "discount", default: 0
     t.integer "quantity", null: false
+    t.datetime "date_created"
     t.index ["item_id"], name: "index_transaction_items_on_item_id"
     t.index ["transaction_id"], name: "index_transaction_items_on_transaction_id"
   end
@@ -201,6 +202,7 @@ ActiveRecord::Schema.define(version: 2019_03_13_085245) do
     t.integer "bank", default: 0
     t.integer "edc_inv", default: 0
     t.datetime "date_created", null: false
+    t.integer "hpp_total"
     t.index ["member_id"], name: "index_transactions_on_member_id"
     t.index ["user_id"], name: "index_transactions_on_user_id"
   end

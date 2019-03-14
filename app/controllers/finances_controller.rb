@@ -69,17 +69,27 @@ class FinancesController < ApplicationController
     start_date = DateTime.now.to_date
     end_date = DateTime.now.to_date - 1.day
     
-    last_trx = Transaction.last.date_created.to_date
+    last_trx = "01-01-1999".to_date
+    last_trx = Transaction.last.date_created.to_date if Transaction.last.present?
     
     checking_trx_finance = Finance.where(finance_type: Finance::TRANSACTIONS).last
     start_date = checking_trx_finance.date_created if checking_trx_finance.present?
     start_date = "01-01-1999".to_date if checking_trx_finance.nil?
 
     transactions = Transaction.where("date_created > ? AND date_created < ?", start_date, end_date).group("DATE(date_created)").sum(:grand_total)
-    transactions.each do |transaction|
+    based_prices = Transaction.where("date_created > ? AND date_created < ?", start_date, end_date).group("DATE(date_created)").sum(:hpp_total)
+
+    a = transactions
+    b = based_prices
+    trx_based =  a.merge!(b) { |k, o, n| k=o,k=n,k=o - n }
+    trx_based.each do |transaction|
       if Finance.find_by(description: "TRX "+transaction[0].to_s).nil?  
-        Finance.create date_created: transaction[0].to_date, nominal: transaction[1], user: current_user, 
+        a = Finance.create date_created: transaction[0].to_date, nominal: transaction[1][0], user: current_user, 
         store: current_user.store, description: "TRX "+transaction[0].to_s, finance_type: Finance::TRANSACTIONS
+        b = Finance.create date_created: transaction[0].to_date, nominal: transaction[1][1], user: current_user, 
+        store: current_user.store, description: "HPP "+transaction[0].to_s, finance_type: Finance::HPP
+        c = Finance.create date_created: transaction[0].to_date, nominal: transaction[1][2], user: current_user, 
+        store: current_user.store, description: "PRF "+transaction[0].to_s, finance_type: Finance::PROFIT
       end
     end
   end

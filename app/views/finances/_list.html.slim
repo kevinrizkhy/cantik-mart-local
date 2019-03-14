@@ -1,12 +1,12 @@
 tr
   td #{finance.user.name} (#{finance.store.name})
   td #{finance.finance_type}
-  - if finance.finance_type != "Receivables"
-  	td 0
-  	td #{finance.nominal}
+  - if finance.finance_type == "Receivables" || finance.finance_type == "Profit" || finance.finance_type == "Transactions"
+    td #{finance.nominal}
+    td 0
   - else
-  	td #{finance.nominal}
-  	td 0
+    td 0
+    td #{finance.nominal}
   td #{finance.date_created}
   - if finance.finance_type == "Debt"
       td 
