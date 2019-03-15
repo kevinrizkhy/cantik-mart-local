@@ -2,14 +2,16 @@ KEUANGAN
 
 0. Harga Beli
 	( ( Stok lama * Harga Beli Lama ) + ( Stok Baru * Harga Beli Baru )) / ( Stok Lama + Stok Baru )
+# bug if date from - to is empty
 
 1. Lap. Perubahan Modal Aset
 	input user
 - tabel equity bulan sebelumnya 
 
 2. Sales
-	Transaksi Toko (POS) => table ?
-- Nilai dari HPP (Harga Beli)
+	Transaksi Toko (POS) => table
+	Profit
+	Nilai dari HPP (Harga Beli)
 - Cash Debit / Credit (input user)
 
 3. Aset 

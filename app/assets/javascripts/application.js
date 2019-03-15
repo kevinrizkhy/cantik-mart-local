@@ -72,79 +72,34 @@ function addNewRowRetur(){
 }
 
 var ctx = document.getElementById("debt-chart").getContext('2d');
+
 var debt = new Chart(ctx, {
     type: 'line',
     data: {
       labels: gon.labels,
-      datasets: [
-      	{
-	        label: 'Penjualan',
-	        data: gon.sales_data,
-	        backgroundColor: [
-	            'rgba(255, 159, 64, 0.2)',
-	          ],
-	        borderColor: [
-	            'rgba(255, 159, 64, 1)',
-	          ],
-	        borderWidth: 2
-	     },
-      	{
-	        label: 'Hutang',
-	        data: gon.debt_data,
-	        backgroundColor: [
-	            'rgba(255, 99, 132, 0.2)',
-	          ],
-	        borderColor: [
-	            'rgba(255,99,132,1)',
-	          ],
-	        borderWidth: 2
-	     },
-	    {
-	        label: 'Operasional',
-	        data: gon.operational_data,
-	        backgroundColor: [
-	            'rgba(54, 162, 235, 0.2)',
-	          ],
-	        borderColor: [
-	            'rgba(54, 162, 235, 1)',
-	          ],
-	        borderWidth: 2
-	     },
-	     {
-	        label: 'Piutang',
-	        data: gon.receivables_data,
-	        backgroundColor: [
-	            'rgba(75, 192, 192, 0.2)',
-	          ],
-	        borderColor: [
-	            'rgba(75, 192, 192, 1)',
-	          ],
-	        borderWidth: 2
-	     },
-	     {
-	        label: 'Pajak',
-	        data: gon.tax_data,
-	        backgroundColor: [
-	            'rgba(255, 206, 86, 0.2)',
-	          ],
-	        borderColor: [
-	            'rgba(255, 206, 86, 1)',
-	          ],
-	        borderWidth: 2
-	     }
-	]
+      datasets: gon.datasets,
     },
     options: {
       responsive: true
     }
   });
 
-
 // var debt = new Chart(ctx, {
 //     type: 'line',
 //     data: {
 //       labels: gon.labels,
 //       datasets: [
+//       	{
+// 	        label: 'Penjualan',
+// 	        data: gon.sales_data,
+// 	        backgroundColor: [
+// 	            'rgba(255, 159, 64, 0.2)',
+// 	          ],
+// 	        borderColor: [
+// 	            'rgba(255, 159, 64, 1)',
+// 	          ],
+// 	        borderWidth: 2
+// 	     },
 //       	{
 // 	        label: 'Hutang',
 // 	        data: gon.debt_data,
@@ -155,6 +110,39 @@ var debt = new Chart(ctx, {
 // 	            'rgba(255,99,132,1)',
 // 	          ],
 // 	        borderWidth: 2
+// 	     },
+// 	    {
+// 	        label: 'Operasional',
+// 	        data: gon.operational_data,
+// 	        backgroundColor: [
+// 	            'rgba(54, 162, 235, 0.2)',
+// 	          ],
+// 	        borderColor: [
+// 	            'rgba(54, 162, 235, 1)',
+// 	          ],
+// 	        borderWidth: 2
+// 	     },
+// 	     {
+// 	        label: 'Piutang',
+// 	        data: gon.receivables_data,
+// 	        backgroundColor: [
+// 	            'rgba(75, 192, 192, 0.2)',
+// 	          ],
+// 	        borderColor: [
+// 	            'rgba(75, 192, 192, 1)',
+// 	          ],
+// 	        borderWidth: 2
+// 	     }
+// 	     ,{
+// 	        label: 'Pajak',
+// 	        data: gon.tax_data,
+// 	        backgroundColor: [
+// 	            'rgba(255, 206, 86, 0.2)',
+// 	          ],
+// 	        borderColor: [
+// 	            'rgba(255, 206, 86, 1)',
+// 	          ],
+// 	        borderWidth: 2
 // 	     }
 // 	]
 //     },
@@ -162,3 +150,7 @@ var debt = new Chart(ctx, {
 //       responsive: true
 //     }
 //   });
+
+$(document).ready(function() {
+	$('select').selectpicker();
+});

@@ -37,8 +37,8 @@
     .col
       |
     .col
-      select[class="form-control" id="finance_type" name="finance_type"]
-        option[value=0]
+      select[class="form-control" id="finance_type" name="finance_type[]" size="8" multiple=true ]
+        option[value=0 selected ]
           | Semua
         option[value=1]
           | Aset
@@ -74,6 +74,7 @@
   hr
 .row
   .col
+    = paginate @finances
     table class="table"
       thead
         th Dibuat Oleh
@@ -84,6 +85,5 @@
         th Keterangan
       tbody
         = render partial: 'list', collection: @finances, as: :finance
-    = paginate @finances
   .col
     canvas#debt-chart 

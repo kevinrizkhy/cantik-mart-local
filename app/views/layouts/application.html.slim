@@ -34,13 +34,6 @@ html
 
     = stylesheet_link_tag "application", media: "all"
 
-    script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js""
-    script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"
-    script src="https://use.fontawesome.com/releases/v5.7.2/js/all.js" 
-    script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" 
-    script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js" 
-    script src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.7.4/js/mdb.min.js"
-
     / = javascript_pack_tag 'application'
 
   body
@@ -89,8 +82,22 @@ html
               = yield
     - else
         = yield
-    
+
+
+    script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
+
+    script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"
+
+    script src="https://use.fontawesome.com/releases/v5.7.2/js/all.js" 
+
+    script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js" 
+
+    script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.2/js/bootstrap-select.min.js" 
+
+    script src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.7.4/js/mdb.min.js"
+
     = javascript_include_tag 'application'
+
 
     
     
