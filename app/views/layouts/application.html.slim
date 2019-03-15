@@ -70,8 +70,7 @@ html
                     li.c-menu__item.is-active data-toggle="tooltip" title="Home" 
                       .c-menu__item__inner
                         i.fa.fa-home
-                        .c-menu-item__title
-                          span Home
+                        span Home
                   - if current_user.owner?
                     = render "layouts/menu/owner"
                   - if current_user.cashier?
