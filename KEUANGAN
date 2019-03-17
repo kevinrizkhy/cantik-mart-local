@@ -1,3 +1,7 @@
+- when create a new CREDIT, add reference from DEBT (always checking)
+- add new column in FINANCE => invoice, null: true
+
+
 KEUANGAN
 
 0. Harga Beli

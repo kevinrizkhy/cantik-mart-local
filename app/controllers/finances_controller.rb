@@ -9,12 +9,15 @@ class FinancesController < ApplicationController
     @finances = Finance.all
     sum_finances_before_date = Finance.where(status: false)
     checking_prev_trx
+    additional_recv_fin_type = false
     finance_type = params[:finance_type]
     if finance_type.present? 
       finance_type.map!{|e| e.to_i}
       if finance_type.include?(0)
         if finance_type.size > 1
           finance_type.delete(0)
+          finance_type << 3 if finance_type.include?(2) && finance_type.exclude?(3)
+          additional_recv_fin_type = true
           @finances = @finances.where(finance_type: finance_type)
           @search = "(Pencarian "+Finance.finance_types.key(finance_type).to_s+" " 
         end
@@ -57,7 +60,6 @@ class FinancesController < ApplicationController
     end
 
     finances = @finances
-    @finances = @finances.page param_page
 
     if params[:order_by].present?
       @finances = @finances.order("date_created "+params[:order_by])
@@ -69,6 +71,11 @@ class FinancesController < ApplicationController
     gon.labels = labels
 
     datasets = []
+    if additional_recv_fin_type == true
+      # finance_type.delete(3)
+      # @finances = @finances.where(finance_type: finance_type)
+    end
+    @finances = @finances.page param_page
     finance_type.each do |type|
       if type == 0
         datasets << js_sales(labels, finances,label_type)
@@ -235,19 +242,31 @@ class FinancesController < ApplicationController
 
   def js_debt labels, finances, label_type, sum_finances_before_date
     debt_data = Array.new(labels.size) {|i| 0 }
-    finances = finances.where(status: false)
+    # finances = finances.where(status: true)
     # debt_data[0] = sum_finances_before_date.where("finance_type = ?", Finance::DEBT).sum(:nominal).to_i
     debts = finances.where("finance_type = ?", Finance::DEBT).group("DATE(date_created)").sum(:nominal) if label_type == "day" || label_type == "week"
     debts = finances.where("finance_type = ?", Finance::DEBT).group("date_trunc('month', date_created)").sum(:nominal) if label_type == "month"
+    receivables = finances.where("finance_type = ?", Finance::RECEIVABLES).group("DATE(date_created)").sum(:nominal) if label_type == "day" || label_type == "week"
+    receivables = finances.where("finance_type = ?", Finance::RECEIVABLES).group("date_trunc('month', date_created)").sum(:nominal) if label_type == "month"
+    
+    receivables.each_with_index do |receivable, index|
+      debt_value = 0
+      debt_value = debts[receivable[0]] if debts[receivable[0]].present?
+      new_value = debt_value.to_i - receivable[1].to_i 
+      debts[receivable[0]] = new_value
+    end
+
     debts.each_with_index do |debt, index|
       index_month = labels.index(debt[0].to_date.strftime("%B %Y")) if label_type == "month"
       index_month = labels.index(debt[0].to_date) if label_type == "day"
       index_month = labels.index(debt[0].at_beginning_of_week.strftime("%U").to_i+1) if label_type == "week"
-      debt_data[index_month] = debt[1].to_i
-    end 
+      debt_data[index_month] += debt[1].to_i
+    end
+
     data = {
-      label: 'Hutang',
+      label: 'Pengeluaran',
       data: (replace_zero_nominal debt_data, sum_finances_before_date, Finance::DEBT),
+      # data: debt_data,
       backgroundColor: [
           'rgba(255, 99, 132, 0.2)',
         ],
@@ -260,8 +279,8 @@ class FinancesController < ApplicationController
 
   def js_receivables labels, finances, label_type, sum_finances_before_date
     receivables_data = Array.new(labels.size) {|i| 0 }
-    finances = finances.where(status: false)
-    receivables_data[0] = sum_finances_before_date.where("finance_type = ?", Finance::RECEIVABLES).sum(:nominal).to_i
+    # finances = finances.where(status: false)
+    # receivables_data[0] = sum_finances_before_date.where("finance_type = ?", Finance::RECEIVABLES).sum(:nominal).to_i
     receivables = finances.where("finance_type = ?", Finance::RECEIVABLES).group("DATE(date_created)").sum(:nominal) if label_type == "day" || label_type == "week"
     receivables = finances.where("finance_type = ?", Finance::RECEIVABLES).group("date_trunc('month', date_created)").sum(:nominal) if label_type == "month"
     receivables.each_with_index do |receivable, index|
@@ -275,8 +294,9 @@ class FinancesController < ApplicationController
       receivables_data[index_month] = total
     end 
     data = {
-      label: 'Piutang',
-      data: replace_zero_nominal(receivables_data, sum_finances_before_date, Finance::RECEIVABLES),
+      label: 'Pemasukkan',
+      # data: replace_zero_nominal(receivables_data, sum_finances_before_date, Finance::RECEIVABLES),
+      data: receivables_data,
       backgroundColor: [
           'rgba(75, 192, 192, 0.2)',
         ],
@@ -355,6 +375,7 @@ class FinancesController < ApplicationController
   end
 
   def new
+
   end
 
   def create
@@ -362,8 +383,16 @@ class FinancesController < ApplicationController
     finance.date_created = DateTime.now
     finance.user = current_user
     finance.store = current_user.store
-    if finance.finance_type == "Debt" || finance.finance_type == "Receivables"
-      finance.description = "("+finance.nominal.to_s+") "+finance.description
+    if finance.finance_type == "Debt" 
+      inv = "DEBT-"+Time.now.to_i.to_s
+      finance.description = inv+" ("+finance.description+")"
+    end
+    if finance.finance_type == "Receivables"
+      return redirect_back_no_access_right if params[:finance][:inv_number].nil?
+      debt_inv = Finance.where("description like ?", "%"+params[:finance][:inv_number]+"%")
+      return redirect_back_no_access_right if debt_inv.nil?
+      inv = "RCV-"+Time.now.to_i.to_s
+      finance.description = inv+" ("+finance.description+")"
     end
     return redirect_to new_user_path if finance.invalid?
     finance.save!

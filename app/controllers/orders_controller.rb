@@ -80,6 +80,8 @@ class OrdersController < ApplicationController
     item_arr.each do |item_arr|
       item = Item.find item_arr[0]
       break if item.nil?
+      supplier_item = SupplierItem.find_by(item_id: item_arr[0])
+      SupplierItem.create supplier_id: address_to, item: item if supplier_item.nil?
       order_item = OrderItem.create item_id: item_arr[0], order_id: order.id, quantity: item_arr[1], price: item_arr[2], description: item_arr[3]
       total+= (item_arr[2].to_i*item_arr[1].to_i)
     end
@@ -120,23 +122,26 @@ class OrdersController < ApplicationController
       order_item.receive = item[1]
       order_item.save!
       this_item = Item.find order_item.item.id
-      store_stock = StoreItem.find_by(item_id: order_item.item.id)
+      store_stock = StoreItem.find_by(item_id: order_item.item.id, store_id: current_user.store)
+      store_stock = StoreItem.create store: current_user.store, item: this_item, stock: 0, min_stock: 5 if store_stock.nil?
       store_stock.stock = store_stock.stock + item[1].to_i
       store_stock.save!
       new_buy_total = item[1].to_i * order_item.price.to_i
       old_buy_total = store_stock.stock.to_i * this_item.buy.to_i
-      new_buy = (new_buy_total + old_buy_total) / (item[1].to_i + store_stock.stock.to_i)
+      new_buy = 0
+      new_buy = (new_buy_total + old_buy_total) / (item[1].to_i + store_stock.stock.to_i) if (item[1].to_i + store_stock.stock.to_i) > 0
       this_item.buy = new_buy
       this_item.save!
       new_total +=  new_buy_total
     end
     order.total = new_total
     order.date_receive = Time.now
-    Finance.create nominal: new_total, user: current_user, 
-    store: current_user.store, date_created: DateTime.now, 
-    order_id: params[:id], finance_type: Finance::DEBT,
-    description: "#"+order.invoice+" ("+new_total.to_s+")"
     order.save!
+    # Finance.create  nominal: new_total, user: current_user, 
+    #                 store: current_user.store, date_created: DateTime.now, 
+    #                 order_id: params[:id], finance_type: Finance::DEBT,
+    #                 description: "#"+order.invoice+" (-"+pay.to_s+")",
+    #                 status: false
     return redirect_to order_items_path(id: params[:id])
   end
 
@@ -165,15 +170,21 @@ class OrdersController < ApplicationController
     order_inv.nominal = params[:order_pay][:nominal]
     order_inv.save!
     pay = order.total.to_i - order_invs.sum(:nominal) 
-    finance_pay = Finance.find_by(order_id: params[:id])
-    finance_pay.nominal = pay
+    # finance_head = Finance.find_by(order_id: params[:id])
+    finance_paid = Finance.new  nominal: params[:order_pay][:nominal], user: current_user, 
+                                store: current_user.store, date_created: DateTime.now, 
+                                order_id: params[:id], finance_type: Finance::DEBT,
+                                description: "#"+order.invoice+" (-"+pay.to_s+")",
+                                status: true
+    # finance_head.nominal = pay
     if pay <= 0
       order.date_paid_off = Time.now 
-      finance_pay.nominal = pay
-      finance_pay.status = true
       order.save!
+      finance_paid.description = "#"+order.invoice+" (LUNAS)"
+      # finance_head.status = true
     end
-    finance_pay.save!
+    # finance_head.save!
+    finance_paid.save!
     return redirect_to order_items_path(id: params[:id])
   end
 
