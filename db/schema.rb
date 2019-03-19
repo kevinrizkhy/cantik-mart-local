@@ -10,10 +10,52 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_14_070733) do
+ActiveRecord::Schema.define(version: 2019_03_19_065558) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "assets", force: :cascade do |t|
+    t.bigint "store_id", null: false
+    t.bigint "user_id", null: false
+    t.float "nominal", null: false
+    t.datetime "date_created", null: false
+    t.string "description", null: false
+    t.integer "finance_type", null: false
+    t.index ["store_id"], name: "index_assets_on_store_id"
+    t.index ["user_id"], name: "index_assets_on_user_id"
+  end
+
+  create_table "capitals", force: :cascade do |t|
+    t.bigint "store_id", null: false
+    t.bigint "user_id", null: false
+    t.float "nominal", null: false
+    t.datetime "date_created", null: false
+    t.string "description", null: false
+    t.index ["store_id"], name: "index_capitals_on_store_id"
+    t.index ["user_id"], name: "index_capitals_on_user_id"
+  end
+
+  create_table "cash_flows", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "store_id", null: false
+    t.integer "nominal", null: false
+    t.integer "finance_type", default: 1, null: false
+    t.datetime "date_created"
+    t.string "description"
+    t.index ["store_id"], name: "index_cash_flows_on_store_id"
+    t.index ["user_id"], name: "index_cash_flows_on_user_id"
+  end
+
+  create_table "cashes", force: :cascade do |t|
+    t.bigint "store_id", null: false
+    t.bigint "user_id", null: false
+    t.float "nominal", null: false
+    t.datetime "date_created", null: false
+    t.string "description", null: false
+    t.index ["store_id"], name: "index_cashes_on_store_id"
+    t.index ["user_id"], name: "index_cashes_on_user_id"
+  end
 
   create_table "complain_items", force: :cascade do |t|
     t.bigint "item_id", null: false
@@ -36,6 +78,32 @@ ActiveRecord::Schema.define(version: 2019_03_14_070733) do
     t.index ["store_id"], name: "index_complains_on_store_id"
   end
 
+  create_table "credits", force: :cascade do |t|
+    t.bigint "store_id", null: false
+    t.bigint "user_id", null: false
+    t.float "nominal", null: false
+    t.float "deficiency", null: false
+    t.datetime "date_created", null: false
+    t.string "description", null: false
+    t.integer "ref_id"
+    t.integer "finance_type", null: false
+    t.index ["store_id"], name: "index_credits_on_store_id"
+    t.index ["user_id"], name: "index_credits_on_user_id"
+  end
+
+  create_table "debts", force: :cascade do |t|
+    t.bigint "store_id", null: false
+    t.bigint "user_id", null: false
+    t.float "nominal", null: false
+    t.float "deficiency", null: false
+    t.datetime "date_created", null: false
+    t.string "description", null: false
+    t.integer "ref_id"
+    t.integer "finance_type", null: false
+    t.index ["store_id"], name: "index_debts_on_store_id"
+    t.index ["user_id"], name: "index_debts_on_user_id"
+  end
+
   create_table "finances", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "store_id", null: false
@@ -43,9 +111,6 @@ ActiveRecord::Schema.define(version: 2019_03_14_070733) do
     t.integer "finance_type", default: 1, null: false
     t.datetime "date_created"
     t.string "description"
-    t.boolean "status", default: false
-    t.bigint "order_id"
-    t.index ["order_id"], name: "index_finances_on_order_id"
     t.index ["store_id"], name: "index_finances_on_store_id"
     t.index ["user_id"], name: "index_finances_on_user_id"
   end
@@ -116,6 +181,17 @@ ActiveRecord::Schema.define(version: 2019_03_14_070733) do
     t.index ["supplier_id"], name: "index_orders_on_supplier_id"
   end
 
+  create_table "profit_losses", force: :cascade do |t|
+    t.bigint "store_id", null: false
+    t.bigint "user_id", null: false
+    t.float "nominal", null: false
+    t.datetime "date_created", null: false
+    t.string "description", null: false
+    t.integer "finance_type", null: false
+    t.index ["store_id"], name: "index_profit_losses_on_store_id"
+    t.index ["user_id"], name: "index_profit_losses_on_user_id"
+  end
+
   create_table "retur_items", force: :cascade do |t|
     t.bigint "item_id", null: false
     t.bigint "retur_id", null: false
@@ -141,6 +217,16 @@ ActiveRecord::Schema.define(version: 2019_03_14_070733) do
     t.datetime "status"
     t.index ["store_id"], name: "index_returs_on_store_id"
     t.index ["supplier_id"], name: "index_returs_on_supplier_id"
+  end
+
+  create_table "stock_values", force: :cascade do |t|
+    t.bigint "store_id", null: false
+    t.bigint "user_id", null: false
+    t.float "nominal", null: false
+    t.datetime "date_created", null: false
+    t.string "description", null: false
+    t.index ["store_id"], name: "index_stock_values_on_store_id"
+    t.index ["user_id"], name: "index_stock_values_on_user_id"
   end
 
   create_table "store_items", force: :cascade do |t|
@@ -254,10 +340,22 @@ ActiveRecord::Schema.define(version: 2019_03_14_070733) do
     t.index ["store_id"], name: "index_users_on_store_id"
   end
 
+  add_foreign_key "assets", "stores"
+  add_foreign_key "assets", "users"
+  add_foreign_key "capitals", "stores"
+  add_foreign_key "capitals", "users"
+  add_foreign_key "cash_flows", "stores"
+  add_foreign_key "cash_flows", "users"
+  add_foreign_key "cashes", "stores"
+  add_foreign_key "cashes", "users"
   add_foreign_key "complain_items", "complains"
   add_foreign_key "complain_items", "items"
   add_foreign_key "complains", "members"
   add_foreign_key "complains", "stores"
+  add_foreign_key "credits", "stores"
+  add_foreign_key "credits", "users"
+  add_foreign_key "debts", "stores"
+  add_foreign_key "debts", "users"
   add_foreign_key "finances", "stores"
   add_foreign_key "finances", "users"
   add_foreign_key "items", "item_cats"
@@ -266,10 +364,14 @@ ActiveRecord::Schema.define(version: 2019_03_14_070733) do
   add_foreign_key "order_items", "orders"
   add_foreign_key "orders", "stores"
   add_foreign_key "orders", "suppliers"
+  add_foreign_key "profit_losses", "stores"
+  add_foreign_key "profit_losses", "users"
   add_foreign_key "retur_items", "items"
   add_foreign_key "retur_items", "returs"
   add_foreign_key "returs", "stores"
   add_foreign_key "returs", "suppliers"
+  add_foreign_key "stock_values", "stores"
+  add_foreign_key "stock_values", "users"
   add_foreign_key "store_items", "items"
   add_foreign_key "store_items", "stores"
   add_foreign_key "supplier_items", "items"

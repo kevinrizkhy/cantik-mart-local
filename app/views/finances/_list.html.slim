@@ -1,16 +1,12 @@
 tr
+  - nominal = finance.nominal.abs
   td #{finance.user.name} (#{finance.store.name})
   td #{finance.finance_type}
-  - if finance.finance_type == "Receivables" || finance.finance_type == "Profit" || finance.finance_type == "Transactions"
-    td #{finance.nominal}
+  - if finance.finance_type == "Credit" || finance.finance_type == "Profit" || finance.finance_type == "Stock_Value" || ((finance.finance_type == "Cash") && (finance.nominal > 0))
     td 0
+    td #{nominal}
   - else
+    td #{nominal}
     td 0
-    td #{finance.nominal}
   td #{finance.date_created}
-  - if finance.finance_type == "Debt" && finance.order_id.present?
-      td 
-        a href="#{order_items_path(id: finance.order_id)}"
-          | #{finance.description}
-  - else
-      td #{finance.description}
+  td #{finance.description}

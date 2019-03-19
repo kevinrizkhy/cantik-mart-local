@@ -1,136 +1,49 @@
 class FinancesController < ApplicationController
   before_action :require_login
+
   def index
-    @search = "(Data 6bulan terakhir)"
-    numbers = 6
-    label_type = "month"
-    end_date = DateTime.now
-    start_date = DateTime.now - numbers.months
-    @finances = Finance.all
-    sum_finances_before_date = Finance.where(status: false)
-    checking_prev_trx
-    additional_recv_fin_type = false
-    finance_type = params[:finance_type]
-    if finance_type.present? 
-      finance_type.map!{|e| e.to_i}
-      if finance_type.include?(0)
-        if finance_type.size > 1
-          finance_type.delete(0)
-          finance_type << 3 if finance_type.include?(2) && finance_type.exclude?(3)
-          additional_recv_fin_type = true
-          @finances = @finances.where(finance_type: finance_type)
-          @search = "(Pencarian "+Finance.finance_types.key(finance_type).to_s+" " 
-        end
-      else
-        @search = "(Pencarian "
-      end
-    else
-      finance_type = [0]
-    end
-    if params[:switch_date_month] == "date"
-      to = DateTime.now.to_date
-      from = to - 1.month
-      if params[:date_from] != "" && params[:date_to] != ""
-        from = params[:date_from].to_date
-        to = params[:date_to].to_date
-        if from > to
-          temp = from
-          from = to
-          to = temp
-        end
-      end
-      @finances = @finances.where("date_created >= ? AND date_created <= ?", from, to+1.day)
-      sum_finances_before_date = sum_finances_before_date.where("date_created < ?", from)
-      start_date = from
-      end_date = to
-      numbers = end_date.month - start_date.month 
-      numbers = numbers * -1 if numbers < 0
-      @search += " " + start_date.to_s+" - "+end_date.to_s+" "
-      if numbers < 1
-        label_type = "day"
-      else
-        label_type = "week"
-      end
-    else
-      numbers = params[:months].to_i if params[:months].present?
-      start_date = end_date - numbers.months
-      @finances = @finances.where("date_created >= ?", Date.today.beginning_of_month - numbers.months )
-      sum_finances_before_date = sum_finances_before_date.where("date_created < ?", start_date)
-      @search += numbers.to_s+"bulan terakhir "
-    end
+  	label_type = "day"
+  	numbers = 3
+  	end_date = DateTime.now.to_date
+  	start_date = DateTime.now.to_date - 2.weeks
+    check_prev
+  	@finances = CashFlow.page param_page
 
-    finances = @finances
-
-    if params[:order_by].present?
-      @finances = @finances.order("date_created "+params[:order_by])
-      @search+= "secara menaik)" if params[:order_by] == "asc"      
-      @search+= "secara menurun)" if params[:order_by] == "desc" 
-    end
-    labels = generate_label label_type, numbers, start_date, end_date
-
+  	labels = generate_label label_type, numbers, start_date, end_date
     gon.labels = labels
 
     datasets = []
-    if additional_recv_fin_type == true
-      # finance_type.delete(3)
-      # @finances = @finances.where(finance_type: finance_type)
-    end
-    @finances = @finances.page param_page
-    finance_type.each do |type|
-      if type == 0
-        datasets << js_sales(labels, finances,label_type)
-        datasets << js_receivables(labels, finances,label_type, sum_finances_before_date)
-        datasets << js_debt(labels, finances,label_type, sum_finances_before_date)
-        datasets << js_operational(labels, finances,label_type)
-        datasets << js_tax(labels, finances,label_type)
-      elsif type == 1
-      elsif type == 2
-        datasets << js_debt(labels, finances,label_type, sum_finances_before_date)
-      elsif type == 3
-        datasets << js_receivables(labels, finances,label_type, sum_finances_before_date)
-      elsif type == 4
-        datasets << js_operational(labels, finances,label_type)
-      elsif type == 5
-      elsif type == 6
-        datasets << js_tax(labels, finances,label_type)
-      elsif type == 7
-        datasets << js_sales(labels, finances,label_type)
-      elsif type == 8
-        datasets << js_hpp(labels, finances,label_type)
-      elsif type == 9
-        datasets << js_profit(labels, finances,label_type)
-      end
-    end
-
+    datasets << debt_chart(labels, @finances,label_type)
+    datasets << cash_chart(labels, @finances,label_type)
+    datasets << credit_chart(labels, @finances,label_type)
+    datasets << tax_chart(labels, @finances,label_type)
+    datasets << operational_chart(labels, @finances,label_type)
+    datasets << stock_value_chart(labels, @finances,label_type)
+    datasets << fix_cost_chart(labels, @finances,label_type)
     gon.datasets = datasets
   end
 
-  def checking_prev_trx 
-    start_date = DateTime.now.to_date
-    end_date = DateTime.now.to_date - 1.day
-    
-    last_trx = "01-01-1999".to_date
-    last_trx = Transaction.last.date_created.to_date if Transaction.last.present?
-    
-    checking_trx_finance = Finance.where(finance_type: Finance::TRANSACTIONS).last
-    start_date = checking_trx_finance.date_created if checking_trx_finance.present?
-    start_date = "01-01-1999".to_date if checking_trx_finance.nil?
-
-    transactions = Transaction.where("date_created > ? AND date_created < ?", start_date, end_date).group("DATE(date_created)").sum(:grand_total)
-    based_prices = Transaction.where("date_created > ? AND date_created < ?", start_date, end_date).group("DATE(date_created)").sum(:hpp_total)
-
-    a = transactions
-    b = based_prices
-    trx_based =  a.merge!(b) { |k, o, n| k=o,k=n,k=o - n }
-    trx_based.each do |transaction|
-      if Finance.find_by(description: "TRX "+transaction[0].to_s).nil?  
-        a = Finance.create date_created: transaction[0].to_date, nominal: transaction[1][0], user: current_user, 
-        store: current_user.store, description: "TRX "+transaction[0].to_s, finance_type: Finance::TRANSACTIONS
-        b = Finance.create date_created: transaction[0].to_date, nominal: transaction[1][1], user: current_user, 
-        store: current_user.store, description: "HPP "+transaction[0].to_s, finance_type: Finance::HPP
-        c = Finance.create date_created: transaction[0].to_date, nominal: transaction[1][2], user: current_user, 
-        store: current_user.store, description: "PRF "+transaction[0].to_s, finance_type: Finance::PROFIT
-      end
+  def check_prev
+    user = current_user
+    store = user.store
+    date_created = DateTime.now
+    current_month = Date.today.month
+    current_year = Date.today.year
+    last_stock_value = CashFlow.where(finance_type: CashFlow::STOCK_VALUE)
+    current_stock_value = CashFlow.where("date_created > ? AND date_created < ? AND finance_type = ?", Time.now.beginning_of_month, Time.now.end_of_month, CashFlow::STOCK_VALUE)
+    stock_values = StoreItem.where(store: current_user.store)
+    values = 0
+    stock_values.each do |store_item|
+      values += store_item.stock.to_f * store_item.item.buy.to_f 
+    end
+    description = "Stock Values ("+Date.today.strftime("%B")+" "+current_year.to_s+")"
+    if current_stock_value.empty?
+      CashFlow.create user: user, store: store, nominal: values, date_created: date_created, description: description, finance_type: CashFlow::STOCK_VALUE
+    else
+      current_stock_value = current_stock_value.first
+      current_stock_value.nominal = values
+      current_stock_value.date_created =  DateTime.now
+      current_stock_value.save!
     end
   end
 
@@ -171,180 +84,73 @@ class FinancesController < ApplicationController
     labels
   end
 
-  def js_sales labels, finances, label_type
-    trx_data = Array.new(labels.size) {|i| 0 }
-    trxs = finances.where(finance_type: Finance::TRANSACTIONS).group("DATE(date_created)").sum(:nominal) if label_type == "day" || label_type == "week"
-    trxs = finances.where(finance_type: Finance::TRANSACTIONS).group("date_trunc('month', date_created)").sum(:nominal) if label_type == "month"
-    trxs.each_with_index do |trx, index|
-      index_month = labels.index(trx[0].to_date.strftime("%B %Y")) if label_type == "month"
-      index_month = labels.index(trx[0].to_date) if label_type == "day"
-      index_month = labels.index(trx[0].at_beginning_of_week.strftime("%U").to_i+1) if label_type == "week"
-      total = trx[1].to_i
-      trx_data[index_month] = total if index_month != nil
-    end 
-    data =   {
-        label: 'Penjualan',
-        data: trx_data,
-        backgroundColor: [
-          'rgba(255, 159, 64, 0.2)',
-        ],
-        borderColor: [
-          'rgba(255, 159, 64, 1)',
-        ],
-        borderWidth: 2}
-  end
-
-  def js_profit labels, finances, label_type
-    trx_data = Array.new(labels.size) {|i| 0 }
-    trxs = finances.where(finance_type: Finance::PROFIT).group("DATE(date_created)").sum(:nominal) if label_type == "day" || label_type == "week"
-    trxs = finances.where(finance_type: Finance::PROFIT).group("date_trunc('month', date_created)").sum(:nominal) if label_type == "month"
-    trxs.each_with_index do |trx, index|
-      index_month = labels.index(trx[0].to_date.strftime("%B %Y")) if label_type == "month"
-      index_month = labels.index(trx[0].to_date) if label_type == "day"
-      index_month = labels.index(trx[0].at_beginning_of_week.strftime("%U").to_i+1) if label_type == "week"
-      total = trx[1].to_i
-      trx_data[index_month] = total if index_month != nil
-    end 
-    data =   {
-        label: 'Profit',
-        data: trx_data,
-        backgroundColor: [
-          'rgba(54, 162, 235, 0.2)',
-        ],
-        borderColor: [
-          'rgba(54, 162, 235, 1)',
-        ],
-        borderWidth: 2}
-  end
-
-  def js_hpp labels, finances, label_type
-    trx_data = Array.new(labels.size) {|i| 0 }
-    trxs = finances.where(finance_type: Finance::HPP).group("DATE(date_created)").sum(:nominal) if label_type == "day" || label_type == "week"
-    trxs = finances.where(finance_type: Finance::HPP).group("date_trunc('month', date_created)").sum(:nominal) if label_type == "month"
-    trxs.each_with_index do |trx, index|
-      index_month = labels.index(trx[0].to_date.strftime("%B %Y")) if label_type == "month"
-      index_month = labels.index(trx[0].to_date) if label_type == "day"
-      index_month = labels.index(trx[0].at_beginning_of_week.strftime("%U").to_i+1) if label_type == "week"
-      total = trx[1].to_i
-      trx_data[index_month] = total if index_month != nil
-    end 
-    data =   {
-        label: 'HPP',
-        data: trx_data,
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.5)',
-        ],
-        borderColor: [
-          'rgba(255,99,132,1)',
-        ],
-        borderWidth: 2}
-  end
-
-  def js_debt labels, finances, label_type, sum_finances_before_date
-    debt_data = Array.new(labels.size) {|i| 0 }
-    # finances = finances.where(status: true)
-    # debt_data[0] = sum_finances_before_date.where("finance_type = ?", Finance::DEBT).sum(:nominal).to_i
-    debts = finances.where("finance_type = ?", Finance::DEBT).group("DATE(date_created)").sum(:nominal) if label_type == "day" || label_type == "week"
-    debts = finances.where("finance_type = ?", Finance::DEBT).group("date_trunc('month', date_created)").sum(:nominal) if label_type == "month"
-    receivables = finances.where("finance_type = ?", Finance::RECEIVABLES).group("DATE(date_created)").sum(:nominal) if label_type == "day" || label_type == "week"
-    receivables = finances.where("finance_type = ?", Finance::RECEIVABLES).group("date_trunc('month', date_created)").sum(:nominal) if label_type == "month"
-    
-    receivables.each_with_index do |receivable, index|
-      debt_value = 0
-      debt_value = debts[receivable[0]] if debts[receivable[0]].present?
-      new_value = debt_value.to_i - receivable[1].to_i 
-      debts[receivable[0]] = new_value
-    end
-
+  def debt_chart labels, finances, label_type
+  	debt_data = Array.new(labels.size) {|i| 0 }
+  	debts = finances.where(finance_type: CashFlow::DEBT).group("DATE(date_created)").sum(:nominal) if label_type == "day" || label_type == "week"
+    debts = finances.where(finance_type: CashFlow::DEBT).group("date_trunc('month', date_created)").sum(:nominal) if label_type == "month"
     debts.each_with_index do |debt, index|
       index_month = labels.index(debt[0].to_date.strftime("%B %Y")) if label_type == "month"
       index_month = labels.index(debt[0].to_date) if label_type == "day"
       index_month = labels.index(debt[0].at_beginning_of_week.strftime("%U").to_i+1) if label_type == "week"
       debt_data[index_month] += debt[1].to_i
     end
-
-    data = {
-      label: 'Pengeluaran',
-      data: (replace_zero_nominal debt_data, sum_finances_before_date, Finance::DEBT),
-      # data: debt_data,
-      backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
+    debt_dates = debts.keys
+  	sum_finances_before_date = Debt.where("date_created < ?", debt_dates.min).sum(:deficiency).to_i
+      data = {
+        label: 'Hutang',
+        # data: (replace_zero_nominal debt_data, sum_finances_before_date),
+        data: debt_data,
+        backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+          ],
+        borderColor: [
+            'rgba(255,99,132,1)',
         ],
-      borderColor: [
-          'rgba(255,99,132,1)',
-      ],
-      borderWidth: 2
-    }
+        borderWidth: 2
+      }
   end
 
-  def js_receivables labels, finances, label_type, sum_finances_before_date
-    receivables_data = Array.new(labels.size) {|i| 0 }
-    # finances = finances.where(status: false)
-    # receivables_data[0] = sum_finances_before_date.where("finance_type = ?", Finance::RECEIVABLES).sum(:nominal).to_i
-    receivables = finances.where("finance_type = ?", Finance::RECEIVABLES).group("DATE(date_created)").sum(:nominal) if label_type == "day" || label_type == "week"
-    receivables = finances.where("finance_type = ?", Finance::RECEIVABLES).group("date_trunc('month', date_created)").sum(:nominal) if label_type == "month"
-    receivables.each_with_index do |receivable, index|
-      index_month = labels.index(receivable[0].to_date.strftime("%B %Y")) if label_type == "month"
-      index_month = labels.index(receivable[0].to_date) if label_type == "day"
-      index_month = labels.index(receivable[0].at_beginning_of_week.strftime("%U").to_i+1) if label_type == "week"
-      total = receivable[1].to_i
-      (index_month+1).times do |idx|
-        total+= receivables_data[idx]
-      end
-      receivables_data[index_month] = total
-    end 
+  def cash_chart labels, finances, label_type
+    cash_datas = Array.new(labels.size) {|i| 0 }
+    cashes = finances.where(finance_type: CashFlow::CASH).group("DATE(date_created)").sum(:nominal) if label_type == "day" || label_type == "week"
+    cashes = finances.where(finance_type: CashFlow::CASH).group("date_trunc('month', date_created)").sum(:nominal) if label_type == "month"
+    cashes.each_with_index do |debt, index|
+      index_month = labels.index(debt[0].to_date.strftime("%B %Y")) if label_type == "month"
+      index_month = labels.index(debt[0].to_date) if label_type == "day"
+      index_month = labels.index(debt[0].at_beginning_of_week.strftime("%U").to_i+1) if label_type == "week"
+      cash_datas[index_month] += debt[1].to_i
+    end
+    cash_dates = cashes.keys
+    sum_finances_before_date = Credit.where("date_created < ?", cash_dates.min).sum(:nominal).to_i
+      data = {
+        label: 'Kas',
+        data: (sum_this_month cash_datas),
+        backgroundColor: [
+          'rgba(54, 162, 235, 0.2)',
+        ],
+        borderColor: [
+          'rgba(54, 162, 235, 1)',
+        ],
+        borderWidth: 2
+      }
+  end
+
+  def credit_chart labels, finances, label_type
+    credit_datas = Array.new(labels.size) {|i| 0 }
+    credits = finances.where(finance_type: CashFlow::CREDIT).group("DATE(date_created)").sum(:nominal) if label_type == "day" || label_type == "week"
+    credits = finances.where(finance_type: CashFlow::CREDIT).group("date_trunc('month', date_created)").sum(:nominal) if label_type == "month"
+    credits.each_with_index do |debt, index|
+      index_month = labels.index(debt[0].to_date.strftime("%B %Y")) if label_type == "month"
+      index_month = labels.index(debt[0].to_date) if label_type == "day"
+      index_month = labels.index(debt[0].at_beginning_of_week.strftime("%U").to_i+1) if label_type == "week"
+      credit_datas[index_month] += debt[1].to_i
+    end
+    credit_dates = credits.keys
+    sum_finances_before_date = Credit.where("date_created < ?", credit_dates.min).sum(:deficiency).to_i
     data = {
       label: 'Pemasukkan',
       # data: replace_zero_nominal(receivables_data, sum_finances_before_date, Finance::RECEIVABLES),
-      data: receivables_data,
-      backgroundColor: [
-          'rgba(75, 192, 192, 0.2)',
-        ],
-      borderColor: [
-          'rgba(75, 192, 192, 1)',
-        ],
-      borderWidth: 2
-    }
-  end
-
-  def js_operational labels, finances, label_type
-    operational_data = Array.new(labels.size) {|i| 0 }
-    operationals = finances.where("finance_type = ?", Finance::OPERATIONAL).group("DATE(date_created)").sum(:nominal) if label_type == "day" || label_type == "week"
-    operationals = finances.where("finance_type = ?", Finance::OPERATIONAL).group("date_trunc('month', date_created)").sum(:nominal) if label_type == "month"
-    operationals.each_with_index do |operational, index|
-      index_month = labels.index(operational[0].to_date.strftime("%B %Y")) if label_type == "month"
-      index_month = labels.index(operational[0].to_date) if label_type == "day"
-      index_month = labels.index(operational[0].at_beginning_of_week.strftime("%U").to_i+1) if label_type == "week"
-      total = operational[1].to_i
-      operational_data[index_month] = total
-    end 
-    data = {
-      label: 'Operasional',
-      data: operational_data,
-      backgroundColor: [
-          'rgba(54, 162, 235, 0.2)',
-        ],
-      borderColor: [
-          'rgba(54, 162, 235, 1)',
-        ],
-      borderWidth: 2
-    }
-  end
-
-  def js_tax labels, finances, label_type
-    tax_data = Array.new(labels.size) {|i| 0 }
-    taxs = finances.where("finance_type = ?", Finance::TAX).group("DATE(date_created)").sum(:nominal) if label_type == "day" || label_type == "week"
-    taxs = finances.where("finance_type = ?", Finance::TAX).group("date_trunc('month', date_created)").sum(:nominal) if label_type == "month"
-    taxs.each_with_index do |tax, index|
-      index_month = labels.index(tax[0].to_date.strftime("%B %Y")) if label_type == "month"
-      index_month = labels.index(tax[0].to_date) if label_type == "day"
-      index_month = labels.index(tax[0].at_beginning_of_week.strftime("%U").to_i+1) if label_type == "week"
-      total = tax[1].to_i
-      tax_data[index_month] = total
-    end 
-    data = {
-      label: 'Pajak',
-      data: tax_data,
+      data: credit_datas,
       backgroundColor: [
           'rgba(255, 206, 86, 0.2)',
         ],
@@ -355,8 +161,106 @@ class FinancesController < ApplicationController
     }
   end
 
-  def replace_zero_nominal datas, sum_finances_before_date, data_type
-    total = sum_finances_before_date.where("finance_type = ?", data_type).sum(:nominal).to_i
+  def fix_cost_chart labels, finances, label_type
+    fix_cost_datas = Array.new(labels.size) {|i| 0 }
+    fix_costs = finances.where(finance_type: CashFlow::FIX_COST).group("DATE(date_created)").sum(:nominal) if label_type == "day" || label_type == "week"
+    fix_costs = finances.where(finance_type: CashFlow::FIX_COST).group("date_trunc('month', date_created)").sum(:nominal) if label_type == "month"
+    fix_costs.each_with_index do |debt, index|
+      index_month = labels.index(debt[0].to_date.strftime("%B %Y")) if label_type == "month"
+      index_month = labels.index(debt[0].to_date) if label_type == "day"
+      index_month = labels.index(debt[0].at_beginning_of_week.strftime("%U").to_i+1) if label_type == "week"
+      fix_cost_datas[index_month] += debt[1].to_i
+    end
+    credit_dates = fix_costs.keys
+    sum_finances_before_date = Credit.where("date_created < ?", credit_dates.min).sum(:deficiency).to_i
+    data = {
+      label: 'Biaya Pasti',
+      # data: replace_zero_nominal(receivables_data, sum_finances_before_date, Finance::RECEIVABLES),
+      data: fix_cost_datas,
+      backgroundColor: [
+          'rgba(141, 110, 99, 0.2)',
+        ],
+      borderColor: [
+          'rgba(141, 110, 99, 1)',
+        ],
+      borderWidth: 2
+    }
+  end
+
+  def stock_value_chart labels, finances, label_type
+    stock_value_datas = Array.new(labels.size) {|i| 0 }
+    stock_values = finances.where(finance_type: CashFlow::STOCK_VALUE).group("DATE(date_created)").sum(:nominal) if label_type == "day" || label_type == "week"
+    stock_values = finances.where(finance_type: CashFlow::STOCK_VALUE).group("date_trunc('month', date_created)").sum(:nominal) if label_type == "month"
+    stock_values.each_with_index do |debt, index|
+      index_month = labels.index(debt[0].to_date.strftime("%B %Y")) if label_type == "month"
+      index_month = labels.index(debt[0].to_date) if label_type == "day"
+      index_month = labels.index(debt[0].at_beginning_of_week.strftime("%U").to_i+1) if label_type == "week"
+      stock_value_datas[index_month] += debt[1].to_i
+    end
+    credit_dates = stock_values.keys
+    data = {
+      label: 'Nilai Stok',
+      data: (replace_zero_nominal stock_value_datas),
+      backgroundColor: [
+          'rgba(75, 192, 192, 0.2)',
+        ],
+      borderColor: [
+          'rgba(75, 192, 192, 1)',
+        ],
+      borderWidth: 2
+    }
+  end
+
+  def tax_chart labels, finances, label_type
+    tax_datas = Array.new(labels.size) {|i| 0 }
+    if label_type == "month"
+      taxes = finances.where(finance_type: CashFlow::TAX).group("date_trunc('month', date_created)").sum(:nominal) if label_type == "month"
+      taxes.each_with_index do |debt, index|
+        index_month = labels.index(debt[0].to_date.strftime("%B %Y")) if label_type == "month"
+        index_month = labels.index(debt[0].to_date) if label_type == "day"
+        index_month = labels.index(debt[0].at_beginning_of_week.strftime("%U").to_i+1) if label_type == "week"
+        tax_datas[index_month] += debt[1].to_i
+      end
+    else
+      taxes = finances.where(finance_type: CashFlow::TAX).group("date_trunc('month', date_created)").sum(:nominal) if label_type == "day" || label_type == "week"
+    end
+    data = {
+        label: 'Pajak',
+        data: tax_datas,
+        backgroundColor: [
+          'rgba(153, 102, 255, 0.2)',
+        ],
+        borderColor: [
+          'rgba(153, 102, 255, 1)',
+        ],
+        borderWidth: 2
+      }
+  end
+
+  def operational_chart labels, finances, label_type
+    operational_datas = Array.new(labels.size) {|i| 0 }
+    operationals = finances.where(finance_type: CashFlow::OPERATIONAL).group("DATE(date_created)").sum(:nominal) if label_type == "day" || label_type == "week"
+    operationals = finances.where(finance_type: CashFlow::OPERATIONAL).group("date_trunc('month', date_created)").sum(:nominal) if label_type == "month"
+    operationals.each_with_index do |debt, index|
+      index_month = labels.index(debt[0].to_date.strftime("%B %Y")) if label_type == "month"
+      index_month = labels.index(debt[0].to_date) if label_type == "day"
+      index_month = labels.index(debt[0].at_beginning_of_week.strftime("%U").to_i+1) if label_type == "week"
+      operational_datas[index_month] += debt[1].to_i
+    end
+    data = {
+      label: 'Operasional',
+      data: operational_datas,
+      backgroundColor: [
+          'rgba(255, 159, 64, 0.2)',
+        ],
+      borderColor: [
+          'rgba(255, 159, 64, 1)',
+        ],
+      borderWidth: 2
+    }
+  end
+
+  def sum_nominal datas, sum_finances_before_date
     datas.each_with_index do |data, index|
       rev_idx = datas.size-index-1
       (rev_idx).times do |r_idx|
@@ -370,42 +274,74 @@ class FinancesController < ApplicationController
         min = data
       end
     end
-    datas.map { |x| x += total }
+    datas = datas.map { |x| x += sum_finances_before_date }
+    # datas = datas.map{|e| e < 0 ? 0 : e}
+    datas
+  end
+
+  def replace_zero_nominal datas
+    max = datas.max
+    datas.each do |data|
+      if data == 0
+        data = max
+      end
+    end
+  end
+
+  def sum_this_month datas
+    datas.each_with_index do |data, index|
+      rev_idx = datas.size-index-1
+      (rev_idx).times do |r_idx|
+        datas[rev_idx] += datas[r_idx] 
+      end
+    end 
     datas
   end
 
   def new
-
   end
 
   def create
-    finance = Finance.new finance_params
-    finance.date_created = DateTime.now
-    finance.user = current_user
-    finance.store = current_user.store
-    if finance.finance_type == "Debt" 
-      inv = "DEBT-"+Time.now.to_i.to_s
-      finance.description = inv+" ("+finance.description+")"
+    finance_type = params[:finance][:finance_type]
+    nominal = params[:finance][:nominal].to_f
+    description = params[:finance][:description]
+    date_created = DateTime.now
+    user = current_user
+    store = current_user.store
+    finance_types = []
+    if finance_type == "Outcome" 
+      Cash.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description
+      Credit.create user: user, store: store, nominal: nominal, date_created: date_created, description: description, 
+                    finance_type: Credit::OTHER, deficiency:nominal
+      finance_types = [[CashFlow::CASH, nominal*-1], [CashFlow::CREDIT, nominal]]
+    elsif finance_type == "Income"
+      Cash.create user: user, store: store, nominal: nominal, date_created: date_created, description: description
+      finance_types = [[CashFlow::CASH, nominal]]
+    elsif finance_type == "Operational"
+      finance_types = [[CashFlow::OPERATIONAL, nominal*-1]]
+    elsif finance_type == "Tax"
+      description = "TAX "+(DateTime.now-1.month).strftime("%B")+"/"+Date.today.year.to_s + " ("+description+")"
+      date_created = Date.today.beginning_of_month
+      finance_types = [[CashFlow::TAX, nominal*-1]]
+    elsif finance_type == "Fix_Cost"
+      finance_types = [[CashFlow::FIX_COST, nominal*-1]]
     end
-    if finance.finance_type == "Receivables"
-      return redirect_back_no_access_right if params[:finance][:inv_number].nil?
-      debt_inv = Finance.where("description like ?", "%"+params[:finance][:inv_number]+"%")
-      return redirect_back_no_access_right if debt_inv.nil?
-      inv = "RCV-"+Time.now.to_i.to_s
-      finance.description = inv+" ("+finance.description+")"
+    finance_types.each_with_index do |finance_type|
+      if finance_type[0] == CashFlow::TAX
+        tax_current_month = CashFlow.find_by("date_created > ? AND date_created < ? AND finance_type = ?", Time.now.beginning_of_month, Time.now.end_of_month, CashFlow::TAX)
+        if tax_current_month.present?
+          tax_current_month.nominal = nominal
+          tax_current_month.date_created = DateTime.now
+          tax_current_month.save!
+          break
+        end
+      end
+      CashFlow.create user: user, store: store, nominal: finance_type[1], date_created: date_created, description: description, finance_type: finance_type[0]
     end
-    return redirect_to new_user_path if finance.invalid?
-    finance.save!
     return redirect_to finances_path
   end
 
   private
-    def finance_params
-      params.require(:finance).permit(
-        :nominal, :description, :finance_type
-      )
-    end
-
     def param_page
       params[:page]
     end

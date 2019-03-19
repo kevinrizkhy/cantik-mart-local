@@ -88,6 +88,7 @@ class OrdersController < ApplicationController
 
     order.total = total
     order.save!
+
     return redirect_to orders_path
   end
 
@@ -107,6 +108,7 @@ class OrdersController < ApplicationController
     return redirect_back_no_access_right if @order.date_receive.present? || @order.date_paid_off.present?
     return redirect_to orders_path unless @order.present?
     @order_items = OrderItem.where(order_id: @order.id)
+
   end
 
   def receive
@@ -137,11 +139,14 @@ class OrdersController < ApplicationController
     order.total = new_total
     order.date_receive = Time.now
     order.save!
-    # Finance.create  nominal: new_total, user: current_user, 
-    #                 store: current_user.store, date_created: DateTime.now, 
-    #                 order_id: params[:id], finance_type: Finance::DEBT,
-    #                 description: "#"+order.invoice+" (-"+pay.to_s+")",
-    #                 status: false
+    
+    Debt.create user: current_user, store: current_user.store, nominal: new_total, 
+                deficiency: new_total, date_created: DateTime.now, ref_id: order.id,
+                description: order.invoice, finance_type: Debt::ORDER
+    description = order.invoice + " (" + new_total.to_s + ")"
+    CashFlow.create user: current_user, store: current_user.store, nominal: new_total, date_created: DateTime.now, 
+                    description: description, finance_type: CashFlow::DEBT
+    
     return redirect_to order_items_path(id: params[:id])
   end
 
@@ -160,31 +165,24 @@ class OrdersController < ApplicationController
     return redirect_back_no_access_right unless order.present?
     return redirect_back_no_access_right if order.date_receive.nil? || order.date_paid_off.present?
     order_invs = InvoiceTransaction.where(invoice: order.invoice)
-    pay = order.total.to_i - order_invs.sum(:nominal) 
-    return redirect_back_no_access_right if (params[:order_pay][:nominal].to_i > pay) || (params[:order_pay][:nominal].to_i < 1000)
+    paid = order.total.to_f - order_invs.sum(:nominal) 
+    return redirect_back_no_access_right if (params[:order_pay][:nominal].to_i > paid) || (params[:order_pay][:nominal].to_i < 0)
     order_inv = InvoiceTransaction.new 
     order_inv.invoice = order.invoice
     order_inv.transaction_type = 0
     order_inv.transaction_invoice = "PAID-" + Time.now.to_i.to_s
     order_inv.date_created = params[:order_pay][:date_paid]
-    order_inv.nominal = params[:order_pay][:nominal]
+    order_inv.nominal = params[:order_pay][:nominal].to_f
     order_inv.save!
-    pay = order.total.to_i - order_invs.sum(:nominal) 
-    # finance_head = Finance.find_by(order_id: params[:id])
-    finance_paid = Finance.new  nominal: params[:order_pay][:nominal], user: current_user, 
-                                store: current_user.store, date_created: DateTime.now, 
-                                order_id: params[:id], finance_type: Finance::DEBT,
-                                description: "#"+order.invoice+" (-"+pay.to_s+")",
-                                status: true
-    # finance_head.nominal = pay
-    if pay <= 0
+    deficiency = paid - params[:order_pay][:nominal].to_f
+    debt = Debt.find_by(finance_type: Debt::ORDER, ref_id: order.id)
+    debt.deficiency = deficiency
+    if deficiency <= 0
       order.date_paid_off = Time.now 
       order.save!
-      finance_paid.description = "#"+order.invoice+" (LUNAS)"
-      # finance_head.status = true
+      debt.deficiency = deficiency
     end
-    # finance_head.save!
-    finance_paid.save!
+    debt.save!
     return redirect_to order_items_path(id: params[:id])
   end
 
