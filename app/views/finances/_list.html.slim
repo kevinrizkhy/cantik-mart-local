@@ -9,4 +9,10 @@ tr
     td #{nominal}
     td 0
   td #{finance.date_created}
-  td #{finance.description}
+  - if finance.ref_id.present?
+    - if ( finance.finance_type == "Outcome" || finance.finance_type == "Debt") && (finance.description.include? "ORD-") 
+      td
+        a href='#{order_items_path(id: finance.ref_id)}'
+          | #{finance.description}
+  - else
+    td #{finance.description}
