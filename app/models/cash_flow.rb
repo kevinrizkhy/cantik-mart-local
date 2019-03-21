@@ -4,17 +4,18 @@ class CashFlow < ApplicationRecord
   enum finance_type: { 
     Asset: 1,
     Debt: 2,
-    Credit: 3,
+    Receivable: 3,
     Operational: 4,
-    Fix_cost: 5,
+    Fix_Cost: 5,
     Tax: 6,
     Transactions: 7,
     HPP: 8,
     Profit: 9,
     Outcome: 10,
     Income: 11,
-    Cash: 12,
-    Stock_Value: 13
+    Employee_Loan: 12,
+    Bank_Loan: 13,
+
   }
 
   belongs_to :store
@@ -22,7 +23,7 @@ class CashFlow < ApplicationRecord
 
   ASSET=1
   DEBT=2
-  CREDIT=3
+  RECEIVABLE=3
   OPERATIONAL=4
   FIX_COST=5
   TAX=6
@@ -31,6 +32,6 @@ class CashFlow < ApplicationRecord
   PROFIT = 9
   OUTCOME = 10
   INCOME = 11
-  CASH = 12
-  STOCK_VALUE = 13
+  EMPLOYEE_LOAN = 12
+  BANK_LOAN = 13
 end

@@ -2,12 +2,12 @@ tr
   - nominal = finance.nominal.abs
   td #{finance.user.name} (#{finance.store.name})
   td #{finance.finance_type}
-  - if finance.finance_type == "Credit" || finance.finance_type == "Profit" || finance.finance_type == "Stock_Value" || ((finance.finance_type == "Cash") && (finance.nominal > 0))
-    td 0
+  - if finance.nominal > 0
     td #{nominal}
+    td 0
   - else
-    td #{nominal}
     td 0
+    td #{nominal}
   td #{finance.date_created}
   - if finance.ref_id.present?
     - if ( finance.finance_type == "Outcome" || finance.finance_type == "Debt") && (finance.description.include? "ORD-") 

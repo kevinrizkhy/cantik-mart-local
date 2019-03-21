@@ -4,6 +4,10 @@ h2
   .form-group
     label for="type" Tipe
     select name="finance[finance_type]" required=true class="form-control" data-live-search="true" data-live-search-style="startsWith" class="selectpicker form_control"
+      option value="BankLoan"
+        | Pinjaman Bank 
+      option value="Loan"
+        | Pinjaman Karyawan 
       option value="Outcome"
         | Pengeluaran 
       option value="Income"
@@ -16,9 +20,6 @@ h2
         | Pajak 
       option value="Asset"
         | Aset 
-  .form-group
-    label for="description" Nomor Invoice (isikan NOMOR INVOICE jika tipe PEMASUKKAN)
-    = form.text_field :inv_number, required: true, class: "form-control", id: "description"
   .form-group
     label for="nominal" Nominal
     = form.number_field :nominal, required: true, class: "form-control", id: "nominal"

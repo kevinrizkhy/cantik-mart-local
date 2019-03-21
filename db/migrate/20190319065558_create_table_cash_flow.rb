@@ -6,7 +6,7 @@ class CreateTableCashFlow < ActiveRecord::Migration[5.2]
     	t.integer :nominal, null: false
     	t.integer :finance_type, null: false, default: 1
     	t.timestamp :date_created
-		t.string :description
+		  t.string :description
     end
   end
 end

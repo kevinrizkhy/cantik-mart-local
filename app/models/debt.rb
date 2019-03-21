@@ -3,7 +3,8 @@ class Debt < ApplicationRecord
   
   enum finance_type: { 
     ORDER:1,
-    OTHER:2
+    OTHER:2,
+    BANK: 3
   }
 
   belongs_to :store
@@ -11,5 +12,5 @@ class Debt < ApplicationRecord
 
   ORDER=1
   OTHER=2
-  
+  BANK=3
 end

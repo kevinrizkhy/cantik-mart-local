@@ -1,9 +1,10 @@
-class Credit < ApplicationRecord
+class Receivable < ApplicationRecord
   validates :user_id, :store_id, :nominal, :date_created, :finance_type, presence: true
   
   enum finance_type: { 
     RETUR:1,
-    OTHER:2
+    OTHER:2,
+    EMPLOYEE: 3
   }
 
   belongs_to :store
@@ -11,5 +12,5 @@ class Credit < ApplicationRecord
 
   RETUR=1
   OTHER=2
-  
+  EMPLOYEE=3
 end
