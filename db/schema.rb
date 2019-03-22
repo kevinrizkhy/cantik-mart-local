@@ -100,6 +100,9 @@ ActiveRecord::Schema.define(version: 2019_03_22_061550) do
     t.integer "finance_type", default: 1, null: false
     t.datetime "date_created"
     t.string "description"
+    t.boolean "status", default: false
+    t.bigint "order_id"
+    t.index ["order_id"], name: "index_finances_on_order_id"
     t.index ["store_id"], name: "index_finances_on_store_id"
     t.index ["user_id"], name: "index_finances_on_user_id"
   end

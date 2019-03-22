@@ -371,6 +371,36 @@ width: 100%;
 height: 100%;
 }
 
+.dropdown-container a, .dropdown-btn {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  color: #fff;
+  display: block;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+}
+
+.dropdown-btn:hover {
+  background: red;
+  display: block;
+}
+
+.dropdown-container {
+  display: none;
+  background-color: #262626;
+  padding-left: 8px;
+}
+
+.dropdown:hover .dropdown-container {display: block;}
+
+.fa-caret-down {
+  float: right;
+}
+
 
 /* ======================================================= */
 
