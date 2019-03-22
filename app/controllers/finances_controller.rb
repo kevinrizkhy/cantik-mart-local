@@ -46,16 +46,15 @@ class FinancesController < ApplicationController
     b = based_prices
     trx_based =  a.merge!(b) { |k, o, n| k=o,k=n,k=o - n }
     trx_based.each do |transaction|
-      if CashFlow.find_by(description: "TRX "+transaction[0].to_s).nil?  
+      if CashFlow.find_by(invoice: "TRX-"+transaction[0].to_s).nil?  
         a = CashFlow.create date_created: transaction[0].to_date, nominal: transaction[1][0], user: current_user, 
         store: current_user.store, description: "TRX "+transaction[0].to_s, finance_type: CashFlow::TRANSACTIONS
         # b = CashFlow.create date_created: transaction[0].to_date, nominal: transaction[1][1], user: current_user, 
         # store: current_user.store, description: "HPP "+transaction[0].to_s, finance_type: CashFlow::HPP
         # c = CashFlow.create date_created: transaction[0].to_date, nominal: transaction[1][2], user: current_user, 
         # store: current_user.store, description: "PRF "+transaction[0].to_s, finance_type: CashFlow::PROFIT
-
         ProfitLoss.create date_created: transaction[0].to_date, nominal: transaction[1][2], user: current_user, 
-        store: current_user.store, description: "PRF "+transaction[0].to_s
+        store: current_user.store, description: "PRF "+transaction[0].to_s, finance_type: ProfitLoss::PROFIT
       end
     end
   end
@@ -319,30 +318,36 @@ class FinancesController < ApplicationController
     finance_types = []
     inv_number = Time.now.to_i.to_s
     if finance_type == "Loan" 
-      description+= " EL-"+inv_number
+      invoice = " EL-"+inv_number
       Receivable.create user: user, store: store, nominal: nominal, date_created: date_created, description: description, 
                     finance_type: Receivable::EMPLOYEE, deficiency:nominal
-      CashFlow.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description, finance_type: CashFlow::EMPLOYEE_LOAN
+      CashFlow.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description, 
+                      finance_type: CashFlow::EMPLOYEE_LOAN, invoice: invoice
     elsif finance_type == "BankLoan"
-      description+= " BL-"+inv_number
+      invoice = " BL-"+inv_number
       Debt.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description,
                     finance_type: Debt::BANK, deficiency:nominal
-      CashFlow.create user: user, store: store, nominal: nominal, date_created: date_created, description: description, finance_type: CashFlow::BANK_LOAN
+      CashFlow.create user: user, store: store, nominal: nominal, date_created: date_created, description: description, 
+                      finance_type: CashFlow::BANK_LOAN, invoice: invoice
     elsif finance_type == "Outcome"
-      description+= " OUT-"+inv_number
-      CashFlow.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description, finance_type: CashFlow::OUTCOME
+      invoice = " OUT-"+inv_number
+      CashFlow.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description, 
+                      finance_type: CashFlow::OUTCOME, invoice: invoice
     elsif finance_type == "Income"
-      description+= " IN-"+inv_number
-      CashFlow.create user: user, store: store, nominal: nominal, date_created: date_created, description: description, finance_type: CashFlow::INCOME
+      invoice = " IN-"+inv_number
+      CashFlow.create user: user, store: store, nominal: nominal, date_created: date_created, description: description, 
+                      finance_type: CashFlow::INCOME, invoice: invoice
     elsif finance_type == "Asset"
-      description+= " AST-"+inv_number
-      CashFlow.create user: user, store: store, nominal: nominal, date_created: date_created, description: description, finance_type: CashFlow::ASSET
+      invoice = " AST-"+inv_number
+      CashFlow.create user: user, store: store, nominal: nominal, date_created: date_created, description: description, 
+                      finance_type: CashFlow::ASSET, invoice: invoice
     elsif finance_type == "Operational"
-      description+= " OPR-"+inv_number
-      CashFlow.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description, finance_type: CashFlow::OPERATIONAL
+      invoice = " OPR-"+inv_number
+      CashFlow.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description, 
+                      finance_type: CashFlow::OPERATIONAL, invoice: invoice
     elsif finance_type == "Tax"
       description = "TAX "+(DateTime.now-1.month).strftime("%B")+"/"+Date.today.year.to_s + " ("+description+")"
-      description+= " TAX-"+inv_number
+      invoice = " TAX-"+inv_number
       date_created = Date.today.beginning_of_month
       tax_current_month = CashFlow.find_by("date_created > ? AND date_created < ? AND finance_type = ?", Time.now.beginning_of_month, Time.now.end_of_month, CashFlow::TAX)
       if tax_current_month.present?
@@ -350,23 +355,13 @@ class FinancesController < ApplicationController
         tax_current_month.date_created = DateTime.now
         tax_current_month.save!
       else
-        CashFlow.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description, finance_type: CashFlow::TAX
+        CashFlow.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description, 
+                        finance_type: CashFlow::TAX, invoice: invoice
       end
     elsif finance_type == "Fix_Cost"
-      description+= " FIX-"+inv_number
-      CashFlow.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description, finance_type: CashFlow::FIX_COST
-    end
-    finance_types.each_with_index do |finance_type|
-      if finance_type[0] == CashFlow::TAX
-        tax_current_month = CashFlow.find_by("date_created > ? AND date_created < ? AND finance_type = ?", Time.now.beginning_of_month, Time.now.end_of_month, CashFlow::TAX)
-        if tax_current_month.present?
-          tax_current_month.nominal = nominal
-          tax_current_month.date_created = DateTime.now
-          tax_current_month.save!
-          break
-        end
-      end
-      CashFlow.create user: user, store: store, nominal: finance_type[1], date_created: date_created, description: description, finance_type: finance_type[0]
+      invoice = " FIX-"+inv_number
+      CashFlow.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description, 
+                      finance_type: CashFlow::FIX_COST, invoice: invoice
     end
     return redirect_to finances_path
   end

@@ -144,9 +144,6 @@ class OrdersController < ApplicationController
                 deficiency: new_total, date_created: DateTime.now, ref_id: order.id,
                 description: order.invoice, finance_type: Debt::ORDER
     description = order.invoice + " (" + new_total.to_s + ")"
-    CashFlow.create user: current_user, store: current_user.store, nominal: new_total*-1, date_created: DateTime.now, 
-                    description: description, finance_type: CashFlow::DEBT, ref_id:order.id
-    
     return redirect_to order_items_path(id: params[:id])
   end
 
@@ -176,19 +173,15 @@ class OrdersController < ApplicationController
     order_inv.save!
     deficiency = paid - params[:order_pay][:nominal].to_f
     debt = Debt.find_by(finance_type: Debt::ORDER, ref_id: order.id)
-    CashFlow.create user: current_user, store: current_user.store, description: order.invoice, nominal: order_inv.nominal, 
+    CashFlow.create user: current_user, store: current_user.store, description: order.invoice, nominal: order_inv.nominal*-1, 
                     date_created: params[:order_pay][:date_paid], finance_type: CashFlow::OUTCOME, ref_id: order.id
-    cashflow_debt = CashFlow.find_by("finance_type = ? AND description LIKE ?", CashFlow::DEBT, order.invoice+"%")
     debt.deficiency = deficiency
-    cashflow_debt.nominal = deficiency*-1
     if deficiency <= 0
       order.date_paid_off = Time.now 
-      cashflow_debt.nominal = 0
       order.save!
       debt.deficiency = 0
     end
     debt.save!
-    cashflow_debt.save!
     return redirect_to order_items_path(id: params[:id])
   end
 

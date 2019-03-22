@@ -1,5 +1,5 @@
 class CashFlow < ApplicationRecord
-  validates :user_id, :store_id, :nominal, :finance_type, :date_created, presence: true
+  validates :user_id, :store_id, :nominal, :finance_type, :date_created, :invoice, presence: true
   
   enum finance_type: { 
     Asset: 1,

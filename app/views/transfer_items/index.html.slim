@@ -1,20 +1,21 @@
 - transfer_id = @transfer_items.first.transfer.id
+- transfer = @transfer_items.first.transfer 
 .row
   .col
     h2
       | Daftar Item Transfer (#{@transfer_items.first.transfer.invoice})
+  - if transfer.date_approve.present? && transfer.date_picked.present? && transfer.status.nil? && @transfer_items.first.transfer.from_store.id == current_user.store.id
     .col-md-6.text-right
-    / a href="#{transfer_feedback_path(id: transfer_id)}"
-      / button class="btn btn-primary"
-        / | FEEDBACK
-    / |  
-  - if @transfer_items.first.transfer.date_approve.nil? && @transfer_items.first.transfer.to_store.id == current_user.store.id
+      a href="#{transfer_receive_path(id: transfer_id)}"
+        button class="btn btn-primary"
+          | TERIMA
+      |  
+  - if transfer.date_approve.nil? && transfer.to_store.id == current_user.store.id && current_user.level == User::SUPER_VISI
     .col.text-right
       a href="#{transfer_confirmation_path(id: transfer_id)}"
         button class="btn btn-warning"
           | KONFIRMASI
     |  
-  - transfer = @transfer_items.first.transfer 
     .col.text-right
   - if transfer.date_approve.present? && transfer.date_picked.nil? && @transfer_items.first.transfer.to_store.id == current_user.store.id
     .col.text-right

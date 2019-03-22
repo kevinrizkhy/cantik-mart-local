@@ -16,7 +16,6 @@ h2
       label for="from" Kepada
       input type="text" class="form-control" disabled=true value="#{@transfer.to_store.name}"
 hr style="border-top: 1px solid black;"
-= form_for :retur, url: transfer_accept_path, method: "POST" do |form|
   table class="table"
     thead
       th Barang
@@ -28,5 +27,11 @@ hr style="border-top: 1px solid black;"
   .row
     .col.text-center
       .form-group
-        = form.submit "Konfirmasi Permintaan", class: "btn btn-primary"
+        = form_for :retur, url: transfer_accept_path, method: "POST" do |form|
+          input type="hidden" value=0 name="retur[cancel]"
+          = form.submit "Batalkan Permintaan", class: "btn btn-danger"
+    .col.text-center
+      .form-group
+        = form_for :retur, url: transfer_accept_path, method: "POST" do |form|
+          = form.submit "Konfirmasi Permintaan", class: "btn btn-primary"
     

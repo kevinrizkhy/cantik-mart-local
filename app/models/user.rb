@@ -7,7 +7,8 @@ class User < ApplicationRecord
   enum level: { super_admin: 2,
                 owner: 1,
                 stock_admin: 3,
-                cashier: 4
+                cashier: 4,
+                super_visi: 5
   }
 
   enum sex: {
@@ -24,6 +25,7 @@ class User < ApplicationRecord
   OWNER = 'owner'
   STOCK_ADMIN = 'stock_admin'
   CASHIER = "cashier"
+  SUPER_VISI = 'super_visi'
 
   MALE = 'laki_laki'
   FEMALE = 'perempuan'

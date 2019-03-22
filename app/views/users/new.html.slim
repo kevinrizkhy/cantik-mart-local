@@ -18,16 +18,18 @@ h2
     = form.number_field :phone, required: true, class: "form-control", id: "phone"
   .form-group
     label for="sex" Sex
-    select name="user[sex]" required=true
+    select name="user[sex]" required=true class="selectpicker form-control"
       option value='laki_laki'
         | Laki - laki
       option value='perempuan'
         | Perempuan
   .form-group
     label for="level" Peran 
-    select name="user[level]" required=true
+    select name="user[level]" required=true class="selectpicker form-control"
       option value='owner'
         | Owner
+      option value='super_visi'
+        | Supervisi
       option value='super_admin'
         | Super Admin
       option value='cashier'
@@ -37,6 +39,6 @@ h2
     = form.text_field :id_card, required: true, class: "form-control", id: "id-card"
   .form-group
     label for="store" Toko
-    = form.select :store_id, options_from_collection_for_select(@stores,"id", "name")
+    = form.select :store_id, options_from_collection_for_select(@stores,"id", "name"), class:"selectpicker form-control"
   .form-group
     = form.submit "Tambah User", class: "btn btn-primary"

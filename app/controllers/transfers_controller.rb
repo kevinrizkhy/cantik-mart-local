@@ -72,7 +72,14 @@ class TransfersController < ApplicationController
     transfer = Transfer.find params[:id]
     return redirect back_no_access_right unless transfer.present?
     return redirect_back_no_access_right if transfer.date_confirm.present? || transfer.date_picked.present?
-    transfer.date_approve = Time.now
+    if params[:retur][:cancel].present?
+      transfer.date_approve = DateTime.now
+      transfer.date_picked = "01-01-1999".to_date
+      transfer.status = "01-01-1999".to_date
+    else
+      transfer.date_approve = DateTime.now
+    end
+    
     transfer.save!
     return redirect_to transfers_path id: params[:id]
   end
@@ -90,10 +97,30 @@ class TransfersController < ApplicationController
     transfer = Transfer.find params[:id]
     return redirect_back_no_access_right if transfer.nil?
     return redirect_back_no_access_right unless transfer.to_store_id == current_user.store.id
-    return redirect_back_no_access_right if transfer.date_picked.present? || transfer.date_picked.present?
-    transfer.date_picked = Time.now
+    return redirect_back_no_access_right if transfer.date_picked.present? || transfer.status.present?
+    transfer.date_picked = DateTime.now
     transfer.save!
     sent_items params[:id]
+    return redirect_to transfers_path
+  end
+
+  def receive
+    return redirect_back_no_access_right unless params[:id].present?
+    @transfer = Transfer.find params[:id]
+    return redirect_back_no_access_right unless @transfer.present?
+    return redirect_back_no_access_right if @transfer.date_approve.nil? || @transfer.date_picked.nil?|| @transfer.status.present?
+    @transfer_items = TransferItem.where(transfer_id: @transfer.id)
+  end
+
+  def received
+    return redirect_back_no_access_right unless params[:id].present?
+    transfer = Transfer.find params[:id]
+    return redirect_back_no_access_right if transfer.nil?
+    return redirect_back_no_access_right unless transfer.from_store_id == current_user.store.id
+    return redirect_back_no_access_right if transfer.date_picked.nil? || transfer.date_approve.nil? || transfer.status.present?
+    transfer.status = DateTime.now
+    transfer.save!
+    receive_items params[:id]
     return redirect_to transfers_path
   end
 
@@ -134,6 +161,22 @@ class TransfersController < ApplicationController
         new_stock = store_item.stock.to_i - qty
         store_item.stock = new_stock
         store_item.save!
+      end
+    end
+
+    def receive_items transfer_id
+      transfer_items.each do |item|
+        transfer_item = TransferItem.find item[2]
+        qty = item[1].to_i.abs
+        transfer_item.receive_quantity = qty
+        transfer_item.save!
+        store_item = StoreItem.find_by(item_id: item[0], store_id: current_user.store.id)
+        if store_item.nil?
+          StoreItem.create store: current_user.store, item_id: item[0], stock: qty
+        else
+          store_item.stock =  store_item.stock.to_i + qty
+          store_item.save!
+        end
       end
     end
 

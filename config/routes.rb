@@ -26,8 +26,8 @@ Rails.application.routes.draw do
   get 'transfer/:id/sent', to:'transfers#picked', as: 'transfer_picked'
   post 'transfer/:id/sent', to: 'transfers#sent', as: 'transfer_sent'
 
-  get 'transfer/:id/receive', to: 'transfer_item#sent', as: 'transfer_item_sent'
-  post 'transfer/:id/receive', to: 'transfer_item#receive', as: 'transfer_item_receive'
+  get 'transfer/:id/receive', to: 'transfers#receive', as: 'transfer_receive'
+  post 'transfer/:id/received', to: 'transfers#received', as: 'transfer_received'
 
   get 'order/:id/receive', to: 'orders#confirmation', as: 'order_confirmation'
   post 'order/:id/receive', to: 'orders#receive', as: 'order_receive'
