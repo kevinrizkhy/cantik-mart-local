@@ -375,7 +375,7 @@ height: 100%;
   padding: 6px 8px 6px 16px;
   text-decoration: none;
   color: #fff;
-  display: block;
+  display: inline-block;
   border: none;
   background: none;
   width: 100%;
@@ -391,16 +391,40 @@ height: 100%;
 
 .dropdown-container {
   display: none;
-  background-color: #262626;
+  background-color: #102c58;
   padding-left: 8px;
 }
 
-.dropdown:hover .dropdown-container {display: block;}
+.dropdown:hover .dropdown-container {
+
+  display: block;
+}
 
 .fa-caret-down {
   float: right;
 }
 
+/* width */
+::-webkit-scrollbar {
+  width: 3px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey; 
+  border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: yellow; 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #b30000; 
+}
 
 /* ======================================================= */
 
