@@ -55,12 +55,12 @@ class OrdersController < ApplicationController
 
     ongoing_order_ids = Order.where('date_receive is null and date_paid_off is null').pluck(:id)
     @ongoing_order_items = OrderItem.where(order_id: ongoing_order_ids)
-
-    @inventories = StoreItem.all
+    @items = Item.all
+    @inventories = StoreItem.page param_page
     store_id = current_user.store.id
-    min_inventories = @inventories.where(store_id: store_id).where('stock < min_stock')
+    @inventories = @inventories.where(store_id: store_id).where('stock < min_stock')
 
-    gon.inv_count = min_inventories.count + 2
+    gon.inv_count = @inventories.count + 2
   end
 
   def create
