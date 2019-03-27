@@ -63,6 +63,14 @@ Rails.application.routes.draw do
   resources :order_items, only: %i[index new create edit update]
   resources :transactions, only: %i[index new create]
   resources :transaction_items, only: %i[index]
-  resources :finances, only: %i[index new create]
+
+  resources :cash_flows, only: %i[index new create]
+  resources :debts, only: %i[index new create]
+  resources :receivables, only: %i[index new create]
+  resources :taxs, only: %i[index new create]
+  resources :fix_costs, only: %i[index new create]
+  resources :operationals, only: %i[index new create]
+  resources :stock_values, only: %i[index new create]
+  # resources :assets, only: %i[index new create]
 
 end

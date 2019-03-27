@@ -72,7 +72,7 @@ h2
         tr
           td
             select class="selectpicker form-control" data-show-subtext="true" data-live-search="true" name="order[order_items][#{idx+1}][item_id]"
-              - @items.each do |supplier_item|
+              - @items.each do |item|
                 option data-subtext="#{item.item_cat.name}" value="#{item.id}" 
                   | #{item.name}
           td

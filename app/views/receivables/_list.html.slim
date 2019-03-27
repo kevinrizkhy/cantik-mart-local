@@ -1,0 +1,9 @@
+tr
+  td #{finance.user.name} (#{finance.store.name})
+  td #{finance.finance_type}
+  td #{finance.nominal.abs}
+  td #{finance.deficiency.abs}
+  td #{finance.date_created}
+  td
+    a href='#{order_items_path(id: finance.ref_id)}'
+      | #{finance.description}

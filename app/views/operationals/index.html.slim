@@ -1,13 +1,13 @@
 .row
   .col
     h2
-      | Arus Kas #{@search}
+      | Operasional #{@search}
   .col.text-right
-    a href="#{new_finance_path}"
+    a href="#{new_cash_flow_path}"
       button.btn.btn-primary type="button" 
         i.fas.fa-plus 
         |   Tambah 
-= form_for :finances, url: finances_path, method: 'GET' do |form|
+= form_for :finances, url: cash_flows_path, method: 'GET' do |form|
   .row
     .col
       .col.text-right
@@ -37,28 +37,6 @@
     .col
       |
     .col
-      select[class="form-control" id="finance_type" name="finance_type[]" size="8" multiple=true ]
-        option[value=0 selected ]
-          | Semua
-        option[value=1]
-          | Aset
-        option[value=2]
-          | Pengeluaran
-        option[value=3]
-          | Pemasukkan
-        option[value=4]
-          | Operasional
-        option[value=5]
-          | Pengeluaran Pasti
-        option[value=6]
-          | Pajak
-        option[value=7]
-          | Penjualan
-        option[value=8]
-          | HPP
-        option[value=9]
-          | Profit
-    .col
       select[class="form-control" id="order_by" name="order_by"]
         option[value="asc"]
           | secara A - Z
@@ -79,8 +57,8 @@
       thead
         th Dibuat Oleh
         th Tipe
-        th Debit
-        th Kredit
+        th Nominal
+        th Kekurangan
         th Tanggal
         th Keterangan
       tbody

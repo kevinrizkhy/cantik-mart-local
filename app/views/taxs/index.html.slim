@@ -1,0 +1,51 @@
+.row
+  .col
+    h2
+      | Pajak #{@search}
+  .col.text-right
+    a href="#{new_cash_flow_path}"
+      button.btn.btn-primary type="button" 
+        i.fas.fa-plus 
+        |   Tambah 
+= form_for :finances, url: taxs_path, method: 'GET' do |form|
+  .row
+    .col
+      | 
+    .col
+      select[class="form-control" id="months" name="months"]
+        option[value=3]
+          | 3 bulan
+        option[value=6]
+          | 6 bulan
+        option[value=9]
+          | 9 bulan
+        option[value=12]
+          | 1 tahun
+    .col
+      select[class="form-control" id="order_by" name="order_by"]
+        option[value="asc"]
+          | secara A - Z
+        option[value="desc"]
+          | secara Z - A
+    .col
+      | 
+  .row
+    .col.text-center
+      button class="btn btn-primary"
+        | Cari
+    br
+  hr
+.row
+  .col
+    = paginate @finances
+    table class="table"
+      thead
+        th Dibuat Oleh
+        th Tipe
+        th Nominal
+        th Tanggal
+        th Keterangan
+      tbody
+        = render partial: 'list', collection: @finances, as: :finance
+  .col
+    canvas#debt-chart 

@@ -1,1 +1,4 @@
 - Stock Value ? ==> barang selalu berubah
+- fix cost
+- filter in finance
+- change order select item into trx new (using API)

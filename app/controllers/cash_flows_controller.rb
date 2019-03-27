@@ -1,4 +1,4 @@
-class FinancesController < ApplicationController
+class CashFlowsController < ApplicationController
   before_action :require_login
 
   def index
@@ -7,11 +7,10 @@ class FinancesController < ApplicationController
   	end_date = DateTime.now.to_date
   	start_date = DateTime.now.to_date - 2.weeks
     check_prev
-  	@finances = CashFlow.page param_page
+  	@finances = CashFlow.all
 
   	labels = generate_label label_type, numbers, start_date, end_date
     gon.labels = labels
-
     datasets = []
     datasets << debt_chart(labels, @finances,label_type)
     datasets << cash_chart(labels, @finances,label_type)
@@ -21,6 +20,7 @@ class FinancesController < ApplicationController
     # datasets << stock_value_chart(labels, @finances,label_type)
     datasets << fix_cost_chart(labels, @finances,label_type)
     gon.datasets = datasets
+    @finances = @finances.page param_page
   end
 
   def check_prev
@@ -48,7 +48,8 @@ class FinancesController < ApplicationController
     trx_based.each do |transaction|
       if CashFlow.find_by(invoice: "TRX-"+transaction[0].to_s).nil?  
         a = CashFlow.create date_created: transaction[0].to_date, nominal: transaction[1][0], user: current_user, 
-        store: current_user.store, description: "TRX "+transaction[0].to_s, finance_type: CashFlow::TRANSACTIONS
+        store: current_user.store, description: "TRX "+transaction[0].to_s, finance_type: CashFlow::TRANSACTIONS,
+        invoice: "TRX-"+transaction[0].to_s
         # b = CashFlow.create date_created: transaction[0].to_date, nominal: transaction[1][1], user: current_user, 
         # store: current_user.store, description: "HPP "+transaction[0].to_s, finance_type: CashFlow::HPP
         # c = CashFlow.create date_created: transaction[0].to_date, nominal: transaction[1][2], user: current_user, 
@@ -346,7 +347,7 @@ class FinancesController < ApplicationController
       CashFlow.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description, 
                       finance_type: CashFlow::OPERATIONAL, invoice: invoice
     elsif finance_type == "Tax"
-      description = "TAX "+(DateTime.now-1.month).strftime("%B")+"/"+Date.today.year.to_s + " ("+description+")"
+      description = "TAX "+(DateTime.now.month).strftime("%B")+"/"+Date.today.year.to_s + " ("+description+")"
       invoice = " TAX-"+inv_number
       date_created = Date.today.beginning_of_month
       tax_current_month = CashFlow.find_by("date_created > ? AND date_created < ? AND finance_type = ?", Time.now.beginning_of_month, Time.now.end_of_month, CashFlow::TAX)
@@ -363,7 +364,7 @@ class FinancesController < ApplicationController
       CashFlow.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description, 
                       finance_type: CashFlow::FIX_COST, invoice: invoice
     end
-    return redirect_to finances_path
+    return redirect_to cash_flows_path
   end
 
   private

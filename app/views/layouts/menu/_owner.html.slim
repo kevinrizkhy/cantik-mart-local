@@ -44,9 +44,19 @@ a href="#{transactions_path}"
     .c-menu__item__inner
       i.fa.fa-credit-card
       span Transaction
-a href="#{finances_path}"
-  li.c-menu__item.is-active data-toggle="tooltip" title="Finance" 
+.dropdown
+  .c-menu__item.is-active data-toogle="tooltip" title="Finance"
     .c-menu__item__inner
-      i.fa.fa-table
+      i.fa.fa-book
       span Finance
+      i.fa.fa-caret-down
+  .dropdown-container
+    a href="#{cash_flows_path}"  Cash Flow
+    a href="#{debts_path}"  Debt
+    a href="#{receivables_path}"  Receivable
+    a href="#{taxs_path}"  Tax
+    a href="#{operationals_path}"  Operational
+    a href="#{fix_costs_path}"  Fix Cost
+    a href="#{stock_values_path}"  Stock Values
+
 
