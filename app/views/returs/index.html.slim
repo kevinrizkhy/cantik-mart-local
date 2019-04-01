@@ -3,14 +3,10 @@
     h2
       | Daftar Retur
   .col.text-right
-    a href="#{complains_path}"
-      button.btn.btn-success type="button" 
-        |   Daftar Retur Member
-    | &nbsp &nbsp
     a href="#{new_retur_path}"
       button.btn.btn-primary type="button" 
         i.fas.fa-plus 
-        |   Buat Retur
+        |   Buat Retur Supplier
         
 = form_for :retur, url: returs_path, method: 'GET' do |form|
   .row  

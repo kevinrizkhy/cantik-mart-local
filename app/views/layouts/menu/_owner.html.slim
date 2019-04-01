@@ -2,12 +2,12 @@
   .c-menu__item.is-active data-toogle="tooltip" title="dropdown"
     .c-menu__item__inner
       i.fa.fa-users
-      span Users
+      span Pengguna
       i.fa.fa-caret-down
   .dropdown-container
-    a href="#{users_path}"  Users
-    a href="#{suppliers_path}"  Suppliers
-    a href="#{members_path}"  Members
+    a href="#{users_path}"  Toko
+    a href="#{suppliers_path}"  Suplier
+    a href="#{members_path}"  Member
 a href="#{stores_path}"
   li.c-menu__item.is-active data-toggle="tooltip" title="Toko" 
     .c-menu__item__inner
@@ -17,18 +17,22 @@ a href="#{stores_path}"
   .c-menu__item.is-active data-toogle="tooltip" title="dropdown"
     .c-menu__item__inner
       i.fa.fa-archive
-      span Items
+      span Barang
       i.fa.fa-caret-down
   .dropdown-container
-    a href="#{items_path}"  Items
-    a href="#{suppliers_path}"  Suppliers
-    a href="#{stocks_path}"  Stocks
-    a href="#{warning_items_path}"
-a href="#{returs_path}"
-  li.c-menu__item.is-active data-toggle="tooltip" title="Retur" 
+    a href="#{items_path}"  Daftar Barang
+    a href="#{suppliers_path}"  Supplier
+    a href="#{stocks_path}"  Stok
+    a href="#{warning_items_path}" Barang Habis
+.dropdown
+  .c-menu__item.is-active data-toogle="tooltip" title="Retur"
     .c-menu__item__inner
       i.fa.fa-undo
       span Retur
+      i.fa.fa-caret-down
+  .dropdown-container
+    a href="#{returs_path}" Retur Supplier
+    a href="#{complains_path}" Retur Konsumen
 a href="#{transfers_path}"
   li.c-menu__item.is-active data-toggle="tooltip" title="Transfer" 
     .c-menu__item__inner
@@ -43,20 +47,20 @@ a href="#{transactions_path}"
   li.c-menu__item.is-active data-toggle="tooltip" title="Transaction" 
     .c-menu__item__inner
       i.fa.fa-credit-card
-      span Transaction
+      span Transaksi
 .dropdown
   .c-menu__item.is-active data-toogle="tooltip" title="Finance"
     .c-menu__item__inner
       i.fa.fa-book
-      span Finance
+      span Keuangan
       i.fa.fa-caret-down
   .dropdown-container
-    a href="#{cash_flows_path}"  Cash Flow
-    a href="#{debts_path}"  Debt
-    a href="#{receivables_path}"  Receivable
-    a href="#{taxs_path}"  Tax
-    a href="#{operationals_path}"  Operational
-    a href="#{fix_costs_path}"  Fix Cost
-    a href="#{stock_values_path}"  Stock Values
+    a href="#{cash_flows_path}"  Arus Kas
+    a href="#{debts_path}"  Hutang
+    a href="#{receivables_path}"  Piutang
+    a href="#{taxs_path}"  Pajak
+    a href="#{operationals_path}"  Operasional
+    a href="#{fix_costs_path}"  Biaya Pasti
+    a href="#{stock_values_path}"  Nilai Stok
 
 
