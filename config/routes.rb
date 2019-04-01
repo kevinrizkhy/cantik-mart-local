@@ -45,22 +45,34 @@ Rails.application.routes.draw do
 
   resources :items, only: %i[index new create edit update]
   resources :item_cats, only: %i[index new create edit update]
+
   resources :stocks, only: %i[index edit update]
   resources :users, only: %i[index new create edit update]
   resources :stores, only: %i[index new create edit update]
+
   resources :suppliers, only: %i[index new create edit update]
   resources :supplier_items, only: %i[index new create edit update]
   resources :item_suppliers, only: %i[index]
+
   resources :members, only: %i[index new create edit update]
+
   resources :returs
+  resources :retur_items, only: %i[index new create edit update]
+
   resources :complains, only: %i[index new create]
   resources :complain_items, only: %i[index]
+
   resources :transfers
-  resources :retur_items, only: %i[index new create edit update]
   resources :transfer_items, only: %i[index new create edit update]
+  
+  resources :retur_warehouses, only: %i[index new create edit update]
+  resources :retur_warehouse_items, only: %i[index new create edit update]
+
   resources :warning_items, only: %i[index new create edit update]
+
   resources :orders
   resources :order_items, only: %i[index new create edit update]
+
   resources :transactions, only: %i[index new create]
   resources :transaction_items, only: %i[index]
 
