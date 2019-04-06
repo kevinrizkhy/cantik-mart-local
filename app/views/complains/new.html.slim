@@ -1,26 +1,15 @@
-h2
-  | BUAT RETUR MEMBER
-= form_for :complain, url: complains_path, method: "POST" do |form|
-  .row
-    .col-md-6
-      .form-group
-        label for="from" Dari
-        select class="selectpicker form-control" data-show-subtext="true" data-live-search="true" data-live-search-style="startsWith"  name="complain[member_id]" id="supplierId"
-          - @members.each do |member|
-            - if member.name == "-"
-              option data-subtext="" value="#{member.id}"
-                  | ---BELUM MEMBER--
-            -else
-                option data-subtext="#{member.phone}" value="#{member.id}"
-                  | #{member.name}
-    .col-md-6
-      .form-group
-        label for="from" Kepada
-        input type="text" class="form-control" disabled=true value="#{current_user.store.name}"
+.row
+  .col.text-left
+    h2
+      | BUAT RETUR MEMBER (#{@transaction.invoice})
+  .col.text-right.text-danger
+    h2
+      | TOTAL : #{number_to_currency(@transaction.grand_total, unit: "Rp. ")}
+= form_for :complain, url: complains_path(id: @transaction.id), method: "POST" do |form|
   hr style="bretur-top: 1px solid black;"
   .row
     .col-md-12.text-right
-      button type="button" class="btn btn-primary" onclick="addNewRowRetur()"
+      button type="button" class="btn btn-primary" onclick="addNewRowComplain()"
         | + Item
     .col-md-12  
       table.table id="myTable"
@@ -28,36 +17,32 @@ h2
           th
             | Item - Kategori
           th
-            | Jumlah
+            | Harga
           th
-            | Deskripsi
+            | Diskon
           th
-        - idx = 0
-        tr
-          td
-            select class="selectpicker form-control" data-show-subtext="true" data-live-search="true" name="complain[complain_items][#{idx}][item_id]"
-              - @inventories.each do |inventory|
-                option data-subtext="#{inventory.item.item_cat.name}" value="#{inventory.item.id}" 
-                  | #{inventory.item.name}
-          td
-            input type="number" required=true class="form-control" id="quantity" name="complain[complain_items][#{idx}][quantity]"
-          td
-            input type="textarea" class="form-control" id="description" name="complain[complain_items][#{idx}][description]"
-          td
-            i.fa.fa-trash.text-danger onclick="removeThisRow(this)"
-        tr
-          td
-            select class="selectpicker form-control" data-show-subtext="true" data-live-search="true" name="complain[complain_items][#{idx+1}][item_id]"
-              - @inventories.each do |inventory|
-                option data-subtext="#{inventory.item.item_cat.name}" value="#{inventory.item.id}" 
-                  | #{inventory.item.name}
-          td
-            input type="number" required=true class="form-control" id="quantity" name="complain[complain_items][#{idx+1}][quantity]"
-          td
-            input type="textarea" class="form-control" id="description" name="complain[complain_items][#{idx+1}][description]"
-          td
-            i.fa.fa-trash.text-danger onclick="removeThisRow(this)"
-
+            | Jumlah Lama
+          th
+            | Jumlah Baru
+          th
+            | Keterangan
+          th
+        - @transaction_items.each_with_index do |trx_item, index|
+          tr
+            td hidden=true
+              input type="text" required=true class="form-control" id="description" name="complain[complain_items][#{index}][item_id]" value="#{trx_item.item.id}" 
+            td
+              | #{trx_item.item.name}
+            td 
+              input type="number" required=true class="form-control" id="price" name="complain[complain_items][#{index}][price]" value="#{trx_item.price}" readonly=true
+            td 
+              input type="textarea" required=true class="form-control" id="discount" name="complain[complain_items][#{index}][discount]" value="#{trx_item.discount}" readonly=true
+            td 
+              input type="number" required=true class="form-control" id="quantity" name="complain[complain_items][#{index}][quantity]" value="#{trx_item.quantity}" readonly=true 
+            td 
+              input type="number" required=true class="form-control" id="newquantity" name="complain[complain_items][#{index}][new_quantity]" value=0
+            td 
+              input type="text" required=true class="form-control" id="description" name="complain[complain_items][#{index}][decription]" value="#{@transaction.invoice}" readonly=true
     .col-md-12.text-center
       .form-group.text-center
         = form.submit "Buat Retur", class: "btn btn-primary"

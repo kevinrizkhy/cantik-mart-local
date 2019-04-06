@@ -37,8 +37,8 @@ class RetursController < ApplicationController
     else
       @supplier_id = @suppliers.first.id.to_i
     end
-    @supplier_items = SupplierItem.where(supplier_id: @supplier_id)
 
+    @supplier_items = SupplierItem.where(supplier_id: @supplier_id)
     all_options = ""
     @supplier_items.each do |supplier_item|
       s_item = supplier_item.item

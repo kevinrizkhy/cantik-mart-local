@@ -8,7 +8,6 @@ class CashFlowsController < ApplicationController
   	start_date = DateTime.now.to_date - 2.weeks
     check_prev
   	@finances = CashFlow.all
-
   	labels = generate_label label_type, numbers, start_date, end_date
     gon.labels = labels
     datasets = []
@@ -20,6 +19,7 @@ class CashFlowsController < ApplicationController
     # datasets << stock_value_chart(labels, @finances,label_type)
     datasets << fix_cost_chart(labels, @finances,label_type)
     gon.datasets = datasets
+    @finances = @finances.order("date_created DESC")
     @finances = @finances.page param_page
   end
 

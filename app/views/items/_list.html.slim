@@ -5,6 +5,13 @@ tr
   td #{item.item_cat.name}
   td #{item.buy}
   td #{item.sell}
+  td 
+    - supplier_items = SupplierItem.where(item_id: item.id)
+    - supplier_items.each do |sup_item|
+        - if supplier_items.last == sup_item
+          | #{sup_item.supplier.pic}
+        - else
+          |  #{sup_item.supplier.pic}, 
   td
     a href='#{edit_item_path(id: item.id)}'
       button.btn.btn-primary type="button" 
@@ -14,7 +21,7 @@ tr
       button.btn.btn-primary type="button" 
           | Supplier
     | &nbsp &nbsp
-    a href='#{new_order_path(item_id: item.id)}'
-      button.btn.btn-primary type="button" 
-          | Order
+    / a href='#{new_order_path(item_id: item.id)}'
+      / button.btn.btn-primary type="button" 
+          / | Order
 

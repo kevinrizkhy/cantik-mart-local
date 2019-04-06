@@ -46,7 +46,7 @@ function addNewRow(){
 	cell2.innerHTML = '<input type="number" required=true class="form-control" id="quantity" name="order[order_items]['+add_counter+'][quantity]">'; 
 	cell3.innerHTML = '<input type="number" required=true class="form-control" id="quantity" name="order[order_items]['+add_counter+'][price]">'; 
 	cell4.innerHTML = '<input type="textarea" required=true class="form-control" id="description" name="order[order_items]['+add_counter+'][description]">'; 
-	cell5.innerHTML = "<i class='fa fa-times text-danger' onclick='removeThisRow(this)'></i>"; 
+	cell5.innerHTML = "<i class='fa fa-trash text-danger' onclick='removeThisRow(this)'></i>"; 
 
 	$('#selectpicker'+add_counter).selectpicker('refresh');
 	add_counter++;
@@ -65,7 +65,32 @@ function addNewRowRetur(){
 	gon.select_options+'</select>';
 	cell2.innerHTML = '<input type="number" required=true class="form-control" id="quantity" name="order[order_items]['+add_counter+'][quantity]">'; 
 	cell3.innerHTML = '<input type="textarea" required=true class="form-control" id="description" name="order[order_items]['+add_counter+'][description]">'; 
-	cell4.innerHTML = "<i class='fa fa-times text-danger' onclick='removeThisRow(this)'></i>"; 
+	cell4.innerHTML = "<i class='fa fa-trash text-danger' onclick='removeThisRow(this)'></i>"; 
+
+	$('#selectpicker'+add_counter).selectpicker('refresh');
+	add_counter++;
+}
+
+function addNewRowComplain(){
+	var table = document.getElementById("myTable");
+	var row = table.insertRow(table.rows.length);
+
+	var cell1 = row.insertCell(0);
+	var cell2 = row.insertCell(1);
+	var cell3 = row.insertCell(2);
+	var cell4 = row.insertCell(3);
+	var cell5 = row.insertCell(4);
+	var cell6 = row.insertCell(5);	
+	var cell7 = row.insertCell(6);
+
+	cell1.innerHTML = '<select id="selectpicker'+add_counter+'" class="selectpicker form-control" data-show-subtext="true" data-live-search="true" name="complain[complain_items]['+add_counter+'][item_id]">'+
+	gon.select_options+'</select>';
+	cell2.innerHTML = '<input type="number" required=true class="form-control" id="quantity" name="complain[complain_items]['+add_counter+'][price]">';
+	cell3.innerHTML = '<input type="number" required=true class="form-control" id="quantity" name="complain[complain_items]['+add_counter+'][discount]">';  
+	cell4.innerHTML = '<input type="number" required=true class="form-control" id="quantity" name="complain[complain_items]['+add_counter+'][quantity]" readonly value=0>'; 
+	cell5.innerHTML = '<input type="number" required=true class="form-control" id="quantity" name="complain[complain_items]['+add_counter+'][new_quantity]">'; 
+	cell6.innerHTML = '<input type="textarea" required=true class="form-control" id="description" name="complain[complain_items]['+add_counter+'][description]">'; 
+	cell7.innerHTML = "<i class='fa fa-trash text-danger' onclick='removeThisRow(this)'></i>"; 
 
 	$('#selectpicker'+add_counter).selectpicker('refresh');
 	add_counter++;
@@ -83,73 +108,6 @@ var debt = new Chart(ctx, {
       responsive: true
     }
   });
-
-// var debt = new Chart(ctx, {
-//     type: 'line',
-//     data: {
-//       labels: gon.labels,
-//       datasets: [
-//       	{
-// 	        label: 'Penjualan',
-// 	        data: gon.sales_data,
-// 	        backgroundColor: [
-// 	            'rgba(255, 159, 64, 0.2)',
-// 	          ],
-// 	        borderColor: [
-// 	            'rgba(255, 159, 64, 1)',
-// 	          ],
-// 	        borderWidth: 2
-// 	     },
-//       	{
-// 	        label: 'Hutang',
-// 	        data: gon.debt_data,
-// 	        backgroundColor: [
-// 	            'rgba(255, 99, 132, 0.2)',
-// 	          ],
-// 	        borderColor: [
-// 	            'rgba(255,99,132,1)',
-// 	          ],
-// 	        borderWidth: 2
-// 	     },
-// 	    {
-// 	        label: 'Operasional',
-// 	        data: gon.operational_data,
-// 	        backgroundColor: [
-// 	            'rgba(54, 162, 235, 0.2)',
-// 	          ],
-// 	        borderColor: [
-// 	            'rgba(54, 162, 235, 1)',
-// 	          ],
-// 	        borderWidth: 2
-// 	     },
-// 	     {
-// 	        label: 'Piutang',
-// 	        data: gon.receivables_data,
-// 	        backgroundColor: [
-// 	            'rgba(75, 192, 192, 0.2)',
-// 	          ],
-// 	        borderColor: [
-// 	            'rgba(75, 192, 192, 1)',
-// 	          ],
-// 	        borderWidth: 2
-// 	     }
-// 	     ,{
-// 	        label: 'Pajak',
-// 	        data: gon.tax_data,
-// 	        backgroundColor: [
-// 	            'rgba(255, 206, 86, 0.2)',
-// 	          ],
-// 	        borderColor: [
-// 	            'rgba(255, 206, 86, 1)',
-// 	          ],
-// 	        borderWidth: 2
-// 	     }
-// 	]
-//     },
-//     options: {
-//       responsive: true
-//     }
-//   });
 
 $(document).ready(function() {
 	$('select').selectpicker();

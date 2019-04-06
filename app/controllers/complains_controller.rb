@@ -25,7 +25,11 @@ class ComplainsController < ApplicationController
   end
 
   def new
-    @members = Member.all
+    return redirect_back_no_access_right unless params[:id].present?
+    id = params[:id]
+    @transaction = Transaction.find id
+    return redirect_back_no_access_right if @transaction.nil? || @transaction.user.store != current_user.store
+    @transaction_items = @transaction.transaction_items
     @inventories = StoreItem.page param_page
     all_options = ""
     @inventories.each do |inventory|
@@ -33,30 +37,35 @@ class ComplainsController < ApplicationController
       all_options+= "<option value="+stock.id.to_s+" data-subtext='"+stock.item_cat.name+"'>"+stock.name+"</option>"
     end
     gon.select_options = all_options
-    gon.inv_count = 2
+    gon.inv_count = @transaction_items.count
   end
 
   def create
+    return redirect_back_no_access_right unless params[:id].present?
+    id = params[:id]
+    @transaction = Transaction.find id
+    return redirect_back_no_access_right if @transaction.nil? || @transaction.user.store != current_user.store
     invoice = "CMP-" + Time.now.to_i.to_s
     items = complain_items
     total_item = items.size
-    address_to = params[:complain][:member_id]
+    binding.pry
+    # address_to = params[:complain][:member_id]
 
-    complain = Complain.create invoice: invoice,
-      total_items: total_item,
-      store_id: current_user.store.id,
-      date_created: Time.now,
-      member_id: address_to
+    # complain = Complain.create invoice: invoice,
+    #   total_items: total_item,
+    #   store_id: current_user.store.id,
+    #   date_created: Time.now,
+    #   member_id: address_to
 
-    complain_items.each do |complain_item|
-      item = Item.find complain_item[0]
-      break if item.nil?
-      ComplainItem.create item_id: complain_item[0], complain_id: complain.id, quantity: complain_item[1], description: complain_item[2]
-      store_stock = StoreItem.find_by(item_id: item.id)
-      store_stock.stock = store_stock.stock + complain_item[1].to_i
-      store_stock.save!
-    end
-    return redirect_to complains_path
+    # complain_items.each do |complain_item|
+    #   item = Item.find complain_item[0]
+    #   break if item.nil?
+    #   ComplainItem.create item_id: complain_item[0], complain_id: complain.id, quantity: complain_item[1], description: complain_item[2]
+    #   store_stock = StoreItem.find_by(item_id: item.id)
+    #   store_stock.stock = store_stock.stock + complain_item[1].to_i
+    #   store_stock.save!
+    # end
+    # return redirect_to complains_path
   end
 
   private

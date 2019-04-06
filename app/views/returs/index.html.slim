@@ -1,12 +1,12 @@
 .row
   .col.text-left
     h2
-      | Daftar Retur
+      | Daftar Retur Supplier
   .col.text-right
     a href="#{new_retur_path}"
-      button.btn.btn-primary type="button" 
+      button.btn.btn-danger type="button" 
         i.fas.fa-plus 
-        |   Buat Retur Supplier
+        |   Buat Retur
         
 = form_for :retur, url: returs_path, method: 'GET' do |form|
   .row  
