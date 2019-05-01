@@ -68,9 +68,12 @@ class RetursController < ApplicationController
       date_created: Time.now,
       supplier_id: address_to
 
-    retur_items.each do |retur_item|
+    items.each do |retur_item|
       item = Item.find retur_item[0]
-      break if item.nil?
+      if item.nil?
+        ReturItem.where(retur: retur).delete_all
+        Retur.where(retur: retur).delete
+      end
       ReturItem.create item_id: retur_item[0], retur_id: retur.id, quantity: retur_item[1], description: retur_item[2]
     end
     return redirect_to returs_path

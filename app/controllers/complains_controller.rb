@@ -48,14 +48,12 @@ class ComplainsController < ApplicationController
     invoice = "CMP-" + Time.now.to_i.to_s
     items = complain_items
     total_item = items.size
-    binding.pry
-    # address_to = params[:complain][:member_id]
 
-    # complain = Complain.create invoice: invoice,
-    #   total_items: total_item,
-    #   store_id: current_user.store.id,
-    #   date_created: Time.now,
-    #   member_id: address_to
+    complain = Complain.create invoice: invoice,
+      total_items: total_item,
+      store_id: current_user.store.id,
+      date_created: Time.now,
+      member_id: address_to
 
     # complain_items.each do |complain_item|
     #   item = Item.find complain_item[0]

@@ -15,9 +15,12 @@ tr
     - else
       | #{order.date_paid_off.to_date}
   td
-    - if order.date_receive.nil?
-      = form_for :order, url: order_path(id: order.id), method: "DELETE" do |form|
-        = form.submit "Hapus", class: "btn btn-danger"
+    - if order.total==0 
+      = form_for :order, url: "", method: "DELETE" do |form|
+        = form.submit "Hapus", class: "btn btn-danger", disabled: "disabled"
+    - elsif order.date_receive.nil? 
+      = form_for :order, url: "", method: "DELETE" do |form|
+        = form.submit "Hapus", class: "btn btn-danger", disabled: "disabled"
     - else
       = form_for :order, url: "", method: "DELETE" do |form|
         = form.submit "Hapus", class: "btn btn-danger", disabled: "disabled"
