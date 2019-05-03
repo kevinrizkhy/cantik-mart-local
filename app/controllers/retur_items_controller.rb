@@ -21,7 +21,16 @@ class ReturItemsController < ApplicationController
     return redirect_back_no_access_right if retur.status.present?
     feed_value = feedback_value
     order = nil
+    receivable = nil
+    cash_flow = nil
     feed_value.each do |value|
+      retur_item = ReturItem.find value[1]
+      if retur_item.nil?
+          receivable.delete
+          OrderItem.where(order: order).delete_all
+          order.delete
+          break
+      end
       if value[0] == "retur_item"
         if order.nil?
           order = Order.create supplier_id: retur.supplier_id, 
@@ -31,25 +40,31 @@ class ReturItemsController < ApplicationController
             date_created: DateTime.now,
             invoice: "ORD-" + Time.now.to_i.to_s
         end
-        retur_item = ReturItem.find value[1]
         if retur_item.nil?
           OrderItem.where(order: order).delete_all
           order.delete
           break
         else
-          a = OrderItem.create quantity: retur_item.quantity, 
+          OrderItem.create quantity: retur_item.quantity, 
           price: 0,
           item_id: value[1],
           order: order,
           description: "RETUR #"+order.invoice
-          binding.pry
+          retur_item.ref_id = order.id
         end
       elsif value[0] == "cash"
-        binding.pry
+        if receivable.nil?
+          receivable = Receivable.create user: current_user, store: current_user.store, nominal: value[2], date_created: DateTime.now, 
+                        description: "RECEIVABLE FROM RETUR #"+retur.invoice, finance_type: Receivable::RETUR, deficiency:value[2], to_user: retur.supplier_id
+        else
+          receivable.nominal += receivable.nominal+value[2]
+          receivable.deficiency += receivable.deficiency+value[2]
+          receivable.save!
+        end
+        retur_item.ref_id = receivable.id
+        retur_item.nominal = receivable.nominal
       end
-      retur_item = ReturItem.find value[1]
       retur_item.feedback = value[0]
-      retur_item.nominal = 0
       retur_item.save!
     end
     retur.status = Time.now

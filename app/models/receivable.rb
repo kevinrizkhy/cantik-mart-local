@@ -13,4 +13,5 @@ class Receivable < ApplicationRecord
   RETUR=1
   OTHER=2
   EMPLOYEE=3
+  
 end

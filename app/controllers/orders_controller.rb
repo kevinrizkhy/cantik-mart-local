@@ -163,18 +163,25 @@ class OrdersController < ApplicationController
     return redirect_back_no_access_right if order.date_receive.nil? || order.date_paid_off.present?
     order_invs = InvoiceTransaction.where(invoice: order.invoice)
     paid = order.total.to_f - order_invs.sum(:nominal) 
-    return redirect_back_no_access_right if (params[:order_pay][:nominal].to_i > paid) || (params[:order_pay][:nominal].to_i < 0)
+    nominal = params[:order_pay][:nominal].to_i 
+    nominal = params[:order_pay][:receivable_nominal].to_i if params[:order_pay][:user_receivable] == "on"
+    return redirect_back_no_access_right if (nominal.to_i > paid) || (nominal < 0)
     order_inv = InvoiceTransaction.new 
     order_inv.invoice = order.invoice
     order_inv.transaction_type = 0
     order_inv.transaction_invoice = "PAID-" + Time.now.to_i.to_s
     order_inv.date_created = params[:order_pay][:date_paid]
-    order_inv.nominal = params[:order_pay][:nominal].to_f
+    order_inv.nominal = nominal.to_f
     order_inv.save!
-    deficiency = paid - params[:order_pay][:nominal].to_f
+    deficiency = paid - nominal
     debt = Debt.find_by(finance_type: Debt::ORDER, ref_id: order.id)
-    CashFlow.create user: current_user, store: current_user.store, description: order.invoice, nominal: order_inv.nominal*-1, 
+    if params[:order_pay][:user_receivable] == "on"
+      dec_receivable = decrease_receivable order.supplier_id, nominal, order
+      return redirect_back_no_access_right unless dec_receivable
+    else
+      CashFlow.create user: current_user, store: current_user.store, description: order.invoice, nominal: order_inv.nominal*-1, 
                     date_created: params[:order_pay][:date_paid], finance_type: CashFlow::OUTCOME, ref_id: order.id
+    end
     debt.deficiency = deficiency
     if deficiency <= 0
       order.date_paid_off = Time.now 
@@ -209,6 +216,35 @@ class OrdersController < ApplicationController
         item.stock = new_stock
         item.save!
       end
+    end
+
+    def decrease_receivable supplier_id, nominal, order
+      receivable_nominal = Receivable.where("to_user=? AND deficiency > 0", supplier_id).group(:to_user).sum(:deficiency).values.first
+      if receivable_nominal >= nominal
+        receivables = Receivable.where("to_user=? AND deficiency > 0", supplier_id).order("date_created ASC")
+        receivables.each do |receivable|
+          curr_receivable = receivable.deficiency.to_i
+          if curr_receivable >= nominal
+            curr_receivable = curr_receivable - nominal
+            receivable.deficiency = curr_receivable
+            receivable.save!
+            CashFlow.create user: current_user, store: current_user.store, description: order.invoice, nominal: nominal, 
+                    date_created: params[:order_pay][:date_paid], finance_type: CashFlow::INCOME, ref_id: order.id
+            CashFlow.create user: current_user, store: current_user.store, description: order.invoice, nominal: nominal*-1, 
+                    date_created: params[:order_pay][:date_paid], finance_type: CashFlow::OUTCOME, ref_id: order.id
+            return true
+          else
+            CashFlow.create user: current_user, store: current_user.store, description: order.invoice, nominal: curr_receivable, 
+                    date_created: params[:order_pay][:date_paid], finance_type: CashFlow::INCOME, ref_id: order.id
+            CashFlow.create user: current_user, store: current_user.store, description: order.invoice, nominal: curr_receivable*-1, 
+                    date_created: params[:order_pay][:date_paid], finance_type: CashFlow::OUTCOME, ref_id: order.id
+            nominal -= curr_receivable
+            receivable.deficiency = 0
+            receivable.save!
+          end
+        end
+      end
+      return false
     end
 
     def param_page

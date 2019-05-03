@@ -74,7 +74,7 @@ class RetursController < ApplicationController
         ReturItem.where(retur: retur).delete_all
         Retur.where(retur: retur).delete
       end
-      ReturItem.create item_id: retur_item[0], retur_id: retur.id, quantity: retur_item[1], description: retur_item[2]
+      a = ReturItem.create item_id: retur_item[0], retur_id: retur.id, quantity: retur_item[1], description: retur_item[2]
     end
     return redirect_to returs_path
   end

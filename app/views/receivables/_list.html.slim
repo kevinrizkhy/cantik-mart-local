@@ -1,9 +1,13 @@
 tr
-  td #{finance.user.name} (#{finance.store.name})
-  td #{finance.finance_type}
-  td #{finance.nominal.abs}
-  td #{finance.deficiency.abs}
-  td #{finance.date_created}
-  td
-    a href='#{order_items_path(id: finance.ref_id)}'
-      | #{finance.description}
+  	td #{finance.user.name} (#{finance.store.name})
+ 	- if finance.finance_type == "RETUR"
+ 		- to_user = Supplier.find finance.to_user
+	 	td #{to_user.pic}
+  	td #{finance.finance_type}
+  	td #{finance.nominal.abs}
+  	td #{finance.deficiency.abs}
+  	td #{finance.date_created}
+  	- if finance.finance_type == "RETUR"
+	  	td
+	    	a href='#{retur_items_path(id: finance.ref_id)}'
+	      	| #{finance.description}

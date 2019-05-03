@@ -4,10 +4,9 @@ class ReceivablesController < ApplicationController
   def index
   	label_type = "day"
   	numbers = 3
-  	end_date = DateTime.now.to_date
+  	end_date = DateTime.now.to_date+1.day
   	start_date = DateTime.now.to_date - 2.weeks
-  	finances = Receivable.all
-
+  	finances = Receivable.where("date_created > ? AND date_created <= ?", start_date, end_date)
   	labels = generate_label label_type, numbers, start_date, end_date
     gon.labels = labels
 

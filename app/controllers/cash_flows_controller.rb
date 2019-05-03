@@ -4,10 +4,10 @@ class CashFlowsController < ApplicationController
   def index
   	label_type = "day"
   	numbers = 3
-  	end_date = DateTime.now.to_date
+  	end_date = DateTime.now.to_date+1.day
   	start_date = DateTime.now.to_date - 2.weeks
     check_prev
-  	@finances = CashFlow.all
+  	@finances = CashFlow.where("date_created > ? AND date_created < ?", start_date, end_date)
   	labels = generate_label label_type, numbers, start_date, end_date
     gon.labels = labels
     datasets = []
@@ -320,8 +320,9 @@ class CashFlowsController < ApplicationController
     inv_number = Time.now.to_i.to_s
     if finance_type == "Loan" 
       invoice = " EL-"+inv_number
+      # to_user==> di view blm ada, diisi employee
       Receivable.create user: user, store: store, nominal: nominal, date_created: date_created, description: description, 
-                    finance_type: Receivable::EMPLOYEE, deficiency:nominal
+                    finance_type: Receivable::EMPLOYEE, deficiency:nominal, to_user: 1
       CashFlow.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description, 
                       finance_type: CashFlow::EMPLOYEE_LOAN, invoice: invoice
     elsif finance_type == "BankLoan"
