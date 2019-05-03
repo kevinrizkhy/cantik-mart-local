@@ -1,7 +1,7 @@
 class OrdersController < ApplicationController
   before_action :require_login
   def index
-    @orders = Order.page param_page
+    @orders = Order.order("date_created DESC").page param_page
     if params[:type].present?
       @type = params[:type]
       if @type == "ongoing" 
@@ -108,7 +108,51 @@ class OrdersController < ApplicationController
     return redirect_back_no_access_right if @order.date_receive.present? || @order.date_paid_off.present?
     return redirect_to orders_path unless @order.present?
     @order_items = OrderItem.where(order_id: @order.id)
+  end
 
+  def edit_confirmation
+    return redirect_back_no_access_right unless params[:id].present?
+    @order = Order.find params[:id]
+    return redirect_to orders_path unless @order.present? || @order.editable == false
+    return redirect_back_no_access_right if @order.date_paid_off.present? || @order.date_receive.nil?
+    @order_items = OrderItem.where(order_id: @order.id)
+  end
+
+  def edit_receive
+    return redirect_back_no_access_right unless params[:id].present?
+    order = Order.find params[:id]
+    return redirect_to orders_path unless order.present? || order.editable == false
+    return redirect_back_no_access_right if order.date_paid_off.present? || order.date_receive.nil?
+    items = edit_order_items
+    return redirect_back_no_access_right if items.empty?
+    binding.pry
+    new_total = 0
+    items.each do |item|
+      order_item = OrderItem.find item[0]
+      break if order_item.nil?
+      order_item.new_receive = item[1]
+      order_item.save!
+      this_item = Item.find order_item.item.id
+      store_stock = StoreItem.find_by(item_id: order_item.item.id, store_id: current_user.store)
+      store_stock = StoreItem.create store: current_user.store, item: this_item, stock: 0, min_stock: 5 if store_stock.nil?
+      store_stock.stock = store_stock.stock - order_item.receive + item[1].to_i
+      store_stock.save!
+      new_buy_total = item[1].to_i * order_item.price.to_i
+      new_total +=  new_buy_total
+    end
+    order.old_total = order.total
+    order.total = new_total
+    order.date_change = DateTime.now
+    order.editable = false
+    order.save!
+    payment = edit_payment new_total, order
+    if payment
+      order.date_paid_off = DateTime.now 
+      order.save!
+      debt = Debt.find_by(finance_type: Debt::ORDER, ref_id: order.id)
+      debt.deficiency = 0
+      debt.save!
+    end
   end
 
   def receive
@@ -137,7 +181,7 @@ class OrdersController < ApplicationController
       new_total +=  new_buy_total
     end
     order.total = new_total
-    order.date_receive = Time.now
+    order.date_receive = DateTime.now
     order.save!
     
     Debt.create user: current_user, store: current_user.store, nominal: new_total, 
@@ -184,7 +228,7 @@ class OrdersController < ApplicationController
     end
     debt.deficiency = deficiency
     if deficiency <= 0
-      order.date_paid_off = Time.now 
+      order.date_paid_off = DateTime.now 
       order.save!
       debt.deficiency = 0
     end
@@ -205,6 +249,33 @@ class OrdersController < ApplicationController
         items << item[1].values
       end
       items
+    end
+
+    def edit_order_items
+      items = []
+      params[:order][:order_items].each do |item|
+        item_id = item[1][:item_id].to_i
+        order_item = OrderItem.find item_id
+        if order_item.present?
+          if order_item.receive < item[1][:total].to_i
+            items << item[1].values
+          else
+            return []
+          end
+        end
+      end
+      items
+    end
+
+    def edit_payment nominal, order
+      paid = InvoiceTransaction.where(invoice: order.invoice).sum(:nominal) 
+      if paid > nominal
+        over = paid - nominal
+        Receivable.create user: current_user, store: current_user.store, nominal: over, date_created: DateTime.now, 
+                        description: "OVER PAYMENT #"+order.invoice, finance_type: Receivable::OVER, deficiency:over, to_user: order.supplier_id
+        return true
+      end
+      return false
     end
 
     def decrease_stock retur_id

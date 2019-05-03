@@ -31,6 +31,8 @@ Rails.application.routes.draw do
 
   get 'order/:id/receive', to: 'orders#confirmation', as: 'order_confirmation'
   post 'order/:id/receive', to: 'orders#receive', as: 'order_receive'
+  get 'order/:id/edit/receive', to: 'orders#edit_confirmation', as: 'edit_order_confirmation'
+  put 'order/:id/edit/receive', to: 'orders#edit_receive', as: 'edit_order_receive'
   get 'order/:id/pay', to: 'orders#pay', as: 'order_pay'
   post 'order/:id/pay', to: 'orders#paid', as: 'order_paid'
 

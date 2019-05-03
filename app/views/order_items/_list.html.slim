@@ -1,10 +1,16 @@
+- order = @order_items.first.order
 tr
   td #{order_item.item.code} 
   td #{order_item.item.name}
   td #{order_item.quantity}
   td #{order_item.price}
-  td #{order_item.price.to_i * order_item.quantity.to_i}
   td #{order_item.receive}
-  td.text-danger 
-  	| #{order_item.receive.to_i * order_item.price.to_i}
+  - if !order.editable
+	td
+		| #{order_item.new_receive.to_i}
+	td.text-danger.text-right
+		| #{number_to_currency(order_item.new_receive.to_i * order_item.price.to_i, unit: "Rp. ")}
+  - else
+	td.text-danger.text-right
+		| #{number_to_currency(order_item.receive.to_i * order_item.price.to_i, unit: "Rp. ")}
 

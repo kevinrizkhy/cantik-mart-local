@@ -4,7 +4,8 @@ class Receivable < ApplicationRecord
   enum finance_type: { 
     RETUR:1,
     OTHER:2,
-    EMPLOYEE: 3
+    EMPLOYEE: 3,
+    OVER: 4
   }
 
   belongs_to :store
@@ -13,5 +14,5 @@ class Receivable < ApplicationRecord
   RETUR=1
   OTHER=2
   EMPLOYEE=3
-  
+  OVER=4
 end

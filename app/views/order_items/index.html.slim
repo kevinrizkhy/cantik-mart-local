@@ -1,4 +1,5 @@
-- order_id = @order_items.first.order.id
+- order = @order_items.first.order
+- order_id = order.id
 .row
   .col
     h2
@@ -8,17 +9,33 @@
       a href="#{order_confirmation_path(id: order_id)}"
         button.btn.btn-success type="button" 
           | Terima
+  - if order.editable
+      .col.text-right
+        a href="#{edit_order_confirmation_path(id: order_id)}"
+          button.btn.btn-warning type="button" 
+            | Ubah
 table class="table"
   thead
     th Kode
     th Nama
     th Jumlah
-    th Harga
-    th Total
+    th Harga / Item
     th Terima
-    th Bayar
+    - if !order.editable
+      th Terima Baru
+    th.text-center Bayar
   tbody
     = render partial: 'list', collection: @order_items, as: :order_item
+  tfoot.text-xl-right
+    td
+    td
+    td
+    td
+    td
+     - if !order.editable
+      td
+    td.font-weight-bold.text-danger
+      | #{number_to_currency(order.total, unit: "Rp. ")}
 br
 hr
 br
