@@ -24,7 +24,7 @@ gem 'wkhtmltopdf-heroku'
 gem 'administrate'
 gem 'brakeman'
 gem 'carrierwave'
-
+gem 'roo', '~> 2.8.0'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
