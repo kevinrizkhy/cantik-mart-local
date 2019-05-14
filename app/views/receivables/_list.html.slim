@@ -8,6 +8,6 @@ tr
   	td #{finance.deficiency.abs}
   	td #{finance.date_created}
   	- if finance.finance_type == "RETUR"
-	  	td
-	    	a href='#{retur_items_path(id: finance.ref_id)}'
-	      	| #{finance.description}
+      td
+        a href="#{retur_items_path(id: finance.ref_id)}"
+          | #{finance.description}  

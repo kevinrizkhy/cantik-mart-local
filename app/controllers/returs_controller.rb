@@ -2,6 +2,7 @@ class RetursController < ApplicationController
   before_action :require_login
   def index
     @returs = Retur.page param_page
+    @returs = @returs.order("date_created DESC")
     if params[:search].present?
       search = params[:search].downcase
       @search = search

@@ -11,4 +11,13 @@ tr
       | #{ret_item.feedback}
   td
     | #{ret_item.nominal}
+  td
+    - if ret_item.feedback == "retur_item"
+      a href="#{order_items_path(id: ret_item.ref_id)}"
+        button class="btn btn-primary"
+          | Order
+    - elsif ret_item.feedback == "cash"
+      a href="#{receivables_path}"
+        button class="btn btn-primary"
+          | Piutang
 

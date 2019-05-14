@@ -38,7 +38,8 @@ class ReturItemsController < ApplicationController
             total_items: 1,
             total: 0,
             date_created: DateTime.now,
-            invoice: "ORD-" + Time.now.to_i.to_s
+            invoice: "ORDR-" + Time.now.to_i.to_s, 
+            editable: false
         end
         if retur_item.nil?
           OrderItem.where(order: order).delete_all
@@ -49,7 +50,7 @@ class ReturItemsController < ApplicationController
           price: 0,
           item_id: value[1],
           order: order,
-          description: "RETUR #"+order.invoice
+          description: "RETUR #"+retur.invoice
           retur_item.ref_id = order.id
         end
       elsif value[0] == "cash"

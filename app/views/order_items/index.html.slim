@@ -9,7 +9,7 @@
       a href="#{order_confirmation_path(id: order_id)}"
         button.btn.btn-success type="button" 
           | Terima
-  - if order.editable
+  - if order.editable && @pay !=0
       .col.text-right
         a href="#{edit_order_confirmation_path(id: order_id)}"
           button.btn.btn-warning type="button" 
@@ -50,7 +50,7 @@ br
       - else
         .text-success
           | LUNAS
-  - if @order_items.first.order.date_receive.present? && @order_items.first.order.date_paid_off.nil?
+  - if @order_items.first.order.date_receive.present? && @order_items.first.order.date_paid_off.nil? && @pay != 0
     .col.text-right
       a href="#{order_pay_path(id: order_id)}"
         button.btn.btn-success type="button" 

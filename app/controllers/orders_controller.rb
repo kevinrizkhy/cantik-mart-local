@@ -125,11 +125,12 @@ class OrdersController < ApplicationController
     return redirect_back_no_access_right if order.date_paid_off.present? || order.date_receive.nil?
     items = edit_order_items
     return redirect_back_no_access_right if items.empty?
-    binding.pry
     new_total = 0
     items.each do |item|
       order_item = OrderItem.find item[0]
       break if order_item.nil?
+      new_receive_number = item[1]
+      next if new_receive <= order_item.receive
       order_item.new_receive = item[1]
       order_item.save!
       this_item = Item.find order_item.item.id

@@ -41,7 +41,7 @@
         label.custom-control-label for="defaultIndeterminate2"  Potong Piutang
     .form-group
       label for="receivable_nominal" Potong Piutang
-      input type="range" class="range-field" min="0" max="#{max}" step="5000" id="receivable_nominal"  name="order_pay[receivable_nominal]"
+      input type="range" min="0" max="#{max}" step="5000" id="receivable_nominal"  name="order_pay[receivable_nominal]"
 
   .form-group
     = form.submit "Bayar", class: "btn btn-primary"

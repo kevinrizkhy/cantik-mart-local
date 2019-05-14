@@ -1,4 +1,4 @@
-/ = include_gon
+= include_gon
 html
   head
     title Jaya Abadi
@@ -33,10 +33,7 @@ html
     / = javascript_pack_tag 'application'
 
   body
-    - flash.each do |name, msg|
-      div class="flash flash--#{name}"
-        = msg
-
+    
     - if params[:controller] != "sessions" && params[:controller] != "registers"
         body.sidebar-is-reduced
           header.l-header
@@ -74,9 +71,15 @@ html
         main.l-main
           .content-wrapper.content-wrapper--with-bg
             .page-content 
+              - if flash.present?
+                - flash.each do |name, msg|
+                  a.btn.btn-error onclick=("toastr.#{name}('#{msg}');")  id="flash" style="display: none;"
               = yield
     - else
-        = yield
+      - if flash.present?
+        - flash.each do |name, msg|
+          a.btn.btn-error onclick=("toastr.#{name}('#{msg}');")  id="flash" style="display: none;"
+      = yield
 
     script src="https://use.fontawesome.com/releases/v5.7.2/js/all.js" 
 
@@ -84,5 +87,25 @@ html
     = javascript_include_tag '/assets/dist/js/popper.min.js'
     = javascript_include_tag '/assets/dist/js/bootstrap.min.js'
     = javascript_include_tag '/assets/dist/js/mdb.min.js'
-
     = javascript_include_tag 'application'
+    - if flash.present?
+      javascript:
+        toastr.options = {
+          "closeButton": true,
+          "debug": false,
+          "newestOnTop": false,
+          "progressBar": true,
+          "positionClass": "md-toast-top-right",
+          "preventDuplicates": true,
+          "showDuration": 300,
+          "hideDuration": 1000,
+          "timeOut": 5000,
+          "extendedTimeOut": 1000,
+          "showEasing": "swing",
+          "hideEasing": "linear",
+          "showMethod": "fadeIn",
+          "hideMethod": "fadeOut"
+        }
+        $( document ).ready(function() {
+            $( "#flash" ).click();
+        });
