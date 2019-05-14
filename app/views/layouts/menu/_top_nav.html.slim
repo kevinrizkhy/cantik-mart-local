@@ -1,0 +1,39 @@
+nav.navbar.fixed-top.navbar-expand-lg.scrolling-navbar.double-nav
+  .float-left
+    a.button-collapse data-activates="slide-out" href="#" 
+      i.fas.fa-bars
+  .breadcrumb-dn.mr-auto
+    p Dashboard v.3
+  .d-flex.change-mode
+    ul.nav.navbar-nav.nav-flex-icons.ml-auto
+      li.nav-item.dropdown.notifications-nav
+        a#navbarDropdownMenuLink.nav-link.dropdown-toggle.waves-effect aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" 
+          span.badge.red 3
+          i.fas.fa-bell
+          span.d-none.d-md-inline-block Notifications
+        .dropdown-menu.dropdown-primary aria-labelledby="navbarDropdownMenuLink" 
+          a.dropdown-item href="#" 
+            i.far.fa-money-bill-alt.mr-2 aria-hidden="true" 
+            span New order received
+            span.float-right
+              i.far.fa-clock aria-hidden="true" 
+              | 13 min
+          a.dropdown-item href="#" 
+            i.far.fa-money-bill-alt.mr-2 aria-hidden="true" 
+            span New order received
+            span.float-right
+              i.far.fa-clock aria-hidden="true" 
+              | 33 min
+          a.dropdown-item href="#" 
+            i.fas.fa-chart-line.mr-2 aria-hidden="true" 
+            span Your campaign is about to end
+            span.float-right
+              i.far.fa-clock aria-hidden="true" 
+              | 53 min
+      li.nav-item.dropdown
+        a#userDropdown.nav-link.dropdown-toggle.waves-effect aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" href="#" 
+          i.fas.fa-user
+          span.clearfix.d-none.d-sm-inline-block Profile
+        .dropdown-menu.dropdown-menu-right aria-labelledby="userDropdown" 
+          a.dropdown-item href="#"  My account
+          = button_to "Keluar", sign_out_path, method: :delete, class: "btn btn-danger"

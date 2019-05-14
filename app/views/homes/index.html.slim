@@ -1,14 +1,13 @@
-.row
-    .col-sm-3
-        = render "homes/card/limit_stock"
-    .col-sm-3
-        = render "homes/card/order_status"
-    .col-sm-3
-        = render "homes/card/total_payments"
-br
-hr
-br
-footer.footer
-    .text-right
-        a href="http://pardev.id"
-            | Powered by PT. Parahyangan Digital Dev&copy;
+.container-fluid
+  section.pb-3
+    .row
+      .col-md-3.mb-0
+      	= render "homes/card/stock"
+      .col-md-3.mb-0
+        = render "homes/card/order"
+      .col-md-3.mb-md-0.mb-4
+        = render "homes/card/payment"
+      .col-md-3.mb-0
+        = render "homes/card/retur"
+
+
