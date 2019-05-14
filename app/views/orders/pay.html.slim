@@ -1,4 +1,16 @@
 - receive = Receivable.where("to_user=? AND deficiency > 0", @order.supplier.id).group(:to_user).sum(:deficiency).values.first
+- max = receive if @pay >= receive
+- max = @pay if @pay <= receive
+.d-flex.justify-content-center.my-4.pt-3
+  span.font-weight-bold.purple-text.mr-2.mt-1
+    i.fas.fa-minus[aria-hidden="true"]
+  form.range-field.w-75
+    input.border-0[type="range" min="0" max="#{max}" step="10000"]
+  span.font-weight-bold.purple-text.ml-2.mt-1
+    i.fas.fa-plus[aria-hidden="true"]
+
+
+
 .row
   .col.text-left
     h2
@@ -29,8 +41,7 @@
         label.custom-control-label for="defaultIndeterminate2"  Potong Piutang
     .form-group
       label for="receivable_nominal" Potong Piutang
-      - max = receive if @pay >= receive
-      - max = @pay if @pay <= receive
-      input type="range" class="custom-range" min="0" max="#{max}" step="1000" id="receivable_nominal"  name="order_pay[receivable_nominal]"
+      input type="range" class="range-field" min="0" max="#{max}" step="5000" id="receivable_nominal"  name="order_pay[receivable_nominal]"
+
   .form-group
     = form.submit "Bayar", class: "btn btn-primary"
