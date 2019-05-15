@@ -16,24 +16,24 @@ class UsersController < ApplicationController
 
   def create
     user = User.new user_params
-    return redirect_to new_user_path if user.invalid?
+    return redirect_back_data_not_found new_user_path if user.invalid?
     user.save!
     return redirect_to users_path
   end
 
   def edit
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_not_found users_path unless params[:id].present?
     @user = User.find_by_id params[:id]
     @stores = Store.all
-    return redirect_to users_path unless @user.present?
+    return redirect_back_data_not_found users_path unless @user.present?
   end
 
   def update
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_not_found users_path unless params[:id].present?
     user = User.find_by_id params[:id]
     user.assign_attributes user_params
     user.save! if user.changed?
-    return redirect_to users__path
+    return redirect_to users_path
   end
 
   private

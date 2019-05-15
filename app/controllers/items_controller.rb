@@ -1,8 +1,9 @@
 class ItemsController < ApplicationController
   before_action :require_login
   def index
-    insert_prod = InsertProdlist.new
+    # insert_prod = InsertProdlist.new
     # insert_prod.read
+    # insert_prod.update_brand
     @items = Item.page param_page
     if params[:search].present?
       @search = params[:search].downcase
@@ -29,7 +30,7 @@ class ItemsController < ApplicationController
 
   def create
     item = Item.new item_params
-    return redirect_to new_item_path if item.invalid?
+    return redirect_back_data_invalid new_item_path if item.invalid?
 
     item.save!
     insert_into_all_store item.id
@@ -38,14 +39,14 @@ class ItemsController < ApplicationController
   end
 
   def edit
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_not_found items_path unless params[:id].present?
     @item = Item.find_by_id params[:id]
-    return redirect_to items_path unless @item.present?
+    return redirect_back_data_not_found items_path unless @item.present?
     @item_cats = ItemCat.all
   end
 
   def update
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_not_found items_path unless params[:id].present?
     item = Item.find_by_id params[:id]
     item.assign_attributes item_params
     item.save! if item.changed?

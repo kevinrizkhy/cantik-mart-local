@@ -116,38 +116,38 @@ class OrdersController < ApplicationController
   end
 
    def destroy
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_not_found orders_path unless params[:id].present?
     order = Order.find params[:id]
-    return redirect_back_no_access_right unless order.present?
-    return redirect_back_no_access_right if order.date_receive.present?
+    return redirect_back_data_not_found orders_path unless order.present?
+    return redirect_back_data_not_found orders_path if order.date_receive.present?
     OrderItem.where(order_id: params[:id]).destroy_all
     order.destroy
     return redirect_to orders_path
   end
 
   def confirmation
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_not_found orders_path unless params[:id].present?
     @order = Order.find params[:id]
-    return redirect_back_no_access_right if @order.date_receive.present? || @order.date_paid_off.present?
+    return redirect_back_data_not_found orders_path if @order.date_receive.present? || @order.date_paid_off.present?
     return redirect_to orders_path unless @order.present?
     @order_items = OrderItem.where(order_id: @order.id)
   end
 
   def edit_confirmation
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_not_found orders_path unless params[:id].present?
     @order = Order.find params[:id]
-    return redirect_to orders_path unless @order.present? || @order.editable == false
-    return redirect_back_no_access_right if @order.date_paid_off.present? || @order.date_receive.nil?
+    return redirect_back_data_not_found orders_path unless @order.present? || @order.editable == false
+    return redirect_back_data_not_found orders_path if @order.date_paid_off.present? || @order.date_receive.nil?
     @order_items = OrderItem.where(order_id: @order.id)
   end
 
   def edit_receive
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_not_found orders_path unless params[:id].present?
     order = Order.find params[:id]
-    return redirect_to orders_path unless order.present? || order.editable == false
-    return redirect_back_no_access_right if order.date_paid_off.present? || order.date_receive.nil?
+    return redirect_to redirect_back_data_not_found orders_path unless order.present? || order.editable == false
+    return redirect_back_data_not_found orders_path if order.date_paid_off.present? || order.date_receive.nil?
     items = edit_order_items
-    return redirect_back_no_access_right if items.empty?
+    return redirect_back_data_invalid orders_path if items.empty?
     new_total = 0
     items.each do |item|
       order_item = OrderItem.find item[0]
@@ -180,10 +180,10 @@ class OrdersController < ApplicationController
   end
 
   def receive
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_not_found orders_path unless params[:id].present?
     order = Order.find params[:id]
-    return redirect_back_no_access_right unless order.present?
-    return redirect_back_no_access_right if order.date_receive.present? || order.date_paid_off.present?
+    return redirect_back_data_not_found orders_path unless order.present?
+    return redirect_back_data_not_found orders_path if order.date_receive.present? || order.date_paid_off.present?
     items = order_items
     new_total = 0
     items.each do |item|
@@ -208,6 +208,12 @@ class OrdersController < ApplicationController
     order.date_receive = DateTime.now
     order.save!
     
+    if order.total == 0
+      order.date_paid_off = DateTime.now
+      order.save!
+      return redirect_to order_items_path(id: params[:id])
+    end
+
     Debt.create user: current_user, store: current_user.store, nominal: new_total, 
                 deficiency: new_total, date_created: DateTime.now, ref_id: order.id,
                 description: order.invoice, finance_type: Debt::ORDER
@@ -216,24 +222,24 @@ class OrdersController < ApplicationController
   end
 
   def pay
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_not_found orders_path unless params[:id].present?
     @order = Order.find params[:id]
-    return redirect_back_no_access_right unless @order.present?
-    return redirect_back_no_access_right if @order.date_receive.nil? || @order.date_paid_off.present?
+    return redirect_back_data_not_found orders_path unless @order.present?
+    return redirect_back_data_not_found orders_path if @order.date_receive.nil? || @order.date_paid_off.present?
     @order_invs = InvoiceTransaction.where(invoice: @order.invoice)
     @pay = @order.total.to_i - @order_invs.sum(:nominal) 
   end
 
   def paid
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_not_found orders_path unless params[:id].present?
     order = Order.find params[:id]
-    return redirect_back_no_access_right unless order.present?
-    return redirect_back_no_access_right if order.date_receive.nil? || order.date_paid_off.present?
+    return redirect_back_data_not_found orders_path unless order.present?
+    return redirect_back_data_not_found orders_path if order.date_receive.nil? || order.date_paid_off.present?
     order_invs = InvoiceTransaction.where(invoice: order.invoice)
     paid = order.total.to_f - order_invs.sum(:nominal) 
     nominal = params[:order_pay][:nominal].to_i 
     nominal = params[:order_pay][:receivable_nominal].to_i if params[:order_pay][:user_receivable] == "on"
-    return redirect_back_no_access_right if (nominal.to_i > paid) || (nominal < 0)
+    return redirect_back_data_invalid orders_path if (nominal.to_i > paid) || (nominal < 0)
     order_inv = InvoiceTransaction.new 
     order_inv.invoice = order.invoice
     order_inv.transaction_type = 0
@@ -245,7 +251,7 @@ class OrdersController < ApplicationController
     debt = Debt.find_by(finance_type: Debt::ORDER, ref_id: order.id)
     if params[:order_pay][:user_receivable] == "on"
       dec_receivable = decrease_receivable order.supplier_id, nominal, order
-      return redirect_back_no_access_right unless dec_receivable
+      return redirect_back_data_invalid orders_path unless dec_receivable
     else
       CashFlow.create user: current_user, store: current_user.store, description: order.invoice, nominal: order_inv.nominal*-1, 
                     date_created: params[:order_pay][:date_paid], finance_type: CashFlow::OUTCOME, ref_id: order.id

@@ -17,21 +17,21 @@ class SuppliersController < ApplicationController
 
   def create
     supplier = Supplier.new supplier_params
-    return redirect_to new_supplier_path if supplier.invalid?
+    return redirect_back_data_not_found new_supplier_path if supplier.invalid?
     supplier.save!
     return redirect_to suppliers_path
   end
 
   def edit
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_not_found suppliers_path unless params[:id].present?
     @supplier = Supplier.find_by_id params[:id]
-    return redirect_to suppliers_path unless @supplier.present?
+    return redirect_back_data_not_found suppliers_path unless @supplier.present?
   end
 
   def update
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_not_found suppliers_path unless params[:id].present?
     supplier = Supplier.find_by_id params[:id]
-    return redirect_to suppliers_path unless supplier.present?
+    return redirect_back_data_not_found suppliers_pathunless supplier.present?
     supplier.assign_attributes supplier_params
     supplier.save! if supplier.changed?
     return redirect_to suppliers_path

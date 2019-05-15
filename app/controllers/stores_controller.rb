@@ -15,13 +15,13 @@ class StoresController < ApplicationController
 
   def create
     store = Store.new store_params
-    return redirect_to new_store_path if store.invalid?
+    return redirect_back_data_invalid stores_path if store.invalid?
 
     supplier = Supplier.new pic: "GUDANG - "+params[:store][:name],
       phone: params[:store][:phone],
       address: params[:store][:address],
       supplier_type: 1
-    return redirect_to new_store_path if supplier.invalid?
+    return redirect_back_data_invalid stores_path if supplier.invalid?
 
     store.save!
     supplier.save!
@@ -29,15 +29,15 @@ class StoresController < ApplicationController
   end
 
   def edit
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_not_found stores_path unless params[:id].present?
     @store = Store.find_by_id params[:id]
     return redirect_to stores_path unless @store.present?
   end
 
   def update
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_not_found stores_path unless params[:id].present?
     store = Store.find_by_id params[:id]
-    return redirect_to stores_path unless store.present?
+    return redirect_back_data_not_found stores_path unless store.present?
     store.assign_attributes store_params
     store.save! if store.changed?
     return redirect_to stores_path

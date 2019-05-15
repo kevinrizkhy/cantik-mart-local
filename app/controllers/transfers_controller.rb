@@ -60,18 +60,18 @@ class TransfersController < ApplicationController
   end
 
   def confirmation
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_not_found transfers_path unless params[:id].present?
     @transfer = Transfer.find params[:id]
-    return redirect_to transfers_path unless @transfer.present?
-    return redirect_to transfers_path if @transfer.date_approve.present?
+    return redirect_back_data_not_found transfers_path unless @transfer.present?
+    return redirect_back_data_not_found transfers_path if @transfer.date_approve.present?
     @transfer_items = TransferItem.where(transfer_id: @transfer.id)
   end
 
   def accept
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_not_found transfers_path unless params[:id].present?
     transfer = Transfer.find params[:id]
-    return redirect back_no_access_right unless transfer.present?
-    return redirect_back_no_access_right if transfer.date_confirm.present? || transfer.date_picked.present?
+    return redirect redirect_back_data_not_found transfers_path unless transfer.present?
+    return redirect_back_data_not_found transfers_path if transfer.date_confirm.present? || transfer.date_picked.present?
     if params[:retur][:cancel].present?
       transfer.date_approve = DateTime.now
       transfer.date_picked = "01-01-1999".to_date

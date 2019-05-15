@@ -16,8 +16,9 @@ class InsertProdlist
 			box = row[6]
 			# cat_id = row[7]
 			cat_id = ItemCat.first.id
-			# brand = row[8]
-			brand = "DEFAULT BRAND"
+
+			brand = row[1].split[0]
+			# brand = "DEFAULT BRAND"
  			insert_prod code, name, buy, sell, wholesale, box, cat_id, brand
 		end
 	end
@@ -26,5 +27,14 @@ class InsertProdlist
 		a = Item.create code: code, name: name, buy: buy, 
 		sell: sell, wholesale: wholesale, box: box, 
 		item_cat_id: cat_id, brand: brand
+	end
+
+	def update_brand
+		items = Item.all
+		items.each do |item|
+			brand_name = item.name.split[0]
+			item.brand  = brand_name
+			item.save!
+		end
 	end
 end

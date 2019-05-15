@@ -49,6 +49,7 @@ html
         = render "layouts/menu/top_nav"
 
       main
+
         = yield
     - else
       = yield
@@ -64,9 +65,12 @@ html
     = javascript_include_tag '/assets/dist/js/bootstrap.min.js'
     = javascript_include_tag '/assets/dist/js/mdb.min.js'
     = javascript_include_tag 'application'
+    - if flash.present?
+      - flash.each do |key, value|
+        javascript:
+          toastr.#{key}('#{value}');
     javascript:
       $(".button-collapse").sideNav();
-
       var container = document.querySelector('.custom-scrollbar');
       var ps = new PerfectScrollbar(container, {
         wheelSpeed: 2,

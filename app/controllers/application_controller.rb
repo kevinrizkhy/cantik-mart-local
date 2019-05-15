@@ -19,4 +19,12 @@ class ApplicationController < ActionController::Base
     redirect_back fallback_location: root_path, flash: { error: 'Tidak memiliki hak akses' }
   end
 
+  def redirect_back_data_not_found current_path
+    redirect_back fallback_location: current_path, flash: { error: 'Data tidak ditemukan' }
+  end
+
+  def redirect_back_data_invalid current_path
+    redirect_back fallback_location: current_path, flash: { error: 'Data tidak valid' }
+  end
+
 end

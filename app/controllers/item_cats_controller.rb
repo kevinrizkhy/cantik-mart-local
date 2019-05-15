@@ -20,18 +20,19 @@ class ItemCatsController < ApplicationController
 
   def create
     item_cat = ItemCat.new item_cat_params
-    return redirect_to new_item_cats_path if item_cat.invalid?
+    return redirect_back_data_invalid new_item_cat_path if item_cat.invalid?
     item_cat.save!
     return redirect_to item_cats_path
   end
 
   def edit
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_not_found item_cats_path unless params[:id].present?
     @item_cat = ItemCat.find_by_id params[:id]
+    return redirect_back_data_invalid new_item_cat_path unless @item_cat.present?
   end
 
   def update
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_not_found item_cats_path unless params[:id].present?
     item_cat = Item.find_by_id params[:id]
     item_cat.assign_attributes item_cat_params
     item_cat.save! if item_cat.changed?

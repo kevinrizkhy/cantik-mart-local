@@ -3,6 +3,7 @@ class RegistersController < ApplicationController
   before_action { |controller| controller.authorize(User::ADMIN) }
 
   def new
+    render :layout => false
   end
 
   def create

@@ -63,7 +63,7 @@ class RetursController < ApplicationController
     if params[:item_id].present?
       @supplier_items = SupplierItem.where(item_id: params[:item_id])
       if @supplier_items.count > 1
-        return redirect_to item_suppliers_path(id: params[:item_id])
+        return redirect_back_data_invalid item_suppliers_path(id: params[:item_id])
       end
     end
     if params[:supplier_id].present?
@@ -103,29 +103,35 @@ class RetursController < ApplicationController
       supplier_id: address_to
 
     items.each do |retur_item|
-      item = Item.find retur_item[0]
-      if item.nil?
+      item = StoreItem.find retur_item[0]
+      if item.nil? 
         ReturItem.where(retur: retur).delete_all
         Retur.where(retur: retur).delete
+        return redirect_back_data_invalid new_retur_path
+      elsif item.stock < retur_item[1]
+        ReturItem.where(retur: retur).delete_all
+        Retur.where(retur: retur).delete
+        return redirect_back_data_invalid new_retur_path
       end
-      a = ReturItem.create item_id: retur_item[0], retur_id: retur.id, quantity: retur_item[1], description: retur_item[2]
+
+      ReturItem.create item_id: retur_item[0], retur_id: retur.id, quantity: retur_item[1], description: retur_item[2]
     end
     return redirect_to returs_path
   end
 
   def confirmation
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_not_found returs_path unless params[:id].present?
     @retur = Retur.find params[:id]
-    return redirect_to returs_path if @retur.nil?
-    return redirect_back_no_access_right if @retur.date_picked.present? || @retur.date_approve.present?
+    return redirect_back_data_not_found returs_path if @retur.nil?
+    return redirect_back_data_not_found returs_path if @retur.date_picked.present? || @retur.date_approve.present?
     @retur_items = ReturItem.where(retur_id: @retur.id)
   end
 
   def accept
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_not_found returs_path unless params[:id].present?
     retur = Retur.find params[:id]
-    return redirect_back_no_access_right if retur.nil?
-    return redirect_back_no_access_right if retur.date_picked.present? || retur.date_approve.present?
+    return redirect_back_data_not_found returs_path if retur.nil?
+    return redirect_back_data_invalid returs_path if retur.date_picked.present? || retur.date_approve.present?
     items = retur_items
     items.each do |item|
       retur_item = ReturItem.find item[0]
@@ -140,10 +146,10 @@ class RetursController < ApplicationController
   end
 
   def picked
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_not_found returs_path unless params[:id].present?
     retur = Retur.find params[:id]
-    return redirect_back_no_access_right if retur.nil?
-    return redirect_back_no_access_right unless retur.date_picked.present? || retur.date_approve.present?
+    return redirect_back_data_not_found returs_path if retur.nil?
+    return redirect_back_data_invalid returs_path unless retur.date_picked.present? || retur.date_approve.present?
     retur.date_picked = Time.now
     retur.save!
     decrease_stock params[:id]
@@ -151,10 +157,10 @@ class RetursController < ApplicationController
   end
 
   def destroy
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_not_found returs_path unless params[:id].present?
     retur = Retur.find params[:id]
-    return redirect_back_no_access_right unless retur.present?
-    return redirect_back_no_access_right if retur.date_approve.present?
+    return redirect_back_data_not_found returs_path unless retur.present?
+    return redirect_back_data_invalid returs_path if retur.date_approve.present?
     ReturItem.where(retur_id: params[:id]).destroy_all
     retur.destroy
     return redirect_to returs_path

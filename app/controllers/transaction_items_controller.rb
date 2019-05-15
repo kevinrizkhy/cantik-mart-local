@@ -4,7 +4,7 @@ class TransactionItemsController < ApplicationController
 
   def index
     @transaction_items = TransactionItem.page param_page
-    return redirect_back_no_access_right if params[:id].nil?
+    return redirect_back_data_not_found transaction_path if params[:id].nil?
     @transaction_items = @transaction_items.where(transaction_id: params[:id])
   end
 

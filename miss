@@ -1,0 +1,40 @@
+TASK : 
+- alert notification in all controller (adding flash in all return success)
+- change all view to new bootstrap
+	* NEW ORDER
+	* EDIT STORE
+	* INDEX ITEM_SUPPLIER
+	* INDEX STOCK
+	* EDIT STOCK
+	* INDEX TRANSACTION
+	* INDEX TRANSACTION ITEM
+	* INDEX COMPLAIN
+	* NEW COMPLAIN
+	* INDEX TRANSFER
+	* INDEX TRANSFER ITEM
+	* NEW TRANSFER
+	* NEW ORDER
+	* ORDER PAY
+	* ALL FINANCES
+- consumer retur
+- retur to warehouse
+- change order "add new item" to use API
+- post using API, set token CSRF
+- notification
+- profile
+- save image profile
+- add img into item
+- add card into home 
+- check selecting data is on this current user or all 
+- add restriction method
+- checking all trx 
+
+
+
+DONE:
+- check if order "edit", new qty > curr qty
+- check if retur "new", qty > curr stock
+- insert brand automatically from 'first' word in item name
+- order items controller line 5
+- if order from retur (total is 0), automatically set date_paid_off is current time
+- alert notification in all controller (adding flash in all return error)

@@ -1,10 +1,10 @@
 class ItemSuppliersController < ApplicationController
   before_action :require_login
   def index
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_not_found suppliers_path unless params[:id].present?
     @inventories = SupplierItem.page param_page
     @item = Item.find_by_id params[:id]
-    return redirect_to items_path unless @item.present?
+    return redirect_back_data_not_found suppliers_path unless @item.present?
     @inventories = @inventories.where(item_id: @item.id)
     if params[:search].present?
       @search = params[:search].downcase

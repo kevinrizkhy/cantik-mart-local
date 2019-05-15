@@ -14,20 +14,19 @@ class MembersController < ApplicationController
 
   def create
     member = Member.new member_params
-    return redirect_to new_member_path if member.invalid?
-
+    return redirect_back_data_invalid new_member_path if member.invalid?
     member.save!
     return redirect_to members_path
   end
 
   def edit
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_not_found members_path unless params[:id].present?
     @member = Member.find_by_id params[:id]
-    return redirect_to members_path unless @member.present?
+    return redirect_back_data_not_found members_path unless @member.present?
   end
 
   def update
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_not_found unless params[:id].present?
     member = Member.find_by_id params[:id]
     member.assign_attributes member_params
     member.save! if member.changed?
