@@ -9,7 +9,7 @@
           .row
             .col
               label for="from" Kode Barang
-              input type="text" placeholder="123456789" onchange="" class="form-control"
+              input type="text" placeholder="123456789" onchange="" class="form-control md-form"
             .col
               .form-group
                 label for="from" Supplier
@@ -62,11 +62,11 @@
                           option data-subtext="#{stock.item_cat.name}" value="#{stock.id}" 
                             | #{stock.name}
                       td 
-                        input type="number" required=true class="form-control" id="quantity" name="order[order_items][#{index}][quantity]" value="#{new_order}"
+                        input type="number" required=true class="form-control md-form" id="quantity" name="order[order_items][#{index}][quantity]" value="#{new_order}"
                       td 
-                        input type="number" required=true class="form-control" id="quantity" name="order[order_items][#{index}][price]"
+                        input type="number" required=true class="form-control md-form" id="quantity" name="order[order_items][#{index}][price]"
                       td 
-                        input type="textarea" class="form-control" id="description" name="order[order_items][0][description]" value="Barang yang terkena stok limit."
+                        input type="textarea" class="form-control md-form" id="description" name="order[order_items][0][description]" value="Barang yang terkena stok limit."
                       td
                         i.fa.fa-trash.text-danger onclick="removeThisRow(this)"
                     - idx+=1
@@ -77,11 +77,11 @@
                           option data-subtext="#{item.item_cat.name}" value="#{item.id}" 
                             | #{item.name}
                     td
-                      input type="number" required=true class="form-control" id="quantity" name="order[order_items][#{idx}][quantity]"
+                      input type="number" required=true class="form-control md-form" id="quantity" name="order[order_items][#{idx}][quantity]"
                     td
-                      input type="number" required=true class="form-control" id="quantity" name="order[order_items][#{idx}][price]"
+                      input type="number" required=true class="form-control md-form" id="quantity" name="order[order_items][#{idx}][price]"
                     td
-                      input type="textarea" class="form-control" id="description" name="order[order_items][#{idx}][description]"
+                      input type="textarea" class="form-control md-form" id="description" name="order[order_items][#{idx}][description]"
                     td
                       i.fa.fa-trash.text-danger onclick="removeThisRow(this)"
                   tr
@@ -91,11 +91,11 @@
                           option data-subtext="#{item.item_cat.name}" value="#{item.id}" 
                             | #{item.name}
                     td
-                      input type="number" required=true class="form-control" id="quantity" name="order[order_items][#{idx+1}][quantity]"
+                      input type="number" required=true class="form-control md-form" id="quantity" name="order[order_items][#{idx+1}][quantity]"
                     td
-                      input type="number" required=true class="form-control" id="quantity" name="order[order_items][#{idx+1}][price]"
+                      input type="number" required=true class="form-control md-form" id="quantity" name="order[order_items][#{idx+1}][price]"
                     td
-                      input type="textarea" class="form-control" id="description" name="order[order_items][#{idx+1}][description]"
+                      input type="textarea" class="form-control md-form" id="description" name="order[order_items][#{idx+1}][description]"
                     td
                       i.fa.fa-trash.text-danger onclick="removeThisRow(this)"
             .col-md-12.text-center

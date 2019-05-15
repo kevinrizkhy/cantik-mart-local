@@ -1,4 +1,4 @@
-row
+.row
   .col.text-left
     h5
       | Daftar Stok Barang    
@@ -17,11 +17,8 @@ br
       .card-body
         = form_for :store_item, url: stocks_path, method: 'GET' do |form|
           .row
-            .col
-              h5
-                | Daftar Stok Barang
-            .col
-              input type="text" class="form-control" id="search" name="search"
+            .col-10
+              input type="text" class="form-control md-form" id="search" name="search"
             .col
               button class="btn btn-rounded btn-primary"
                 | Cari

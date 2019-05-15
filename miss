@@ -2,7 +2,7 @@ TASK :
 - fixing "col" if page is resizing ==> table + search field
 - alert notification in all controller (adding flash in all return success)
 - js in add new row (all) ==> remove add new row button in new HTML
-- dropdown text if md-form is deleted -> change into black text
+- add profit chart
 - change all view to new bootstrap
 	* NEW ORDER ==> JS
 	* ALL FINANCES
@@ -30,3 +30,5 @@ DONE:
 - alert notification in all controller (adding flash in all return error)
 - change navbar img => image_tag
 - add image link into items
+- top nav ==> img
+- dropdown text if md-form is deleted -> change into black text

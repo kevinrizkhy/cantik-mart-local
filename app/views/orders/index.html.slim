@@ -18,9 +18,9 @@ br
         = form_for :order, url: orders_path, method: 'GET' do |form|
           .row  
             .col-6
-              input type="text" class="form-control" id="search" name="search"
+              input type="text" class="form-control md-form" id="search" name="search"
             .col-6
-              select[class="mdb-select md-outline colorful-select dropdown-primary" id="order_type" name="type"]
+              select[class="mdb-select md-form md-outline colorful-select dropdown-primary" id="order_type" name="type"]
                 option[value=""]
                   | Semua
                 option[value="ongoing"]

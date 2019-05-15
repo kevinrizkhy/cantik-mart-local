@@ -8,6 +8,6 @@
         = form_for :item_cat, url: item_cats_path, method: "POST" do |form|
 		  .form-group
 		    label for="name" Nama
-		    = form.text_field :name, required: true, class: "form-control", id: "name"
+		    = form.text_field :name, required: true, class: "form-control md-form", id: "name"
           .form-group.text-center
             = form.submit "Tambah Barang", class: "btn btn-rounded btn-primary"

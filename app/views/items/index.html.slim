@@ -23,7 +23,7 @@ br
         = form_for :items, url: items_path, method: 'GET' do |form|
           .row
             .col-12
-              input type="text" class="form-control" id="search" name="search" value="#{@search}" placeholder="Cari..."
+              input type="text" class="form-control md-form" id="search" name="search" value="#{@search}" placeholder="Cari..."
             .col
               select[class="mdb-select md-form md-outline colorful-select dropdown-primary" id="order_by" name="order_by"]
                 option[value="code" select]

@@ -43,10 +43,10 @@
                   | Gunakan Piutang
             .form-group
               label for="nominal" Piutang yang Digunakan
-              = form.number_field :receivable_nominal, required: true, class: "form-control", id: "nominal", value:0
+              = form.number_field :receivable_nominal, required: true, class: "form-control md-form", id: "nominal", value:0
             .form-group
               label for="date" Tanggal Pembayaran
-              input type="date" class="form-control" name="order_pay[date_paid]" value="#{Date.today}"
+              input type="date" class="form-control md-form" name="order_pay[date_paid]" value="#{Date.today}"
             .form-group.text-center
               = form.submit "Bayar", class: "btn btn-rounded btn-primary"
 
@@ -60,10 +60,10 @@
         = form_for :order_pay, url: order_paid_path, method: "POST" do |form|
           .form-group
             label for="nominal" Nominal yang Dibayarkan
-            = form.number_field :nominal, required: true, class: "form-control", id: "nominal", value:0
+            = form.number_field :nominal, required: true, class: "form-control md-form", id: "nominal", value:0
           .form-group
             label for="date" Tanggal Pembayaran
-            input type="date" class="form-control" name="order_pay[date_paid]" value="#{Date.today}"
+            input type="date" class="form-control md-form" name="order_pay[date_paid]" value="#{Date.today}"
           - if receive.present?
             .form-group
               br

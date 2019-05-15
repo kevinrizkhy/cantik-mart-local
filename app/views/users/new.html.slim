@@ -8,19 +8,19 @@
         = form_for :user, url: users_path, method: "POST" do |form|
           .form-group
             label for="name" Nama
-            = form.text_field :name, required: true, class: "form-control", id: "name"
+            = form.text_field :name, required: true, class: "form-control md-form", id: "name"
           .form-group
             label for="email" Email
-            = form.text_field :email, required: true, class: "form-control", id: "email"
+            = form.text_field :email, required: true, class: "form-control md-form", id: "email"
           .form-group
             label for="password" Kata Sandi
-            = form.text_field :password, required: true, class: "form-control", id: "password"
+            = form.text_field :password, required: true, class: "form-control md-form", id: "password"
           .form_group
             label for="address" Alamat
-            = form.text_field :address, required: true, class: "form-control", id: "address"
+            = form.text_field :address, required: true, class: "form-control md-form", id: "address"
           .form-group
             label for="phone" No. Telepon
-            = form.number_field :phone, required: true, class: "form-control", id: "phone"
+            = form.number_field :phone, required: true, class: "form-control md-form", id: "phone"
           .form-group
             label for="sex" Jenis Kelamin
             select name="user[sex]" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" searchable="Cari..."
@@ -41,7 +41,7 @@
                 | Kasir
           .form-group
             label for="id-card" KTP
-            = form.text_field :id_card, required: true, class: "form-control", id: "id-card"
+            = form.text_field :id_card, required: true, class: "form-control md-form", id: "id-card"
           .form-group
             label for="store" Toko
             select name="user[store_id]" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" id="store" searchable="Cari..."

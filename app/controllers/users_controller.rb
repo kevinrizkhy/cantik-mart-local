@@ -10,6 +10,12 @@ class UsersController < ApplicationController
 
   end
 
+  def show
+    return redirect_back_data_not_found users_path unless params[:id].present?
+    @user = User.find_by_id params[:id]
+    return redirect_back_data_not_found users_path unless @user.present?
+  end
+
   def new
     @stores = Store.all
   end

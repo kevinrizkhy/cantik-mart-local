@@ -41,19 +41,19 @@ br
               - @transaction_items.each_with_index do |trx_item, index|
                 tr
                   td hidden=true
-                    input type="text" required=true class="form-control" id="description" name="complain[complain_items][#{index}][item_id]" value="#{trx_item.item.id}" 
+                    input type="text" required=true class="form-control md-form" id="description" name="complain[complain_items][#{index}][item_id]" value="#{trx_item.item.id}" 
                   td
                     | #{trx_item.item.name}
                   td 
-                    input type="number" required=true class="form-control" id="price" name="complain[complain_items][#{index}][price]" value="#{trx_item.price}" readonly=true
+                    input type="number" required=true class="form-control md-form" id="price" name="complain[complain_items][#{index}][price]" value="#{trx_item.price}" readonly=true
                   td 
-                    input type="textarea" required=true class="form-control" id="discount" name="complain[complain_items][#{index}][discount]" value="#{trx_item.discount}" readonly=true
+                    input type="textarea" required=true class="form-control md-form" id="discount" name="complain[complain_items][#{index}][discount]" value="#{trx_item.discount}" readonly=true
                   td 
-                    input type="number" required=true class="form-control" id="quantity" name="complain[complain_items][#{index}][quantity]" value="#{trx_item.quantity}" readonly=true 
+                    input type="number" required=true class="form-control md-form" id="quantity" name="complain[complain_items][#{index}][quantity]" value="#{trx_item.quantity}" readonly=true 
                   td 
-                    input type="number" required=true class="form-control" id="newquantity" name="complain[complain_items][#{index}][new_quantity]" value=0
+                    input type="number" required=true class="form-control md-form" id="newquantity" name="complain[complain_items][#{index}][new_quantity]" value=0
                   td 
-                    input type="text" required=true class="form-control" id="description" name="complain[complain_items][#{index}][decription]" value="#{@transaction.invoice}" readonly=true
+                    input type="text" required=true class="form-control md-form" id="description" name="complain[complain_items][#{index}][decription]" value="#{@transaction.invoice}" readonly=true
           .col-md-12.text-center
             .form-group.text-center
               = form.submit "Buat Retur", class: "btn btn-rounded btn-primary"

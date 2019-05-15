@@ -15,7 +15,7 @@
             .col-md-6
               .form-group
                 label for="from" Dari
-                input type="text" class="form-control" disabled=true value="#{current_user.store.name}"
+                input type="text" class="form-control md-form" disabled=true value="#{current_user.store.name}"
             .col-md-6
               .form-group
                 label for="from" Kepada
@@ -54,9 +54,9 @@
                         option data-subtext="#{inventory.item.item_cat.name}" value="#{inventory.item.id}" 
                           | #{inventory.item.name}
                   td
-                    input type="number" required=true class="form-control" id="quantity" name="transfer[transfer_items][#{idx}][quantity]"
+                    input type="number" required=true class="form-control md-form" id="quantity" name="transfer[transfer_items][#{idx}][quantity]"
                   td
-                    input type="textarea" class="form-control" id="description" name="transfer[transfer_items][#{idx}][description]"
+                    input type="textarea" class="form-control md-form" id="description" name="transfer[transfer_items][#{idx}][description]"
                   td
                     i.fa.fa-trash.text-danger onclick="removeThisRow(this)"
                 tr
@@ -66,9 +66,9 @@
                         option data-subtext="#{inventory.item.item_cat.name}" value="#{inventory.item.id}" 
                           | #{inventory.item.name}
                   td
-                    input type="number" required=true class="form-control" id="quantity" name="transfer[transfer_items][#{idx+1}][quantity]"
+                    input type="number" required=true class="form-control md-form" id="quantity" name="transfer[transfer_items][#{idx+1}][quantity]"
                   td
-                    input type="textarea" class="form-control" id="description" name="transfer[transfer_items][#{idx+1}][description]"
+                    input type="textarea" class="form-control md-form" id="description" name="transfer[transfer_items][#{idx+1}][description]"
                   td
                     i.fa.fa-trash.text-danger onclick="removeThisRow(this)"
             .col-md-12.text-center

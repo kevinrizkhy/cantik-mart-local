@@ -3,7 +3,7 @@ h5
 = form_for :finance, url: cash_flows_path, method: "POST" do |form|
   .form-group
     label for="type" Tipe
-    select name="finance[finance_type]" required=true class="form-control" data-live-search="true" data-live-search-style="startsWith" class="selectpicker form_control"
+    select name="finance[finance_type]" required=true class="form-control md-form" data-live-search="true" data-live-search-style="startsWith" class="selectpicker form_control"
       option value="BankLoan"
         | Pinjaman Bank 
       option value="Loan"
@@ -22,10 +22,10 @@ h5
         | Aset 
   .form-group
     label for="nominal" Nominal
-    = form.number_field :nominal, required: true, class: "form-control", id: "nominal"
+    = form.number_field :nominal, required: true, class: "form-control md-form", id: "nominal"
   .form-group
     label for="description" Deskripsi
-    = form.text_field :description, required: true, class: "form-control", id: "description"
+    = form.text_field :description, required: true, class: "form-control md-form", id: "description"
   
   .form-group
     = form.submit "Tambah", class: "btn btn-rounded btn-primary"

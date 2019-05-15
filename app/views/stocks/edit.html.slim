@@ -8,10 +8,10 @@
         = form_for :item, url: stock_path(id: @stock.id), method: "PUT" do |form|
           .form-group
             label for="code" Kode
-            = form.text_field :code, required: true, class: "form-control", id: "code", disabled: true
+            = form.text_field :code, required: true, class: "form-control md-form", id: "code", disabled: true
           .form-group
             label for="name" Nama
-            = form.text_field :name, required: true, class: "form-control", id: "name", disabled: true
+            = form.text_field :name, required: true, class: "form-control md-form", id: "name", disabled: true
           .form-group
               label for="item" Kategori
               select name="supplier_item[item_cat_id]" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" searchable="Cari..."
@@ -20,15 +20,15 @@
                     | #{item_cat.name}   
           .form_group
             label for="category" Stok Lama
-            input type='number' value="#{@stock.stock}" disabled= true class="form-control"
+            input type='number' value="#{@stock.stock}" disabled= true class="form-control md-form"
           .form-group
             label for="stock" Stok Baru
-            = form.number_field :stock, required: true, class: "form-control", id: "stock", value:"#{@stock.stock}"
+            = form.number_field :stock, required: true, class: "form-control md-form", id: "stock", value:"#{@stock.stock}"
           .form-group
             label for="stock" Limit
-            = form.number_field :min_stock, required: true, class: "form-control", id: "stock", value:"#{@stock.min_stock}"
+            = form.number_field :min_stock, required: true, class: "form-control md-form", id: "stock", value:"#{@stock.min_stock}"
           .form-group
             label for="sell" Harga Jual
-            = form.number_field :sell, required: true, class: "form-control", id: "sell", disabled: true
+            = form.number_field :sell, required: true, class: "form-control md-form", id: "sell", disabled: true
           .form-group.text-center
             = form.submit "Ubah Stok Item - #{@item.name}", class: "btn btn-rounded btn-primary"
