@@ -1,48 +1,59 @@
+- member = "XXXXXX"
+- member = @transaction.member.name if @transaction.member.present?
 .row
   .col.text-left
-    h2
-      | BUAT RETUR MEMBER (#{@transaction.invoice})
+    h5
+      | Buat Retur Member - #{member}
   .col.text-right.text-danger
-    h2
+    h5
       | TOTAL : #{number_to_currency(@transaction.grand_total, unit: "Rp. ")}
-= form_for :complain, url: complains_path(id: @transaction.id), method: "POST" do |form|
-  hr style="bretur-top: 1px solid black;"
-  .row
-    .col-md-12.text-right
-      button type="button" class="btn btn-rounded btn-primary" onclick="addNewRowComplain()"
-        | + Item
-    .col-md-12  
-      table.table id="myTable"
-        tr
-          th
-            | Item - Kategori
-          th
-            | Harga
-          th
-            | Diskon
-          th
-            | Jumlah Lama
-          th
-            | Jumlah Baru
-          th
-            | Keterangan
-          th
-        - @transaction_items.each_with_index do |trx_item, index|
-          tr
-            td hidden=true
-              input type="text" required=true class="form-control" id="description" name="complain[complain_items][#{index}][item_id]" value="#{trx_item.item.id}" 
-            td
-              | #{trx_item.item.name}
-            td 
-              input type="number" required=true class="form-control" id="price" name="complain[complain_items][#{index}][price]" value="#{trx_item.price}" readonly=true
-            td 
-              input type="textarea" required=true class="form-control" id="discount" name="complain[complain_items][#{index}][discount]" value="#{trx_item.discount}" readonly=true
-            td 
-              input type="number" required=true class="form-control" id="quantity" name="complain[complain_items][#{index}][quantity]" value="#{trx_item.quantity}" readonly=true 
-            td 
-              input type="number" required=true class="form-control" id="newquantity" name="complain[complain_items][#{index}][new_quantity]" value=0
-            td 
-              input type="text" required=true class="form-control" id="description" name="complain[complain_items][#{index}][decription]" value="#{@transaction.invoice}" readonly=true
-    .col-md-12.text-center
-      .form-group.text-center
-        = form.submit "Buat Retur", class: "btn btn-rounded btn-primary"
+br
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Data Pembeliaan (#{@transaction.invoice}) 
+      .card-body
+        .row
+          .col-md-12.text-right
+            button type="button" class="btn btn-rounded btn-deep-orange" onclick="addNewRowComplain()"
+              | + Item
+            br
+            br
+        = form_for :complain, url: complains_path(id: @transaction.id), method: "POST" do |form|
+          .col-12
+            table.table id="myTable"
+              tr
+                th
+                  | Item - Kategori
+                th
+                  | Harga
+                th
+                  | Diskon
+                th
+                  | Jumlah Lama
+                th
+                  | Jumlah Baru
+                th
+                  | Keterangan
+                th
+              - @transaction_items.each_with_index do |trx_item, index|
+                tr
+                  td hidden=true
+                    input type="text" required=true class="form-control" id="description" name="complain[complain_items][#{index}][item_id]" value="#{trx_item.item.id}" 
+                  td
+                    | #{trx_item.item.name}
+                  td 
+                    input type="number" required=true class="form-control" id="price" name="complain[complain_items][#{index}][price]" value="#{trx_item.price}" readonly=true
+                  td 
+                    input type="textarea" required=true class="form-control" id="discount" name="complain[complain_items][#{index}][discount]" value="#{trx_item.discount}" readonly=true
+                  td 
+                    input type="number" required=true class="form-control" id="quantity" name="complain[complain_items][#{index}][quantity]" value="#{trx_item.quantity}" readonly=true 
+                  td 
+                    input type="number" required=true class="form-control" id="newquantity" name="complain[complain_items][#{index}][new_quantity]" value=0
+                  td 
+                    input type="text" required=true class="form-control" id="description" name="complain[complain_items][#{index}][decription]" value="#{@transaction.invoice}" readonly=true
+          .col-md-12.text-center
+            .form-group.text-center
+              = form.submit "Buat Retur", class: "btn btn-rounded btn-primary"

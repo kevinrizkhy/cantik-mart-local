@@ -2,7 +2,7 @@
 - retur = @retur_items.first.retur
 .row
   .col
-    h2
+    h5
       | Daftar Item Retur (#{@retur_items.first.retur.invoice})
   .col.text-right
   - if retur.date_approve.present? && retur.date_picked.present? && retur.status.nil?

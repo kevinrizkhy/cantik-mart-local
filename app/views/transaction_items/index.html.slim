@@ -1,15 +1,41 @@
-.row
-  .col
-    h2
-      | Daftar Barang Transaksi - #{@transaction_items.first.trx.invoice}
-table class="table"
-  thead
-    th Kode
-    th Nama
-    th Jumlah
-    th Harga
-    th Diskon
-    th Total
-  tbody
-    = render partial: 'list', collection: @transaction_items, as: :transaction_item
-= paginate @transaction_items
+- transaction = @transaction_items.first.trx
+- member = "-"
+- member = transaction.member.name  if transaction.member.present?
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Informasi Transaksi 
+      .card-body
+        .row
+          .col
+            label Invoice
+            input disabled="disabled" class="form-control" value="#{transaction.invoice}"
+          .col
+            label Member
+            input disabled="disabled" class="form-control" value="#{member}"
+          .col
+            label Kasir
+            input disabled="disabled" class="form-control" value="#{transaction.user.name}"
+          .col
+            label Total
+            input disabled="disabled" class="form-control" value="#{transaction.grand_total}"
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Daftar Barang 
+      .card-body
+        table class="table"
+          thead
+            th Kode
+            th Nama
+            th Jumlah
+            th Harga
+            th Diskon
+            th Total
+          tbody
+            = render partial: 'list', collection: @transaction_items, as: :transaction_item
+        = paginate @transaction_items

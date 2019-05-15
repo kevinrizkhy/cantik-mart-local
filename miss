@@ -1,20 +1,10 @@
 TASK : 
+- fixing "col" if page is resizing ==> table + search field
 - alert notification in all controller (adding flash in all return success)
+- js in add new row (all) ==> remove add new row button in new HTML
+- dropdown text if md-form is deleted -> change into black text
 - change all view to new bootstrap
-	* NEW ORDER
-	* EDIT STORE
-	* INDEX ITEM_SUPPLIER
-	* INDEX STOCK
-	* EDIT STOCK
-	* INDEX TRANSACTION
-	* INDEX TRANSACTION ITEM
-	* INDEX COMPLAIN
-	* NEW COMPLAIN
-	* INDEX TRANSFER
-	* INDEX TRANSFER ITEM
-	* NEW TRANSFER
-	* NEW ORDER
-	* ORDER PAY
+	* NEW ORDER ==> JS
 	* ALL FINANCES
 - consumer retur
 - retur to warehouse
@@ -38,3 +28,4 @@ DONE:
 - order items controller line 5
 - if order from retur (total is 0), automatically set date_paid_off is current time
 - alert notification in all controller (adding flash in all return error)
+- change navbar img => image_tag

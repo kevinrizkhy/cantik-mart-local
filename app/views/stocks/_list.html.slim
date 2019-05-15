@@ -1,5 +1,5 @@
 - if inventory.min_stock > inventory.stock
-	tr [style="background:#f76a6a; color:white;"]
+	tr 
 		td #{inventory.item.code}
 		td #{inventory.item.name}
 		td #{inventory.item.item_cat.name}
@@ -11,39 +11,16 @@
 		  		button.btn.btn-rounded.btn-primary type="button" 
 	        		| Edit
 	       	| &nbsp &nbsp
-	       	a href='#{new_order_path(item_id: inventory.item.id)}'
-			  	button.btn.btn-rounded.btn-primary type="button" 
-		        	| Order
-- elsif inventory.min_stock == inventory.stock
-	tr [style="background:yellow;"]
-		td #{inventory.item.code}
-		td #{inventory.item.name}
-		td #{inventory.item.item_cat.name}
-		td #{inventory.stock}
-		td #{inventory.min_stock}
-		td #{inventory.item.sell}
-		td
-		  	a href='#{edit_stock_path(id: inventory.id)}'
-		  		button.btn.btn-rounded.btn-primary type="button" 
-	        		| Edit
-	       	| &nbsp &nbsp
-	       	a href='#{new_order_path(item_id: inventory.item.id)}'
-			  	button.btn.btn-rounded.btn-primary type="button" 
-		        	| Order
-- else
-	tr
-	  td #{inventory.item.code}
-	  td #{inventory.item.name}
-	  td #{inventory.item.item_cat.name}
-	  td #{inventory.stock}
-	  td #{inventory.min_stock}
-	  td #{inventory.item.sell}
-	  td
-	    a href='#{edit_stock_path(id: inventory.id)}' 
-	    	button.btn.btn-rounded.btn-primary type="button" 
-	        	| Edit
-	    | &nbsp &nbsp
-	    a href='#{new_order_path(item_id: inventory.item.id)}'
-		  	button.btn.btn-rounded.btn-primary type="button" 
-	        	| Order
-
+	       	- if inventory.min_stock > inventory.stock
+	       		a href='#{new_order_path(item_id: inventory.item.id)}'
+			  		button.btn.btn-rounded.btn-danger type="button" 
+		        		| Order
+			- elsif inventory.min_stock == inventory.stock
+				a href='#{new_order_path(item_id: inventory.item.id)}'
+			  		button.btn.btn-rounded.btn-warning type="button" 
+		        		| Order
+		    - else
+		    	a href='#{new_order_path(item_id: inventory.item.id)}'
+				  	button.btn.btn-rounded.btn-outline-success type="button" 
+			        	| Order
+	

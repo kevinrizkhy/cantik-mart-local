@@ -1,47 +1,79 @@
 - receive = Receivable.where("to_user=? AND deficiency > 0", @order.supplier.id).group(:to_user).sum(:deficiency).values.first
 - max = receive if @pay >= receive
 - max = @pay if @pay <= receive
-.d-flex.justify-content-center.my-4.pt-3
-  span.font-weight-bold.purple-text.mr-2.mt-1
-    i.fas.fa-minus[aria-hidden="true"]
-  form.range-field.w-75
-    input.border-0[type="range" min="0" max="#{max}" step="10000"]
-  span.font-weight-bold.purple-text.ml-2.mt-1
-    i.fas.fa-plus[aria-hidden="true"]
 
 
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Informasi Pemesanan
+      .card-body
+        .row
+          .col-6.text-left
+            h5
+              | Order #{@order.invoice} 
+          .col-6.text-right.text-danger
+            h5
+              b
+                | KEKURANGAN : #{number_to_currency(@pay, unit: "Rp. ")}
+          .col-6.text-left
+            | #{@order.supplier.pic}
+          .col-6.text-right
+            - if receive.present?
+              h5.text-success
+                | Piutang : #{number_to_currency(receive, unit: "Rp. ")}
+            - else
+              h5
+                | Piutang : #{number_to_currency(0, unit: "Rp. ")}
+- if receive.present?
+  .container-fluid
+    .col-lg-12.col-md-12
+      .card.mb-4
+        .card-header.white-text.success-color
+          h5.font-weight-500.my-1
+            | Piutang
+        .card-body
+          = form_for :order_pay, url: order_paid_path, method: "POST" do |form|
+            .form-group
+              .form-check
+                input#materialChecked2.form-check-input[type="checkbox" checked,name="order_pay[user_receivable]"]
+                label.form-check-label[for="materialChecked2"]
+                  | Gunakan Piutang
+            .form-group
+              label for="nominal" Piutang yang Digunakan
+              = form.number_field :receivable_nominal, required: true, class: "form-control", id: "nominal", value:0
+            .form-group
+              label for="date" Tanggal Pembayaran
+              input type="date" class="form-control" name="order_pay[date_paid]" value="#{Date.today}"
+            .form-group.text-center
+              = form.submit "Bayar", class: "btn btn-rounded btn-primary"
 
-.row
-  .col.text-left
-    h2
-      | Pembayarang Order #{@order.invoice} (#{@order.supplier.pic})
-    - if receive.present?
-      h2.text-success
-        | Piutang : #{number_to_currency(receive, unit: "Rp. ")}
-    - else
-      h2
-        | Piutang : #{number_to_currency(0, unit: "Rp. ")}
-  .col.text-right.text-danger
-    h2
-      b
-        | KEKURANGAN : #{number_to_currency(@pay, unit: "Rp. ")}
-= form_for :order_pay, url: order_paid_path, method: "POST" do |form|
-  .form-group
-    label for="nominal" Nominal yang Dibayarkan
-    = form.number_field :nominal, required: true, class: "form-control", id: "nominal", value:0
-  .form-group
-    label for="date" Tanggal Pembayaran
-    input type="date" class="form-control" name="order_pay[date_paid]" value="#{Date.today}"
-  - if receive.present?
-    .form-group
-      br
-      br
-      .custom-control.custom-checkbox
-        input#defaultIndeterminate2.custom-control-input checked="checked" type="checkbox" name="order_pay[user_receivable]" /
-        label.custom-control-label for="defaultIndeterminate2"  Potong Piutang
-    .form-group
-      label for="receivable_nominal" Potong Piutang
-      input type="range" min="0" max="#{max}" step="5000" id="receivable_nominal"  name="order_pay[receivable_nominal]"
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.danger-color
+        h5.font-weight-500.my-1
+          | Bayar 
+      .card-body
+        = form_for :order_pay, url: order_paid_path, method: "POST" do |form|
+          .form-group
+            label for="nominal" Nominal yang Dibayarkan
+            = form.number_field :nominal, required: true, class: "form-control", id: "nominal", value:0
+          .form-group
+            label for="date" Tanggal Pembayaran
+            input type="date" class="form-control" name="order_pay[date_paid]" value="#{Date.today}"
+          - if receive.present?
+            .form-group
+              br
+              br
+              .custom-control.custom-checkbox
+                input#defaultIndeterminate2.custom-control-input checked="checked" type="checkbox" name="order_pay[user_receivable]" /
+                label.custom-control-label for="defaultIndeterminate2"  Potong Piutang
+            .form-group
+              label for="receivable_nominal" Potong Piutang
+              input type="range" min="0" max="#{max}" step="5000" id="receivable_nominal"  name="order_pay[receivable_nominal]"
 
-  .form-group
-    = form.submit "Bayar", class: "btn btn-rounded btn-primary"
+          .form-group
+            = form.submit "Bayar", class: "btn btn-rounded btn-primary"

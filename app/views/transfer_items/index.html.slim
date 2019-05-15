@@ -1,9 +1,6 @@
-- transfer_id = @transfer_items.first.transfer.id
 - transfer = @transfer_items.first.transfer 
+- transfer_id = transfer.id
 .row
-  .col
-    h2
-      | Daftar Item Transfer (#{@transfer_items.first.transfer.invoice})
   - if transfer.date_approve.present? && transfer.date_picked.present? && transfer.status.nil? && @transfer_items.first.transfer.from_store.id == current_user.store.id
     .col-md-6.text-right
       a href="#{transfer_receive_path(id: transfer_id)}"
@@ -25,14 +22,41 @@
     |  
     / = form_for :transfer_items, url: "#{transfer_picked_path(id: transfer_id)}", method: "POST" do |form|
       / = form.submit "Ambil", class: "btn btn-rounded btn-success"
-table class="table"
-  thead
-    th Kode
-    th Name
-    th Kuantiti
-    th Jumlah Kirim
-    th Jumlah Terima
-    th Keterangan
-  tbody
-    = render partial: 'list', collection: @transfer_items, as: :trf_item
-= paginate @transfer_items
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Informasi Transfer 
+      .card-body
+        .row
+          .col
+            label Invoice
+            input disabled="disabled" class="form-control" value="#{transfer.invoice}"
+          .col
+            label Dari
+            input disabled="disabled" class="form-control" value="#{transfer.from_store.name}"
+          .col
+            label Kepada
+            input disabled="disabled" class="form-control" value="#{transfer.to_store.name}"
+          .col
+            label Total Barang
+            input disabled="disabled" class="form-control" value="#{transfer.total_items}"
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Daftar Barang 
+      .card-body
+        table class="table"
+          thead
+            th Kode
+            th Name
+            th Kuantiti
+            th Jumlah Kirim
+            th Jumlah Terima
+            th Keterangan
+          tbody
+            = render partial: 'list', collection: @transfer_items, as: :trf_item
+        = paginate @transfer_items
