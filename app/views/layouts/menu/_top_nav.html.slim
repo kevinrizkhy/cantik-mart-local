@@ -3,7 +3,7 @@ nav.navbar.fixed-top.navbar-expand-lg.scrolling-navbar.double-nav
     a.button-collapse data-activates="slide-out" href="#" 
       i.fas.fa-bars
   .breadcrumb-dn.mr-auto
-    p Dashboard v.3
+    p PT. Parahyangan Digital Dev
   .d-flex.change-mode
     ul.nav.navbar-nav.nav-flex-icons.ml-auto
       li.nav-item.dropdown.notifications-nav
@@ -33,7 +33,7 @@ nav.navbar.fixed-top.navbar-expand-lg.scrolling-navbar.double-nav
       li.nav-item.dropdown
         a#userDropdown.nav-link.dropdown-toggle.waves-effect aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" href="#" 
           i.fas.fa-user
-          span.clearfix.d-none.d-sm-inline-block #{current_user.name}
+          span.clearfix.d-none.d-sm-inline-block &nbsp&nbsp&nbsp#{current_user.name} - #{current_user.level}
         .dropdown-menu.dropdown-menu-right aria-labelledby="userDropdown" 
-          a.dropdown-item href="#"  My account
+          a.dropdown-item href="#{edit_user_path(id: current_user.id)}"  Akun
           = button_to "Keluar", sign_out_path, method: :delete, class: "btn btn-rounded btn-danger"

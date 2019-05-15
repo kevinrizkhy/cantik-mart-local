@@ -1,5 +1,10 @@
 tr
   td #{inventory.item.code}
+  td
+    - if inventory.item.image.present?
+      img src="#{inventory.item.image}" width="50px"
+    - else
+      =image_tag("/images/default_item.jpg", height: '70', width: '70')
   td #{inventory.item.name}
   td #{inventory.item.item_cat.name}
   td #{inventory.stock}

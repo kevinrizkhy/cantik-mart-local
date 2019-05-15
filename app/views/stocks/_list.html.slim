@@ -1,6 +1,10 @@
 - if inventory.min_stock > inventory.stock
 	tr 
 		td #{inventory.item.code}
+		td
+		    - if inventory.item.image.present?
+		      	img src="#{inventory.item.image}" width="50px"
+		    - else
 		td #{inventory.item.name}
 		td #{inventory.item.item_cat.name}
 		td #{inventory.stock}

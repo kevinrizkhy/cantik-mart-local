@@ -1,10 +1,15 @@
 tr
-  td #{user.name}
-  td #{user.address}
-  td #{user.phone}
-  td #{user.sex}
-  td
-    a href='#{edit_user_path(id: user.id)}' 
-    	button.btn.btn-rounded.btn-warning.black-text type="button" 
-	       	| Edit
+	td 
+		- if user.image.present?
+			=image_tag("/uploads/profile_picture/#{user.image}", height: '90', width: '70')
+		- else
+			=image_tag("/uploads/profile_picture/default.png", height: '90', width: '70')
+  	td #{user.name}
+  	td #{user.address}
+  	td #{user.phone}
+  	td #{user.sex}
+  	td
+    	a href='#{edit_user_path(id: user.id)}' 
+    		button.btn.btn-rounded.btn-warning.black-text type="button" 
+	       		| Edit
 

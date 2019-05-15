@@ -29,3 +29,4 @@ DONE:
 - if order from retur (total is 0), automatically set date_paid_off is current time
 - alert notification in all controller (adding flash in all return error)
 - change navbar img => image_tag
+- add image link into items

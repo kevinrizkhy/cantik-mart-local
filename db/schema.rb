@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_04_094915) do
+ActiveRecord::Schema.define(version: 2019_05_15_150136) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -136,6 +136,7 @@ ActiveRecord::Schema.define(version: 2019_05_04_094915) do
     t.string "brand", default: "DEFAULT BRAND", null: false
     t.float "wholesale", default: 0.0, null: false
     t.float "box", default: 0.0, null: false
+    t.string "image"
     t.index ["item_cat_id"], name: "index_items_on_item_cat_id"
   end
 
@@ -366,6 +367,7 @@ ActiveRecord::Schema.define(version: 2019_05_04_094915) do
     t.integer "sex", default: 0, null: false
     t.bigint "store_id"
     t.integer "salary", default: 0
+    t.string "image"
     t.index ["email"], name: "index_users_on_email"
     t.index ["remember_token"], name: "index_users_on_remember_token"
     t.index ["store_id"], name: "index_users_on_store_id"

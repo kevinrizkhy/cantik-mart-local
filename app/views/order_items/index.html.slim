@@ -25,6 +25,7 @@ br
         table class="table"
           thead
             th Kode
+            th Foto
             th Nama
             th Jumlah
             th Harga / Item
@@ -35,6 +36,7 @@ br
           tbody
             = render partial: 'list', collection: @order_items, as: :order_item
           tfoot.text-xl-right
+            td
             td
             td
             td

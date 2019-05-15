@@ -1,6 +1,5 @@
 class User < ApplicationRecord
   include Clearance::User
-
   validates :level, :email, presence: true
   validates_uniqueness_of :email, :name
 

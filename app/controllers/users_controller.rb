@@ -30,7 +30,14 @@ class UsersController < ApplicationController
 
   def update
     return redirect_back_data_not_found users_path unless params[:id].present?
+    file = params[:user][:image]
+    filename = Digest::SHA1.hexdigest([Time.now, rand].join).to_s+File.extname(file.path).to_s
+    uploaded_io = params[:user][:image]
+    File.open(Rails.root.join('public', 'uploads', 'profile_picture', filename), 'wb') do |file|
+      file.write(uploaded_io.read)
+    end
     user = User.find_by_id params[:id]
+    user.image = filename
     user.assign_attributes user_params
     user.save! if user.changed?
     return redirect_to users_path
