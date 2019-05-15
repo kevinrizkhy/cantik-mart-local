@@ -1,8 +1,13 @@
-h2
-  | UBAH ITEM CATEGORY- #{@item_cat.name}
-= form_for :item_cat, url: item_path(id: @item_cat.id), method: "PUT" do |form|
-  .form-group
-    label for="name" Nama
-    = form.text_field :name, required: true, class: "form-control", id: "name"
-  .form-group
-    = form.submit "Ubah Item - #{@item_cat.name}", class: "btn btn-primary"
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Ubah Kategori Barang (#{@item_cat.name})
+      .card-body 
+        = form_for :item_cat, url: item_cats_path, method: "POST" do |form|
+		  .form-group
+		    label for="name" Nama
+		    = form.text_field :name, required: true, class: "form-control", id: "name"
+          .form-group.text-center
+            = form.submit "Ubah Kategori Barang", class: "btn btn-rounded btn-warning"

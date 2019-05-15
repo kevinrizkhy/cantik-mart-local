@@ -41,14 +41,14 @@ function addNewRow(){
 	var cell4 = row.insertCell(3);
 	var cell5 = row.insertCell(4);
 
-	cell1.innerHTML = '<select id="selectpicker'+add_counter+'" class="selectpicker form-control" data-show-subtext="true" data-live-search="true" name="order[order_items]['+add_counter+'][item_id]">'+
+	cell1.innerHTML = '<select id="selectpicker'+add_counter+'" class="mdb-select md-outline colorful-select dropdown-primary" searchable="Cari..." name="order[order_items]['+add_counter+'][item_id]">'+
 	gon.select_options+'</select>';
 	cell2.innerHTML = '<input type="number" required=true class="form-control" id="quantity" name="order[order_items]['+add_counter+'][quantity]">'; 
 	cell3.innerHTML = '<input type="number" required=true class="form-control" id="quantity" name="order[order_items]['+add_counter+'][price]">'; 
 	cell4.innerHTML = '<input type="textarea" required=true class="form-control" id="description" name="order[order_items]['+add_counter+'][description]">'; 
 	cell5.innerHTML = "<i class='fa fa-trash text-danger' onclick='removeThisRow(this)'></i>"; 
 
-	$('#selectpicker'+add_counter).selectpicker('refresh');
+	$('#selectpicker'+add_counter).material_select();
 	add_counter++;
 }
 
@@ -61,13 +61,14 @@ function addNewRowRetur(){
 	var cell3 = row.insertCell(2);
 	var cell4 = row.insertCell(3);
 
-	cell1.innerHTML = '<select id="selectpicker'+add_counter+'" class="selectpicker form-control" data-show-subtext="true" data-live-search="true" name="retur[retur_items]['+add_counter+'][item_id]">'+
+	cell1.innerHTML = '<select id="selectpicker'+add_counter+'" class="mdb-select md-outline colorful-select dropdown-primary" searchable="Cari..." name="retur[retur_items]['+add_counter+'][item_id]">'+
 	gon.select_options+'</select>';
 	cell2.innerHTML = '<input type="number" required=true class="form-control" id="quantity" name="retur[retur_items]['+add_counter+'][quantity]">'; 
 	cell3.innerHTML = '<input type="textarea" required=true class="form-control" id="description" name="retur[retur_items]['+add_counter+'][description]">'; 
 	cell4.innerHTML = "<i class='fa fa-trash text-danger' onclick='removeThisRow(this)'></i>"; 
 
-	$('#selectpicker'+add_counter).selectpicker('refresh');
+	// $('#selectpicker'+add_counter).selectpicker('refresh');
+	$('#selectpicker'+add_counter).material_select();
 	add_counter++;
 }
 
@@ -83,7 +84,7 @@ function addNewRowComplain(){
 	var cell6 = row.insertCell(5);	
 	var cell7 = row.insertCell(6);
 
-	cell1.innerHTML = '<select id="selectpicker'+add_counter+'" class="selectpicker form-control" data-show-subtext="true" data-live-search="true" name="complain[complain_items]['+add_counter+'][item_id]">'+
+	cell1.innerHTML = '<select id="selectpicker'+add_counter+'" class="mdb-select md-outline colorful-select dropdown-primary" searchable="Cari..." name="complain[complain_items]['+add_counter+'][item_id]">'+
 	gon.select_options+'</select>';
 	cell2.innerHTML = '<input type="number" required=true class="form-control" id="quantity" name="complain[complain_items]['+add_counter+'][price]">';
 	cell3.innerHTML = '<input type="number" required=true class="form-control" id="quantity" name="complain[complain_items]['+add_counter+'][discount]">';  
@@ -92,7 +93,7 @@ function addNewRowComplain(){
 	cell6.innerHTML = '<input type="textarea" required=true class="form-control" id="description" name="complain[complain_items]['+add_counter+'][description]">'; 
 	cell7.innerHTML = "<i class='fa fa-trash text-danger' onclick='removeThisRow(this)'></i>"; 
 
-	$('#selectpicker'+add_counter).selectpicker('refresh');
+	$('#selectpicker'+add_counter).material_select();
 	add_counter++;
 }
 
@@ -108,7 +109,3 @@ var debt = new Chart(ctx, {
       responsive: true
     }
   });
-
-$(document).ready(function() {
-	$('select').selectpicker();
-});

@@ -2,16 +2,30 @@ class OrdersController < ApplicationController
   before_action :require_login
   def index
     @orders = Order.order("date_created DESC").page param_page
+    @orders_new = Order.where("date_receive is null").order("date_created DESC").page param_page
+    @orders_debt = Order.where("date_receive is not null AND date_paid_off is null").order("date_created DESC").page param_page
+    @orders_complete = Order.where("date_paid_off  is not null").order("date_created DESC").page param_page
     if params[:type].present?
       @type = params[:type]
+      
       if @type == "ongoing" 
         @type = "sedang dalam proses"
         @orders = @orders.where(store_id: current_user.store.id).where('date_receive is null')
+        @orders_debt = nil
+        @orders_complete = nil
       elsif @type == "payment"
         @type = "belum lunas"
         @orders = @orders.where(store_id: current_user.store.id).where('date_receive is not null and date_paid_off is null')
+        @orders_new = nil
+        @orders_complete = nil
+       elsif @type == "complete"
+        @type = "lunas"
+        @orders_new = nil
+        @orders_debt = nil
       end
     end
+
+
     if params[:search].present?
       search = params[:search].downcase
       @search = search
@@ -22,11 +36,20 @@ class OrdersController < ApplicationController
         supplier = Supplier.where('lower(pic) like ?', "%"+search_arr[1].downcase+"%").pluck(:id)
           if search_arr[0]== "supplier" && supplier.present?
             @orders = @orders.where(supplier_id: supplier)
+            @orders_new = @orders_new.where(supplier_id: supplier)
+            @orders_debt = @orders_debt.where(supplier_id: supplier)
+            @orders_complete = @orders_complete.where(supplier_id: supplier)
           else
             @orders = @orders.where("invoice like ?", "%"+ search_arr[1]+"%")
+            @orders_new = @orders_new.where("invoice like ?", "%"+ search_arr[1]+"%")
+            @orders_debt = @orders_debt.where("invoice like ?", "%"+ search_arr[1]+"%")
+            @orders_complete = @orders_complete.where("invoice like ?", "%"+ search_arr[1]+"%")
           end
       else
         @orders = @orders.where("invoice like ?", "%"+ search+"%")
+        @orders_new = @orders_new.where("invoice like ?", "%"+ search+"%")
+        @orders_debt = @orders_debt.where("invoice like ?", "%"+ search+"%")
+        @orders_complete = @orders_complete.where("invoice like ?", "%"+ search+"%")
       end
     end
   end

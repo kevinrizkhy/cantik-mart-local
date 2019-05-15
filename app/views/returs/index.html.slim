@@ -4,30 +4,99 @@
       | Daftar Retur Supplier
   .col.text-right
     a href="#{new_retur_path}"
-      button.btn.btn-danger type="button" 
+      button.btn.btn-rounded.btn-danger type="button" 
         i.fas.fa-plus 
         |   Buat Retur
-        
-= form_for :retur, url: returs_path, method: 'GET' do |form|
-  .row  
-    .col-md-4
-    .col-md-4
-      input type="text" class="form-control" id="search" name="search"
-    .col-md-4
-      button class="btn btn-primary"
-        | Cari
+br
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Pencarian
+      .card-body
+        = form_for :retur, url: returs_path, method: 'GET' do |form|
+          .row
+            .col-10
+              input type="text" class="form-control" id="search" name="search"
+            .col
+              button class="btn btn-rounded btn-primary"
+                | Cari
 
-table class="table"
-  thead
-    th Invoice
-    th Dari
-    th Kepada
-    th Total Item
-    th Tgl. Buat
-    th Tgl. Konfirmasi
-    th Tgl. Ambil
-    th Selesai
-    th Action
-  tbody
-    = render partial: 'list', collection: @returs, as: :retur
-= paginate @returs
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.primary-color
+        h5.font-weight-500.my-1
+          | Menunggu Konfirmasi
+      .card-body
+        table class="table"
+          thead
+            th Invoice
+            th Dari
+            th Kepada
+            th Total Item
+            th Tgl. Buat
+            th Action
+          tbody
+            = render partial: 'list_new', collection: @returs_new, as: :retur
+        = paginate @returs_new
+
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.warning-color
+        h5.font-weight-500.my-1
+          | Menunggu Pengambilan
+      .card-body
+        table class="table"
+          thead
+            th Invoice
+            th Dari
+            th Kepada
+            th Total Item
+            th Tgl. Konfirmasi
+            th Action
+          tbody
+            = render partial: 'list_waiting', collection: @returs_waiting, as: :retur
+        = paginate @returs_waiting
+
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.danger-color
+        h5.font-weight-500.my-1
+          | Menunggu Keputusan
+      .card-body
+        table class="table"
+          thead
+            th Invoice
+            th Dari
+            th Kepada
+            th Total Item
+            th Tgl. Pengambilan
+            th Action
+          tbody
+            = render partial: 'list_picked', collection: @returs_picked, as: :retur
+        = paginate @returs_picked
+
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.success-color
+        h5.font-weight-500.my-1
+          | Menunggu Keputusan
+      .card-body
+        table class="table"
+          thead
+            th Invoice
+            th Dari
+            th Kepada
+            th Total Item
+            th Tgl. Selesai
+            th Action
+          tbody
+            = render partial: 'list_complete', collection: @returs_complete, as: :retur
+        = paginate @returs_complete
+
+

@@ -1,35 +1,42 @@
-h2
-  | UBAH USER - #{@user.name} (#{@user.address})
-= form_for :user, url: item_path(id: @user.id), method: "PUT" do |form|
-  .form-group
-    label for="email" Email
-    = form.text_field :email, required: true, class: "form-control", id: "email"
-  .form-group
-    label for="name" Nama
-    = form.text_field :name, required: true, class: "form-control", id: "name"
-  .form-group
-    label for="id-card" KTP
-    = form.text_field :id_card, required: true, class: "form-control", id: "id-card"
-  .form-group
-    label for="address" Alamat
-    = form.text_field :address, required: true, class: "form-control", id: "address"
-  .form-group
-    label for="phone" Nomor Telepon
-    = form.number_field :phone, required: true, class: "form-control", id: "phone"
-    .form-group
-    label for="level" Peran 
-    select name="user[level]" required=true class="form-control"
-      option value='owner'
-        | Owner
-      option value='cashier'
-        | Kasir
-  .form-group
-    label for="store" Toko
-    select name="user[store_id]" required=true class="form-control"
-      - @stores.each do |store|
-        option value="#{store.id}"
-          | #{store.name}    
-    = form.select :store_id, options_for_select(@stores.collect{|store| [store.name, store.id]}, @user.store_id), :prompt => "Select One", :class => 'form-control'
-    = form.select :store_id, options_from_collection_for_select(@stores,"id", "name"), class: "form-control", selected: @user.store_id
-  .form-group
-    = form.submit "Ubah user - #{@user.name}", class: "btn btn-primary"
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Ubah Pengguna - #{@user.name} (#{@user.address})
+      .card-body  
+        = form_for :user, url: item_path(id: @user.id), method: "PUT" do |form|
+          .form-group
+            label for="email" Email
+            = form.text_field :email, required: true, class: "form-control", id: "email"
+          .form-group
+            label for="name" Nama
+            = form.text_field :name, required: true, class: "form-control", id: "name"
+          .form-group
+            label for="id-card" KTP
+            = form.text_field :id_card, required: true, class: "form-control", id: "id-card"
+          .form-group
+            label for="address" Alamat
+            = form.text_field :address, required: true, class: "form-control", id: "address"
+          .form-group
+            label for="phone" Nomor Telepon
+            = form.number_field :phone, required: true, class: "form-control", id: "phone"
+          .form-group
+            label for="level" Peran 
+            select name="user[level]" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" id="level" searchable="Cari..."
+              option value='owner'
+                | Owner
+              option value='super_visi' 
+                | Supervisi
+              option value='super_admin'
+                | Super Admin
+              option value='cashier'
+                | Kasir
+          .form-group
+            label for="store" Toko
+            select name="user[store_id]" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" id="store" searchable="Cari..."
+              - @stores.each do |store|
+                option value="#{store.id}"
+                  | #{store.name}
+          .form-group.text-center
+            = form.submit "Ubah - #{@user.name}", class: "btn btn-rounded btn-warning black-text"

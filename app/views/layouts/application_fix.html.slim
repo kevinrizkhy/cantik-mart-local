@@ -44,7 +44,7 @@ html
                   .h7 style="margin: 10px;"
                     | #{current_user.name}
                 .c-header-icon.logout
-                  = button_to "Sign Out", sign_out_path, method: :delete, class: "btn btn-danger", style: "margin: 10px;"
+                  = button_to "Sign Out", sign_out_path, method: :delete, class: "btn btn-rounded btn-danger", style: "margin: 10px;"
                   
           .l-sidebar
             .logo
@@ -66,12 +66,12 @@ html
             .page-content 
               - if flash.present?
                 - flash.each do |name, msg|
-                  a.btn.btn-error onclick=("toastr.#{name}('#{msg}');")  id="flash" style="display: none;"
+                  a.btn.btn-rounded.btn-error onclick=("toastr.#{name}('#{msg}');")  id="flash" style="display: none;"
               = yield
     - else
       - if flash.present?
         - flash.each do |name, msg|
-          a.btn.btn-error onclick=("toastr.#{name}('#{msg}');")  id="flash" style="display: none;"
+          a.btn.btn-rounded.btn-error onclick=("toastr.#{name}('#{msg}');")  id="flash" style="display: none;"
       = yield
 
     script src="https://use.fontawesome.com/releases/v5.7.2/js/all.js" 

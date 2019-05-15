@@ -1,38 +1,107 @@
 .row
-  .col-md-6.text-left
+  .col.text-left
     h2
-      | Daftar Order
-  .col-md-6.text-right
+      | Daftar Pesanan
+  .col.text-right
     a href="#{new_order_path}"
-      button.btn.btn-primary type="button" 
+      button.btn.btn-rounded.btn-primary type="button" 
         i.fas.fa-plus 
         |   Buat Order
-        
-= form_for :order, url: orders_path, method: 'GET' do |form|
-  .row  
-    .col-md-4
-    .col-md-4
-      input type="text" class="form-control" id="search" name="search"
-    .col-md-4
-      button class="btn btn-primary"
-        | Cari
-- if @type != "" && @type.present?
-  .row
-    .col.text-center
-      p
-        | Pencarian order yang #{@type}.
+br
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Pencarian
+      .card-body
+        = form_for :order, url: orders_path, method: 'GET' do |form|
+          .row  
+            .col-6
+              input type="text" class="form-control" id="search" name="search"
+            .col-6
+              select[class="mdb-select md-outline colorful-select dropdown-primary" id="order_type" name="type"]
+                option[value=""]
+                  | Semua
+                option[value="ongoing"]
+                  | Sedang dalam proses
+                option[value="payment"]
+                  | Belum Lunas
+                option[value="complete"]
+                  | Lunas
+            .col-12.text-center
+              button class="btn btn-rounded btn-primary"
+                | Cari
+        - if @type != "" && @type.present?
+          .row
+            .col.text-center
+              p
+                | Pencarian order yang #{@type}.
+
+- if @orders_new.present?
+  .container-fluid
+    .col-lg-12.col-md-12
+      .card.mb-4
+        .card-header.white-text.primary-color
+          h5.font-weight-500.my-1
+            | Dalam Proses
+        .card-body
+          table class="table"
+            thead
+              th Invoice
+              th Supplier
+              th Total Item
+              th Total
+              th Tgl. Buat
+              th Tgl. Terima
+              th Tgl. Lunas
+              th Action
+            tbody
+              = render partial: 'list', collection: @orders_new, as: :order
+          = paginate @orders_new
 
 
-table class="table"
-  thead
-    th Invoice
-    th Supplier
-    th Total Item
-    th Total
-    th Tgl. Buat
-    th Tgl. Terima
-    th Tgl. Lunas
-    th Action
-  tbody
-    = render partial: 'list', collection: @orders, as: :order
-= paginate @orders
+- if @orders_debt.present?
+  .container-fluid
+    .col-lg-12.col-md-12
+      .card.mb-4
+        .card-header.white-text.warning-color
+          h5.font-weight-500.my-1
+            | Telah Diterima & Belum Lunas
+        .card-body
+          table class="table"
+            thead
+              th Invoice
+              th Supplier
+              th Total Item
+              th Total
+              th Tgl. Buat
+              th Tgl. Terima
+              th Tgl. Lunas
+              th Action
+            tbody
+              = render partial: 'list', collection: @orders_debt, as: :order
+          = paginate @orders_debt
+ 
+
+- if @orders_complete.present?
+  .container-fluid
+    .col-lg-12.col-md-12
+      .card.mb-4
+        .card-header.white-text.success-color
+          h5.font-weight-500.my-1
+            | Lunas
+        .card-body
+          table class="table"
+            thead
+              th Invoice
+              th Supplier
+              th Total Item
+              th Total
+              th Tgl. Buat
+              th Tgl. Terima
+              th Tgl. Lunas
+              th Action
+            tbody
+              = render partial: 'list', collection: @orders_complete, as: :order
+          = paginate @orders_complete

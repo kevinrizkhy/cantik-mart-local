@@ -7,24 +7,24 @@
   - if transfer.date_approve.present? && transfer.date_picked.present? && transfer.status.nil? && @transfer_items.first.transfer.from_store.id == current_user.store.id
     .col-md-6.text-right
       a href="#{transfer_receive_path(id: transfer_id)}"
-        button class="btn btn-primary"
+        button class="btn btn-rounded btn-primary"
           | TERIMA
       |  
   - if transfer.date_approve.nil? && transfer.to_store.id == current_user.store.id && current_user.level == User::SUPER_VISI
     .col.text-right
       a href="#{transfer_confirmation_path(id: transfer_id)}"
-        button class="btn btn-warning"
+        button class="btn btn-rounded btn-warning"
           | KONFIRMASI
     |  
     .col.text-right
   - if transfer.date_approve.present? && transfer.date_picked.nil? && @transfer_items.first.transfer.to_store.id == current_user.store.id
     .col.text-right
       a href="#{transfer_picked_path(id: transfer_id)}"
-        button class="btn btn-warning"
+        button class="btn btn-rounded btn-warning"
           | SIAPKAN BARANG
     |  
     / = form_for :transfer_items, url: "#{transfer_picked_path(id: transfer_id)}", method: "POST" do |form|
-      / = form.submit "Ambil", class: "btn btn-success"
+      / = form.submit "Ambil", class: "btn btn-rounded btn-success"
 table class="table"
   thead
     th Kode

@@ -1,8 +1,25 @@
 class RetursController < ApplicationController
   before_action :require_login
   def index
-    @returs = Retur.page param_page
-    @returs = @returs.order("date_created DESC")
+
+    @returs = Retur.order("date_created DESC").page param_page
+    @returs_new = Retur.where('date_approve is null')
+      .order("date_created DESC").page(param_page).per(5)
+    @returs_complete = Retur.where('status is not null')
+      .order("date_created DESC").page param_page
+    @returs_picked = Retur.where('date_picked is not null AND status is null')
+      .order("date_created DESC").page param_page
+    @returs_waiting = Retur.where('date_approve is not null AND date_picked is null')
+      .order("date_created DESC").page param_page
+
+    if (current_user.level != User::OWNER) || (current_user.level != User::SUPER_ADMIN)
+      @returs = @returs.where(store: current_user.store)
+      @returs_new = @returs_new.where(store: current_user.store)
+      @returs_complete = @returs_complete.where(store: current_user.store)
+      @returs_picked = @returs_picked.where(store: current_user.store)
+      @returs_waiting =  @returs_waiting.where(store: current_user.store)
+    end
+
     if params[:search].present?
       search = params[:search].downcase
       @search = search
@@ -14,13 +31,29 @@ class RetursController < ApplicationController
         supplier = Supplier.where('lower(pic) like ?', "%"+search_arr[1].downcase+"%").pluck(:id)
           if search_arr[0]== "to" && supplier.present?
             @returs = @returs.where(supplier_id: supplier)
+            @returs_new = @returs_new.where(supplier_id: supplier)
+            @returs_complete = @returs_complete.where(supplier_id: supplier)
+            @returs_picked = @returs_picked.where(supplier_id: supplier)
+            @returs_waiting =  @returs_waiting.where(supplier_id: supplier)
           elsif search_arr[0]== "from" && store.present?
             @returs = @returs.where(store_id: store)
+            @returs_new = @returs_new.where(store_id: store)
+            @returs_complete = @returs_complete.where(store_id: store)
+            @returs_picked = @returs_picked.where(store_id: store)
+            @returs_waiting =  @returs_waiting.where(store_id: store)
           else
             @returs = @returs.where("invoice like ?", "%"+ search_arr[1]+"%")
+            @returs_new = @returs_new.where("invoice like ?", "%"+ search_arr[1]+"%")
+            @returs_complete = @returs_complete.where("invoice like ?", "%"+ search_arr[1]+"%")
+            @returs_picked = @returs_picked.where("invoice like ?", "%"+ search_arr[1]+"%")
+            @returs_waiting =  @returs_waiting.where("invoice like ?", "%"+ search_arr[1]+"%")
           end
       else
         @returs = @returs.where("invoice like ?", "%"+ search+"%")
+        @returs_new = @returs_new.where("invoice like ?", "%"+ search+"%")
+        @returs_complete = @returs_complete.where("invoice like ?", "%"+ search+"%")
+        @returs_picked = @returs_picked.where("invoice like ?", "%"+ search+"%")
+        @returs_waiting =  @returs_waiting.where("invoice like ?", "%"+ search+"%")
       end
     end
   end

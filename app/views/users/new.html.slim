@@ -1,44 +1,52 @@
-h2
-  | TAMBAH USER
-= form_for :user, url: users_path, method: "POST" do |form|
-  .form-group
-    label for="name" Nama
-    = form.text_field :name, required: true, class: "form-control", id: "name"
-  .form-group
-    label for="email" Email
-    = form.text_field :email, required: true, class: "form-control", id: "email"
-  .form-group
-    label for="password" Password
-    = form.text_field :password, required: true, class: "form-control", id: "password"
-  .form_group
-    label for="address" Alamat
-    = form.text_field :address, required: true, class: "form-control", id: "address"
-  .form-group
-    label for="phone" Phone
-    = form.number_field :phone, required: true, class: "form-control", id: "phone"
-  .form-group
-    label for="sex" Sex
-    select name="user[sex]" required=true class="selectpicker form-control"
-      option value='laki_laki'
-        | Laki - laki
-      option value='perempuan'
-        | Perempuan
-  .form-group
-    label for="level" Peran 
-    select name="user[level]" required=true class="selectpicker form-control"
-      option value='owner'
-        | Owner
-      option value='super_visi'
-        | Supervisi
-      option value='super_admin'
-        | Super Admin
-      option value='cashier'
-        | Kasir
-  .form-group
-    label for="id-card" KTP
-    = form.text_field :id_card, required: true, class: "form-control", id: "id-card"
-  .form-group
-    label for="store" Toko
-    = form.select :store_id, options_from_collection_for_select(@stores,"id", "name"), class:"selectpicker form-control"
-  .form-group
-    = form.submit "Tambah User", class: "btn btn-primary"
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Tambah Pengguna
+      .card-body
+        = form_for :user, url: users_path, method: "POST" do |form|
+          .form-group
+            label for="name" Nama
+            = form.text_field :name, required: true, class: "form-control", id: "name"
+          .form-group
+            label for="email" Email
+            = form.text_field :email, required: true, class: "form-control", id: "email"
+          .form-group
+            label for="password" Kata Sandi
+            = form.text_field :password, required: true, class: "form-control", id: "password"
+          .form_group
+            label for="address" Alamat
+            = form.text_field :address, required: true, class: "form-control", id: "address"
+          .form-group
+            label for="phone" No. Telepon
+            = form.number_field :phone, required: true, class: "form-control", id: "phone"
+          .form-group
+            label for="sex" Jenis Kelamin
+            select name="user[sex]" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" searchable="Cari..."
+              option value='laki_laki'
+                | Laki - laki
+              option value='perempuan'
+                | Perempuan
+          .form-group
+            label for="level" Peran 
+            select name="user[level]" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" id="level" searchable="Cari..."
+              option value='owner'
+                | Owner
+              option value='super_visi'
+                | Supervisi
+              option value='super_admin'
+                | Super Admin
+              option value='cashier'
+                | Kasir
+          .form-group
+            label for="id-card" KTP
+            = form.text_field :id_card, required: true, class: "form-control", id: "id-card"
+          .form-group
+            label for="store" Toko
+            select name="user[store_id]" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" id="store" searchable="Cari..."
+              - @stores.each do |store|
+                option value="#{store.id}"
+                  | #{store.name}
+          .form-group.text-center
+            = form.submit "Tambah User", class: "btn btn-rounded btn-primary"

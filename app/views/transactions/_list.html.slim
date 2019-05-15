@@ -11,9 +11,9 @@ tr
   td #{transaction.grand_total}
   td
     a href='#{transaction_items_path(id: transaction.id)}'
-      button class="btn btn-primary"
+      button class="btn btn-rounded btn-primary"
         | Item
     a href='#{new_complain_path(id: transaction.id)}'
-      button class="btn btn-warning"
+      button class="btn btn-rounded btn-warning"
         | Retur
 

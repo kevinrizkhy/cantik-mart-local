@@ -33,7 +33,7 @@ nav.navbar.fixed-top.navbar-expand-lg.scrolling-navbar.double-nav
       li.nav-item.dropdown
         a#userDropdown.nav-link.dropdown-toggle.waves-effect aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" href="#" 
           i.fas.fa-user
-          span.clearfix.d-none.d-sm-inline-block Profile
+          span.clearfix.d-none.d-sm-inline-block #{current_user.name}
         .dropdown-menu.dropdown-menu-right aria-labelledby="userDropdown" 
           a.dropdown-item href="#"  My account
-          = button_to "Keluar", sign_out_path, method: :delete, class: "btn btn-danger"
+          = button_to "Keluar", sign_out_path, method: :delete, class: "btn btn-rounded btn-danger"

@@ -8,11 +8,11 @@
 		td #{inventory.item.sell}
 		td
 		  	a href='#{edit_stock_path(id: inventory.id)}'
-		  		button.btn.btn-primary type="button" 
+		  		button.btn.btn-rounded.btn-primary type="button" 
 	        		| Edit
 	       	| &nbsp &nbsp
 	       	a href='#{new_order_path(item_id: inventory.item.id)}'
-			  	button.btn.btn-primary type="button" 
+			  	button.btn.btn-rounded.btn-primary type="button" 
 		        	| Order
 - elsif inventory.min_stock == inventory.stock
 	tr [style="background:yellow;"]
@@ -24,11 +24,11 @@
 		td #{inventory.item.sell}
 		td
 		  	a href='#{edit_stock_path(id: inventory.id)}'
-		  		button.btn.btn-primary type="button" 
+		  		button.btn.btn-rounded.btn-primary type="button" 
 	        		| Edit
 	       	| &nbsp &nbsp
 	       	a href='#{new_order_path(item_id: inventory.item.id)}'
-			  	button.btn.btn-primary type="button" 
+			  	button.btn.btn-rounded.btn-primary type="button" 
 		        	| Order
 - else
 	tr
@@ -40,10 +40,10 @@
 	  td #{inventory.item.sell}
 	  td
 	    a href='#{edit_stock_path(id: inventory.id)}' 
-	    	button.btn.btn-primary type="button" 
+	    	button.btn.btn-rounded.btn-primary type="button" 
 	        	| Edit
 	    | &nbsp &nbsp
 	    a href='#{new_order_path(item_id: inventory.item.id)}'
-		  	button.btn.btn-primary type="button" 
+		  	button.btn.btn-rounded.btn-primary type="button" 
 	        	| Order
 

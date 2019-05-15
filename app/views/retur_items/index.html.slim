@@ -7,27 +7,37 @@
   .col.text-right
   - if retur.date_approve.present? && retur.date_picked.present? && retur.status.nil?
     a href="#{retur_feedback_path(id: retur_id)}"
-      button class="btn btn-primary"
+      button class="btn btn-rounded btn-primary"
         | FEEDBACK
     |  &nbsp &nbsp 
   - if retur.date_approve.nil?
     a href="#{retur_confirmation_path(id: retur_id)}"
-      button class="btn btn-warning"
+      button class="btn btn-rounded btn-warning"
         | KONFIRMASI
     |  &nbsp &nbsp 
   - if retur.date_picked.nil? && retur.date_approve.present?
     = form_for :retur_items, url: "#{retur_picked_path(id: retur_id)}", method: "POST" do |form|
       .col
-        = form.submit "Ambil", class: "btn btn-success"
-table class="table"
-  thead
-    th Kode
-    th Name
-    th Kuantiti
-    th Konfirmasi Jumlah
-    th Alasan Retur
-    th Hasil
-    th Nominal
-  tbody
-    = render partial: 'list', collection: @retur_items, as: :ret_item
-= paginate @retur_items
+        = form.submit "Ambil", class: "btn btn-rounded btn-success"
+
+br
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Data Supplier
+      .card-body
+        table class="table"
+          thead
+            th Kode
+            th Name
+            th Kuantiti
+            th Konfirmasi Jumlah
+            th Alasan Retur
+            th Hasil
+            th Nominal
+          tbody
+            = render partial: 'list', collection: @retur_items, as: :ret_item
+        = paginate @retur_items
+

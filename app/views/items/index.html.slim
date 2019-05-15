@@ -4,11 +4,11 @@
       | Daftar Barang
   .col.text-right
     a href="#{item_cats_path}"
-      button.btn.btn-success type="button" 
+      button.btn.btn-rounded.btn-deep-orange type="button" 
         | Kategori
     | &nbsp
     a href="#{new_item_path}"
-      button.btn.btn-primary type="button" 
+      button.btn.btn-rounded.btn-success type="button" 
         i.fas.fa-plus 
         |   Tambah Barang
 br
@@ -25,7 +25,7 @@ br
             .col-12
               input type="text" class="form-control" id="search" name="search" value="#{@search}" placeholder="Cari..."
             .col
-              select[class="mdb-select md-form colorful-select dropdown-primary" id="order_by" name="order_by"]
+              select[class="mdb-select md-form md-outline colorful-select dropdown-primary" id="order_by" name="order_by"]
                 option[value="code" select]
                   | urutkan KODE
                 option[value="name"]
@@ -34,19 +34,18 @@ br
                   | urutkan MEREK
                 option[value="category_id"]
                   | urutkan KATEGORI
-                option[value="sell_price"]
+                option[value="sell"]
                   | urutkan HARGA
             .col
-              select[class="form-control" id="order_type" name="order_type"]
+              select[class="mdb-select md-form md-outline colorful-select dropdown-primary" id="order_type" name="order_type"]
                 option[value="asc"]
                   | secara A - Z
                 option[value="desc"]
                   | secara Z - A
             .col-12.text-center
-              button class="btn btn-primary"
+              button class="btn btn-rounded btn-primary"
                 | Cari
             br
-        - @search = "asdasdasd"
         - if @search.present?
           .col-md-12.text-center.grey-text
             | Pencarian "

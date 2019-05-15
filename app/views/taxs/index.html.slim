@@ -4,7 +4,7 @@
       | Pajak #{@search}
   .col.text-right
     a href="#{new_cash_flow_path}"
-      button.btn.btn-primary type="button" 
+      button.btn.btn-rounded.btn-primary type="button" 
         i.fas.fa-plus 
         |   Tambah 
 = form_for :finances, url: taxs_path, method: 'GET' do |form|
@@ -31,7 +31,7 @@
       | 
   .row
     .col.text-center
-      button class="btn btn-primary"
+      button class="btn btn-rounded btn-primary"
         | Cari
     br
   hr

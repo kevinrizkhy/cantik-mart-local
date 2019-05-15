@@ -9,7 +9,7 @@
   hr style="bretur-top: 1px solid black;"
   .row
     .col-md-12.text-right
-      button type="button" class="btn btn-primary" onclick="addNewRowComplain()"
+      button type="button" class="btn btn-rounded btn-primary" onclick="addNewRowComplain()"
         | + Item
     .col-md-12  
       table.table id="myTable"
@@ -45,4 +45,4 @@
               input type="text" required=true class="form-control" id="description" name="complain[complain_items][#{index}][decription]" value="#{@transaction.invoice}" readonly=true
     .col-md-12.text-center
       .form-group.text-center
-        = form.submit "Buat Retur", class: "btn btn-primary"
+        = form.submit "Buat Retur", class: "btn btn-rounded btn-primary"

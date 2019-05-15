@@ -14,14 +14,14 @@ tr
           |  #{sup_item.supplier.pic}, 
   td
     a href='#{edit_item_path(id: item.id)}'
-      button.btn.btn-primary type="button" 
+      button.btn.btn-rounded.btn-warning type="button" 
           | Edit
     | &nbsp &nbsp
     a href='#{item_suppliers_path(id: item.id)}'
-      button.btn.btn-primary type="button" 
+      button.btn.btn-rounded.btn-primary type="button" 
           | Supplier
     | &nbsp &nbsp
     / a href='#{new_order_path(item_id: item.id)}'
-      / button.btn.btn-primary type="button" 
+      / button.btn.btn-rounded.btn-primary type="button" 
           / | Order
 

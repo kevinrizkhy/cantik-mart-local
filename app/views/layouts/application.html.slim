@@ -1,4 +1,4 @@
-
+= include_gon
 html
   head
     title Jaya Abadi
@@ -63,7 +63,7 @@ html
     = javascript_include_tag '/assets/dist/js/popper.min.js'
     = javascript_include_tag '/assets/dist/js/bootstrap.min.js'
     = javascript_include_tag '/assets/dist/js/mdb.min.js'
-    / = javascript_include_tag 'application'
+    = javascript_include_tag 'application'
     javascript:
       $(".button-collapse").sideNav();
 
@@ -72,4 +72,8 @@ html
         wheelSpeed: 2,
         wheelPropagation: true,
         minScrollbarLength: 20
+      });
+
+      $(document).ready(function () {
+        $('.mdb-select').materialSelect();
       });
