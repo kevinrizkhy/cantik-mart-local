@@ -41,7 +41,7 @@ html
                   a.collapsible-header.waves-effect.arrow-r href="#{root_path}"
                     i.w-fa.fas.fa-tachometer-alt
                     | Dashboards
-                - if current_user.owner?
+                - if current_user.owner? || current_user.super_admin?
                   = render "layouts/menu/owner"
                 - if current_user.cashier?
                   = render "layouts/menu/cashier"
