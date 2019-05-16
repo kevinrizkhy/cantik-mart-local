@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   include Clearance::User
   validates :level, :email, presence: true
-  validates_uniqueness_of :email, :name
+  validates_uniqueness_of :email, 
 
   enum level: { super_admin: 2,
                 owner: 1,
