@@ -1,4 +1,4 @@
-= include_gon
+/ = include_gon
 html
   head
     title Jaya Abadi
@@ -64,7 +64,7 @@ html
     = javascript_include_tag '/assets/dist/js/popper.min.js'
     = javascript_include_tag '/assets/dist/js/bootstrap.min.js'
     = javascript_include_tag '/assets/dist/js/mdb.min.js'
-    = javascript_include_tag 'application'
+    / = javascript_include_tag 'application'
     - if flash.present?
       - flash.each do |key, value|
         javascript:

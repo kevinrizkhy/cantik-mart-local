@@ -25,6 +25,7 @@ gem 'administrate'
 gem 'brakeman'
 gem 'carrierwave'
 gem 'roo', '~> 2.8.0'
+gem 'rails_12factor', group: :production
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
