@@ -78,7 +78,7 @@ class OrdersController < ApplicationController
 
     ongoing_order_ids = Order.where('date_receive is null and date_paid_off is null').pluck(:id)
     @ongoing_order_items = OrderItem.where(order_id: ongoing_order_ids)
-    @items = Item.all
+    @items = Item.all.limit(50)
     @inventories = StoreItem.page param_page
     store_id = current_user.store.id
     @inventories = @inventories.where(store_id: store_id).where('stock < min_stock')

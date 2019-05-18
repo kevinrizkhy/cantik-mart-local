@@ -2,8 +2,7 @@ class StocksController < ApplicationController
   before_action :require_login
   def index
     @inventories = StoreItem.page param_page
-    store_id = current_user.store.id
-    @inventories = @inventories.where(store_id: store_id)
+    @inventories = @inventories.where(store: current_user.store)
     if params[:search].present?
       @search = params[:search].downcase
       search = "%"+@search+"%"

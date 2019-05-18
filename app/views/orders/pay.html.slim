@@ -1,6 +1,8 @@
 - receive = Receivable.where("to_user=? AND deficiency > 0", @order.supplier.id).group(:to_user).sum(:deficiency).values.first
-- max = receive if @pay >= receive
-- max = @pay if @pay <= receive
+- max = 0
+- if receive.present?
+  - max = receive if @pay >= receive
+  - max = @pay if @pay <= receive
 
 
 .container-fluid

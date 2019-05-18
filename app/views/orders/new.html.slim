@@ -84,20 +84,20 @@
                       input type="textarea" class="form-control md-form" id="description" name="order[order_items][#{idx}][description]"
                     td
                       i.fa.fa-trash.text-danger onclick="removeThisRow(this)"
-                  tr
-                    td
-                      select class="mdb-select md-outline colorful-select dropdown-primary" searchable="Cari..." name="order[order_items][#{idx+1}][item_id]"
-                        - @items.each do |item|
-                          option data-subtext="#{item.item_cat.name}" value="#{item.id}" 
-                            | #{item.name}
-                    td
-                      input type="number" required=true class="form-control md-form" id="quantity" name="order[order_items][#{idx+1}][quantity]"
-                    td
-                      input type="number" required=true class="form-control md-form" id="quantity" name="order[order_items][#{idx+1}][price]"
-                    td
-                      input type="textarea" class="form-control md-form" id="description" name="order[order_items][#{idx+1}][description]"
-                    td
-                      i.fa.fa-trash.text-danger onclick="removeThisRow(this)"
+                tr
+                  td
+                    select class="mdb-select md-form md-outline colorful-select dropdown-primary" searchable="Cari..." name="order[order_items][#{idx+1}][item_id]"
+                      - @items.each do |item|
+                        option data-subtext="#{item.item_cat.name}" value="#{item.id}" 
+                          | #{item.name}
+                  td
+                    input type="number" required=true class="form-control md-form" id="quantity" name="order[order_items][#{idx+1}][quantity]"
+                  td
+                    input type="number" required=true class="form-control md-form" id="quantity" name="order[order_items][#{idx+1}][price]"
+                  td
+                    input type="textarea" class="form-control md-form" id="description" name="order[order_items][#{idx+1}][description]"
+                  td
+                    i.fa.fa-trash.text-danger onclick="removeThisRow(this)"
             .col-md-12.text-center
               .form-group.text-center
                 = form.submit "Buat Pesanan", class: "btn btn-rounded btn-primary"

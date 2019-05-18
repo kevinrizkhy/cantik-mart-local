@@ -9,7 +9,7 @@
       a href="#{order_confirmation_path(id: order_id)}"
         button.btn.btn-rounded.btn-success type="button" 
           | Terima
-  - if order.editable && @pay !=0
+  - if order.editable && @pay !=0 && order.date_receive!=nil
       .col.text-right
         a href="#{edit_order_confirmation_path(id: order_id)}"
           button.btn.btn-rounded.btn-warning type="button" 
@@ -46,38 +46,40 @@ br
               td
             td.font-weight-bold.text-danger
               | #{number_to_currency(order.total, unit: "Rp. ")}
-br
-.row
-  .col
-    h5
-      .text-left
-        | Pembayaran Order #{@order_items.first.order.invoice} 
-      - if @pay > 0
-        .text-danger
-          | KEKURANGAN : #{number_to_currency(@pay, unit: "Rp. ")}
-      - else
-        .text-success
-          | LUNAS
-  - if @order_items.first.order.date_receive.present? && @order_items.first.order.date_paid_off.nil? && @pay != 0
-    .col.text-right
-      a href="#{order_pay_path(id: order_id)}"
-        button.btn.btn-rounded.btn-success type="button" 
-          | Bayar
-br
-.container-fluid
-  .col-lg-12.col-md-12
-    .card.mb-4
-      .card-header.white-text.info-color
-        h5.font-weight-500.my-1
-          | Data Pembayaran
-      .card-body
-        table class="table"
-          thead
-            th Invoice
-            th Tanggal
-            th Total
-          tbody
-            = render partial: 'list_payment', collection: @order_invs, as: :order_inv
 
-        = paginate @order_items
+- if order.date_receive.present?
+  br
+  .row
+    .col
+      h5
+        .text-left
+          | Pembayaran Order #{@order_items.first.order.invoice} 
+        - if @pay > 0
+          .text-danger
+            | KEKURANGAN : #{number_to_currency(@pay, unit: "Rp. ")}
+        - else
+          .text-success
+            | LUNAS
+    - if @order_items.first.order.date_receive.present? && @order_items.first.order.date_paid_off.nil? && @pay != 0
+      .col.text-right
+        a href="#{order_pay_path(id: order_id)}"
+          button.btn.btn-rounded.btn-success type="button" 
+            | Bayar
+  br
+  .container-fluid
+    .col-lg-12.col-md-12
+      .card.mb-4
+        .card-header.white-text.info-color
+          h5.font-weight-500.my-1
+            | Data Pembayaran
+        .card-body
+          table class="table"
+            thead
+              th Invoice
+              th Tanggal
+              th Total
+            tbody
+              = render partial: 'list_payment', collection: @order_invs, as: :order_inv
+
+          = paginate @order_items
 
