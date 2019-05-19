@@ -103,14 +103,15 @@ class RetursController < ApplicationController
       supplier_id: address_to
 
     items.each do |retur_item|
-      item = StoreItem.find retur_item[0]
+      item = StoreItem.find_by(item_id:retur_item[0], store: current_user.store)
       if item.nil? 
         ReturItem.where(retur: retur).delete_all
-        Retur.where(retur: retur).delete
+        retur.delete
         return redirect_back_data_invalid new_retur_path
-      elsif item.stock < retur_item[1]
+      elsif item.stock < retur_item[1].to_i
+        binding.pry
         ReturItem.where(retur: retur).delete_all
-        Retur.where(retur: retur).delete
+        retur.delete
         return redirect_back_data_invalid new_retur_path
       end
 

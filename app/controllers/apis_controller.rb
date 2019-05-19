@@ -14,7 +14,7 @@ class ApisController < ApplicationController
         item = []
         item << item_store.item.code
         item << item_store.item.name
-        item << "KATGEORI"
+        item << item_store.item_cat.name
         item << item_store.item.sell
         json_result << item
       end
@@ -26,10 +26,20 @@ class ApisController < ApplicationController
         item = []
         item << item_store.item.code
         item << item_store.item.name
-        item << "KATGEORI"
+        item << item_store.item_cat.name
         item << item_store.item.sell
         json_result << item
       end
+    elsif params[:api_type] == "order"
+      find_item = Item.find_by(code: search)
+      return render :json => json_result unless find_item.present?
+      item = []
+      item << find_item.code
+      item << find_item.name
+      item << find_item.item_cat.name
+      item << find_item.sell
+      item << find_item.id
+      json_result << item
     elsif params[:api_type] == "member"
       members = Member.where('lower(name) like ?', "%"+search.downcase+"%")
       members.each do|member|

@@ -57,39 +57,26 @@ class OrdersController < ApplicationController
   def new
     @suppliers = Supplier.select(:id, :pic, :address).order("supplier_type DESC").all
     if params[:item_id].present?
-      @supplier_items = SupplierItem.where(item_id: params[:item_id])
-      if @supplier_items.count > 1
-        return redirect_to item_suppliers_path(id: params[:item_id])
-      end
+      @add_item = Item.find params[:item_id]
+      # return redirect_back_data_not_found new_order_path if @add_items.nil?
     end
     if params[:supplier_id].present?
-      @supplier_id = params[:supplier_id].to_i
-    else
-      @supplier_id = @suppliers.first.id.to_i
+      @supplier = Supplier.find params[:supplier_id]
+      return redirect_back_data_not_found new_order_path if @supplier.nil?
     end
-    @supplier_items = SupplierItem.where(supplier_id: @supplier_id)
-
-    all_options = ""
-    @supplier_items.each do |supplier_item|
-      s_item = supplier_item.item
-      all_options+= "<option value="+s_item.id.to_s+" data-subtext='"+s_item.item_cat.name+"'>"+s_item.name+"</option>"
-    end
-    gon.select_options = all_options
 
     ongoing_order_ids = Order.where('date_receive is null and date_paid_off is null').pluck(:id)
     @ongoing_order_items = OrderItem.where(order_id: ongoing_order_ids)
     @items = Item.all.limit(50)
-    @inventories = StoreItem.page param_page
-    store_id = current_user.store.id
-    @inventories = @inventories.where(store_id: store_id).where('stock < min_stock')
+    @inventories = StoreItem.where(store: current_user.store).where('stock < min_stock').page param_page
 
-    gon.inv_count = @inventories.count + 2
+    gon.inv_count = @inventories.count+3
   end
 
   def create
     invoice = "ORD-" + Time.now.to_i.to_s
-    item_arr = order_items
-    total_item = item_arr.size
+    ordered_items = order_items
+    total_item = ordered_items.size
     address_to = params[:order][:supplier_id]
 
     order = Order.create invoice: invoice,
@@ -100,13 +87,16 @@ class OrdersController < ApplicationController
       total: 0
 
     total = 0
-    item_arr.each do |item_arr|
+    ordered_items.each do |item_arr|
       item = Item.find item_arr[0]
-      break if item.nil?
+      if item.nil?
+        order.delete
+        break
+      end
       supplier_item = SupplierItem.find_by(item_id: item_arr[0])
       SupplierItem.create supplier_id: address_to, item: item if supplier_item.nil?
-      order_item = OrderItem.create item_id: item_arr[0], order_id: order.id, quantity: item_arr[1], price: item_arr[2], description: item_arr[3]
-      total+= (item_arr[2].to_i*item_arr[1].to_i)
+      order_item = OrderItem.create item_id: item_arr[0], order_id: order.id, quantity: item_arr[4], price: item_arr[5], description: item_arr[6]
+      total+= (item_arr[5].to_i*item_arr[4].to_i)
     end
 
     order.total = total
@@ -239,7 +229,7 @@ class OrdersController < ApplicationController
     paid = order.total.to_f - order_invs.sum(:nominal) 
     nominal = params[:order_pay][:nominal].to_i 
     nominal = params[:order_pay][:receivable_nominal].to_i if params[:order_pay][:user_receivable] == "on"
-    return redirect_back_data_invalid orders_path if (nominal.to_i > paid) || (nominal < 0)
+    return redirect_back_data_invalid orders_path if (nominal.to_i > paid) || (nominal <= 100)
     order_inv = InvoiceTransaction.new 
     order_inv.invoice = order.invoice
     order_inv.transaction_type = 0

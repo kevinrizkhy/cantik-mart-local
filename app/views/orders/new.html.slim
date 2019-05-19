@@ -7,20 +7,24 @@
             | Data Pesanan
         .card-body
           .row
-            .col
+            .col-8
               label for="from" Kode Barang
-              input type="text" placeholder="123456789" onchange="" class="form-control md-form"
-            .col
+              input class="md-form form-control" placeholder="Barcode Barang..." id="itemId" onkeyup="getData()"
+            .col-4.text-right
               .form-group
                 label for="from" Supplier
-                select onchange="changeSupplier()" class="mdb-select  md-outline colorful-select dropdown-primary" searchable="Cari..." name="order[supplier_id]" id="supplierId"
-                  - @suppliers.each do |supplier|
-                    - if supplier.id == @supplier_id
-                      option data-subtext="#{supplier.address}" value="#{supplier.id}" selected="selected"
-                        | #{supplier.pic}
-                    -else
-                      option data-subtext="#{supplier.address}" value="#{supplier.id}"
-                        | #{supplier.pic}
+                select onchange="changeSupplier()" class="md-form mdb-select  md-outline colorful-select dropdown-primary" searchable="Cari..." name="order[supplier_id]" id="supplierId"
+                  - if @supplier.present?
+                    option data-subtext="#{@supplier.address}" value="#{@supplier.id}"
+                      | #{@supplier.pic}
+                  - else
+                    - @suppliers.each do |supplier|
+                      - if supplier.id == @supplier_id
+                        option data-subtext="#{supplier.address}" value="#{supplier.id}" selected="selected"
+                          | #{supplier.pic}
+                      -else
+                        option data-subtext="#{supplier.address}" value="#{supplier.id}"
+                          | #{supplier.pic}
 
   .container-fluid
     .col-lg-12.col-md-12
@@ -30,16 +34,17 @@
             | Daftar Barang
         .card-body
           .row
-            .col-md-12.text-right
-              button type="button" class="btn btn-rounded btn-deep-orange" onclick="addNewRow()"
-                | + Item
-              br
-              br
             .col-md-12  
+              br
+              br
               table.table id="myTable"
                 tr
                   th
-                    | Item - Kategori
+                    | Kode
+                  th
+                    | Nama
+                  th
+                    | Kategori
                   th
                     | Jumlah
                   th
@@ -47,7 +52,25 @@
                   th
                     | Deskripsi
                   th
-                - idx = 0
+                - if @add_item.present?
+                  tr
+                    td style="display: none;"
+                      input type="number" required=true class="form-control md-form" id="quantity" name="order[order_items][1][item_id]" value="#{@add_item.id}" readonly="readonly"
+                    td
+                      input type="number" required=true class="form-control md-form" id="quantity" name="order[order_items][1][code]" value="#{@add_item.code}" readonly="readonly"
+                    td
+                      input type="text" required=true class="form-control md-form" id="quantity" name="order[order_items][1][name]" value="#{@add_item.name}"  readonly="readonly"
+                    td
+                      input type="text" required=true class="form-control md-form" id="quantity" name="order[order_items][1][item_cat]" value="#{@add_item.item_cat.name}" readonly="readonly"
+                    td 
+                      input type="number" required=true class="form-control md-form" id="quantity" name="order[order_items][1][quantity]" value=1 min=1
+                    td 
+                      input type="number" required=true class="form-control md-form" id="quantity" name="order[order_items][1][price]" value=100 min=100 
+                    td 
+                      input type="textarea" class="form-control md-form" id="description" name="order[order_items][1][description]" value=""
+                    td
+                      i.fa.fa-trash.text-danger onclick="removeThisRow(this)"
+                - idx = 2
                 - @inventories.each_with_index do |store_item, index|
                   - stock = store_item.item
                   - total_order = 0
@@ -57,47 +80,23 @@
                   - new_order = store_item.min_stock - store_item.stock - total_order
                   - if new_order > 0
                     tr
+                      td style="display: none;"
+                        input type="number" required=true class="form-control md-form" id="quantity" name="order[order_items][#{index+idx}][item_id]" value="#{stock.id}" readonly="readonly"
                       td
-                        select class="mdb-select md-outline colorful-select dropdown-primary" searchable="Cari..." name="order[order_items][#{index}][item_id]"
-                          option data-subtext="#{stock.item_cat.name}" value="#{stock.id}" 
-                            | #{stock.name}
+                        input type="text" required=true class="form-control md-form" id="quantity" name="order[order_items][#{index+idx}][quantity]" value="#{stock.code}"
+                      td
+                        input type="text" required=true class="form-control md-form" id="quantity" name="order[order_items][#{index+idx}][quantity]" value="#{stock.name}"
+                      td
+                        input type="text" required=true class="form-control md-form" id="quantity" name="order[order_items][#{index+idx}][quantity]" value="#{stock.item_cat.name}"
                       td 
-                        input type="number" required=true class="form-control md-form" id="quantity" name="order[order_items][#{index}][quantity]" value="#{new_order}"
+                        input type="number" required=true class="form-control md-form" id="quantity" name="order[order_items][#{index+idx}][quantity]" value="#{new_order}"
                       td 
-                        input type="number" required=true class="form-control md-form" id="quantity" name="order[order_items][#{index}][price]"
+                        input type="number" required=true class="form-control md-form" id="quantity" name="order[order_items][#{index+idx}][price]"
                       td 
-                        input type="textarea" class="form-control md-form" id="description" name="order[order_items][0][description]" value="Barang yang terkena stok limit."
+                        input type="textarea" class="form-control md-form" id="description" name="order[order_items][#{index+idx}][description]" value="Barang yang terkena stok limit."
                       td
                         i.fa.fa-trash.text-danger onclick="removeThisRow(this)"
                     - idx+=1
-                  tr
-                    td
-                      select class="mdb-select md-outline colorful-select dropdown-primary" searchable="Cari..." name="order[order_items][#{idx}][item_id]"
-                        - @items.each do |item|
-                          option data-subtext="#{item.item_cat.name}" value="#{item.id}" 
-                            | #{item.name}
-                    td
-                      input type="number" required=true class="form-control md-form" id="quantity" name="order[order_items][#{idx}][quantity]"
-                    td
-                      input type="number" required=true class="form-control md-form" id="quantity" name="order[order_items][#{idx}][price]"
-                    td
-                      input type="textarea" class="form-control md-form" id="description" name="order[order_items][#{idx}][description]"
-                    td
-                      i.fa.fa-trash.text-danger onclick="removeThisRow(this)"
-                tr
-                  td
-                    select class="mdb-select md-form md-outline colorful-select dropdown-primary" searchable="Cari..." name="order[order_items][#{idx+1}][item_id]"
-                      - @items.each do |item|
-                        option data-subtext="#{item.item_cat.name}" value="#{item.id}" 
-                          | #{item.name}
-                  td
-                    input type="number" required=true class="form-control md-form" id="quantity" name="order[order_items][#{idx+1}][quantity]"
-                  td
-                    input type="number" required=true class="form-control md-form" id="quantity" name="order[order_items][#{idx+1}][price]"
-                  td
-                    input type="textarea" class="form-control md-form" id="description" name="order[order_items][#{idx+1}][description]"
-                  td
-                    i.fa.fa-trash.text-danger onclick="removeThisRow(this)"
             .col-md-12.text-center
               .form-group.text-center
                 = form.submit "Buat Pesanan", class: "btn btn-rounded btn-primary"

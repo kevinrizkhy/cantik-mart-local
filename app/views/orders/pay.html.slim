@@ -38,10 +38,10 @@
             | Piutang
         .card-body
           = form_for :order_pay, url: order_paid_path, method: "POST" do |form|
-            .form-group
+            .form-group style="display: none;"
               .form-check
-                input#materialChecked2.form-check-input[type="checkbox" checked,name="order_pay[user_receivable]"]
-                label.form-check-label[for="materialChecked2"]
+                input#materialChecked2.form-check-input[type="checkbox",name="order_pay[user_receivable]", checked]
+                label.form-check-label[for="materialChecked2"] 
                   | Gunakan Piutang
             .form-group
               label for="nominal" Piutang yang Digunakan
@@ -66,16 +66,6 @@
           .form-group
             label for="date" Tanggal Pembayaran
             input type="date" class="form-control md-form" name="order_pay[date_paid]" value="#{Date.today}"
-          - if receive.present?
-            .form-group
-              br
-              br
-              .custom-control.custom-checkbox
-                input#defaultIndeterminate2.custom-control-input checked="checked" type="checkbox" name="order_pay[user_receivable]" /
-                label.custom-control-label for="defaultIndeterminate2"  Potong Piutang
-            .form-group
-              label for="receivable_nominal" Potong Piutang
-              input type="range" min="0" max="#{max}" step="5000" id="receivable_nominal"  name="order_pay[receivable_nominal]"
 
           .form-group
             = form.submit "Bayar", class: "btn btn-rounded btn-primary"

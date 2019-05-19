@@ -42,10 +42,14 @@ br
             td
             td
             td
-             - if !order.editable
+            - if !order.editable
               td
-            td.font-weight-bold.text-danger
-              | #{number_to_currency(order.total, unit: "Rp. ")}
+            - if order.date_receive.present?
+              td.font-weight-bold.text-danger
+                | #{number_to_currency(order.total, unit: "Rp. ")}
+            - else
+              td.font-weight-bold.text-warning
+                | #{number_to_currency(order.total, unit: "Rp. ")}
 
 - if order.date_receive.present?
   br
