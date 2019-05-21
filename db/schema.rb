@@ -10,10 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_15_150136) do
+ActiveRecord::Schema.define(version: 2019_05_21_112912) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "absents", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.datetime "check_in"
+    t.datetime "check_out"
+    t.datetime "overtime_in"
+    t.datetime "overtime_out"
+    t.string "work_hour", default: "0:0:0"
+    t.string "overtime_hour", default: "0:0:0"
+    t.index ["user_id"], name: "index_absents_on_user_id"
+  end
 
   create_table "assets", force: :cascade do |t|
     t.bigint "store_id", null: false
@@ -368,11 +379,13 @@ ActiveRecord::Schema.define(version: 2019_05_15_150136) do
     t.bigint "store_id"
     t.integer "salary", default: 0
     t.string "image"
+    t.integer "fingerprint"
     t.index ["email"], name: "index_users_on_email"
     t.index ["remember_token"], name: "index_users_on_remember_token"
     t.index ["store_id"], name: "index_users_on_store_id"
   end
 
+  add_foreign_key "absents", "users"
   add_foreign_key "assets", "stores"
   add_foreign_key "assets", "users"
   add_foreign_key "capitals", "stores"

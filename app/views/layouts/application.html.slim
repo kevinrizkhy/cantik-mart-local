@@ -25,7 +25,7 @@ html
     = stylesheet_link_tag '/dist/css/mdb.min.css'
     / = stylesheet_link_tag "application", media: "all"
 
-  body.fixed-sn.white-skin
+  body.fixed-sn.white-skin onload="startTime()"
     - if params[:controller] != "sessions" && params[:controller] != "registers"
       header
         #slide-out.side-nav.sn-bg-4.fixed
@@ -81,3 +81,19 @@ html
       $(document).ready(function () {
         $('.mdb-select').materialSelect();
       });
+
+      function startTime() {
+        var today = new Date();
+        var h = today.getHours();
+        var m = today.getMinutes();
+        var s = today.getSeconds();
+        m = checkTime(m);
+        s = checkTime(s);
+        document.getElementById('txt').innerHTML =
+        h + ":" + m + ":" + s;
+        var t = setTimeout(startTime, 500);
+      }
+      function checkTime(i) {
+        if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+        return i;
+      }

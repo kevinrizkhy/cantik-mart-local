@@ -39,15 +39,19 @@
                 - @stores.each do |store|
                   option value="#{store.id}"
                     | #{store.name}
+            - if @user == current_user
+              .form-group
+                label for="store" Foto
+                .input-group
+                  .input-group-prepend
+                    span#inputGroupFileAddon01.input-group-text
+                      | Upload
+                  .custom-file
+                    input#inputGroupFile01.custom-file-input[type="file" name="user[image]" aria-describedby="inputGroupFileAddon01"]
+                    label.custom-file-label[for="inputGroupFile01"]
+                      | Choose file
             .form-group
-              label for="store" Foto
-              .input-group
-                .input-group-prepend
-                  span#inputGroupFileAddon01.input-group-text
-                    | Upload
-                .custom-file
-                  input#inputGroupFile01.custom-file-input[type="file" name="user[image]" aria-describedby="inputGroupFileAddon01"]
-                  label.custom-file-label[for="inputGroupFile01"]
-                    | Choose file
+              label for="id-card" ID Fingerprint
+              = form.text_field :fingerprint, required: true, class: "form-control md-form", id: "id-card"
           .form-group.text-center
             = form.submit "Ubah - #{@user.name}", class: "btn btn-rounded btn-warning black-text"

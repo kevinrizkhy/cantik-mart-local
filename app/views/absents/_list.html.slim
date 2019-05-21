@@ -1,0 +1,28 @@
+tr
+  	td #{absent.user.name}
+  	td #{absent.user.store.name}
+  	td #{absent.check_in}
+    - if absent.check_out.nil?
+      td -
+    - else
+      td #{absent.check_out}
+    - if absent.overtime_in.nil?
+      td -
+    - else
+      td #{absent.overtime_in}
+    - if absent.overtime_out.nil?
+      td -
+    - else
+      td #{absent.overtime_out}
+    td
+      - if absent.check_out.present?
+        - time_split = absent.work_hour.split(":")
+        | #{time_split[0]} Jam #{time_split[1]} Menit #{time_split[2]} Detik
+      - else
+        .text-danger
+          i.fas.fa-times
+  	td
+    	a href='' 
+    		button.btn.btn-rounded.btn-info type="button" 
+	       		| Detil
+

@@ -64,6 +64,8 @@ Rails.application.routes.draw do
   resources :complains, only: %i[index new create]
   resources :complain_items, only: %i[index]
 
+  resources :absents, only: %i[index]
+
   resources :transfers
   resources :transfer_items, only: %i[index new create edit update]
   

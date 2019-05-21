@@ -40,12 +40,26 @@ nav.navbar.fixed-top.navbar-expand-lg.scrolling-navbar.double-nav
               =image_tag("/uploads/profile_picture/#{current_user.image}", height: '100', width: '100', class:"rounded-circle ")
             .col-6.align-middle
               br
-              | #{current_user.name} 
+              | #{current_user.name} - #{current_user.level}
+              - absent = Absent.find_by("DATE(check_in) = ? AND user_id = ?", DateTime.now.to_date, current_user.id)
+              - check_in = absent.check_in
+              - divide_hour = DateTime.now.to_time - check_in.to_time
+              - raw_hour = divide_hour / 1.hour
+              - hour = raw_hour.to_i.to_s
+              - divide_min = raw_hour - raw_hour.to_i
+              - raw_min = divide_min*60
+              - minute = raw_min.to_i.to_s
               br
-              | #{current_user.level}
+                .font-weight-bold.red-text
+                  | #{hour} Jam #{minute} Menit
+                #txt
             .col-12
               hr
-              a.dropdown-item href="#{edit_user_path(id: current_user.id)}"  Akun
+              a.dropdown-item href="#{user_path(id: current_user.id)}"  Akun
+              br
+            .col-12
+              hr
+              a.dropdown-item href="#{absents_path(id: current_user.id)}"  Absensi
               br
               hr
             .col-12

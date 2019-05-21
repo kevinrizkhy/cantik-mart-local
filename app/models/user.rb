@@ -30,4 +30,5 @@ class User < ApplicationRecord
   FEMALE = 'perempuan'
 
   has_many :transactions
+  has_many :absents
 end
