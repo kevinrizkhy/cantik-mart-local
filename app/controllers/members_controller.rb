@@ -14,9 +14,10 @@ class MembersController < ApplicationController
 
   def create
     member = Member.new member_params
+    member.name = params[:member][:name].camelize
     return redirect_back_data_invalid new_member_path if member.invalid?
     member.save!
-    return redirect_to members_path
+    return redirect_success members_path
   end
 
   def edit
@@ -29,8 +30,9 @@ class MembersController < ApplicationController
     return redirect_back_data_not_found unless params[:id].present?
     member = Member.find_by_id params[:id]
     member.assign_attributes member_params
+    member.name = params[:member][:name].camelize
     member.save! if member.changed?
-    return redirect_to members_path
+    return redirect_success members_path
   end
 
   private

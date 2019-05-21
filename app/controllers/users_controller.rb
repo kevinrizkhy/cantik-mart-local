@@ -24,7 +24,7 @@ class UsersController < ApplicationController
     user = User.new user_params
     return redirect_back_data_not_found new_user_path if user.invalid?
     user.save!
-    return redirect_to users_path
+    return redirect_success users_path
   end
 
   def edit
@@ -48,7 +48,7 @@ class UsersController < ApplicationController
     user.image = filename
     user.assign_attributes user_params
     user.save! if user.changed?
-    return redirect_to users_path
+    return redirect_success users_path
   end
 
   private

@@ -117,7 +117,7 @@ class RetursController < ApplicationController
 
       ReturItem.create item_id: retur_item[0], retur_id: retur.id, quantity: retur_item[1], description: retur_item[2]
     end
-    return redirect_to returs_path
+    return redirect_success returs_path
   end
 
   def confirmation
@@ -143,7 +143,7 @@ class RetursController < ApplicationController
     end
     retur.date_approve = Time.now
     retur.save!
-    return redirect_to retur_items_path(id: params[:id])
+    return redirect_success retur_items_path(id: params[:id])
   end
 
   def picked
@@ -154,7 +154,7 @@ class RetursController < ApplicationController
     retur.date_picked = Time.now
     retur.save!
     decrease_stock params[:id]
-    return redirect_to returs_path
+    return redirect_success returs_path
   end
 
   def destroy
@@ -164,7 +164,7 @@ class RetursController < ApplicationController
     return redirect_back_data_invalid returs_path if retur.date_approve.present?
     ReturItem.where(retur_id: params[:id]).destroy_all
     retur.destroy
-    return redirect_to returs_path
+    return redirect_success returs_path
   end
 
   private

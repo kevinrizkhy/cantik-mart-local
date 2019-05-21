@@ -102,7 +102,7 @@ class OrdersController < ApplicationController
     order.total = total
     order.save!
 
-    return redirect_to orders_path
+    return redirect_success orders_path
   end
 
    def destroy
@@ -112,14 +112,14 @@ class OrdersController < ApplicationController
     return redirect_back_data_not_found orders_path if order.date_receive.present?
     OrderItem.where(order_id: params[:id]).destroy_all
     order.destroy
-    return redirect_to orders_path
+    return redirect_success orders_path
   end
 
   def confirmation
     return redirect_back_data_not_found orders_path unless params[:id].present?
     @order = Order.find params[:id]
     return redirect_back_data_not_found orders_path if @order.date_receive.present? || @order.date_paid_off.present?
-    return redirect_to orders_path unless @order.present?
+    return redirect_success orders_path unless @order.present?
     @order_items = OrderItem.where(order_id: @order.id)
   end
 
@@ -134,7 +134,7 @@ class OrdersController < ApplicationController
   def edit_receive
     return redirect_back_data_not_found orders_path unless params[:id].present?
     order = Order.find params[:id]
-    return redirect_to redirect_back_data_not_found orders_path unless order.present? || order.editable == false
+    return redirect_success redirect_back_data_not_found orders_path unless order.present? || order.editable == false
     return redirect_back_data_not_found orders_path if order.date_paid_off.present? || order.date_receive.nil?
     items = edit_order_items
     return redirect_back_data_invalid orders_path if items.empty?
@@ -201,14 +201,14 @@ class OrdersController < ApplicationController
     if order.total == 0
       order.date_paid_off = DateTime.now
       order.save!
-      return redirect_to order_items_path(id: params[:id])
+      return redirect_success order_items_path(id: params[:id])
     end
 
     Debt.create user: current_user, store: current_user.store, nominal: new_total, 
                 deficiency: new_total, date_created: DateTime.now, ref_id: order.id,
                 description: order.invoice, finance_type: Debt::ORDER
     description = order.invoice + " (" + new_total.to_s + ")"
-    return redirect_to order_items_path(id: params[:id])
+    return redirect_success order_items_path(id: params[:id])
   end
 
   def pay
@@ -253,7 +253,7 @@ class OrdersController < ApplicationController
       debt.deficiency = 0
     end
     debt.save!
-    return redirect_to order_items_path(id: params[:id])
+    return redirect_success order_items_path(id: params[:id])
   end
 
   private

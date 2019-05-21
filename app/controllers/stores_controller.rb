@@ -15,6 +15,8 @@ class StoresController < ApplicationController
 
   def create
     store = Store.new store_params
+    store.name = params[:store][:name].camelize
+    store.address = params[:store][:address].camelize
     return redirect_back_data_invalid stores_path if store.invalid?
 
     supplier = Supplier.new pic: "GUDANG - "+params[:store][:name],
@@ -25,13 +27,13 @@ class StoresController < ApplicationController
 
     store.save!
     supplier.save!
-    return redirect_to stores_path
+    return redirect_success stores_path
   end
 
   def edit
     return redirect_back_data_not_found stores_path unless params[:id].present?
     @store = Store.find_by_id params[:id]
-    return redirect_to stores_path unless @store.present?
+    return redirect_success stores_path unless @store.present?
   end
 
   def update
@@ -39,8 +41,10 @@ class StoresController < ApplicationController
     store = Store.find_by_id params[:id]
     return redirect_back_data_not_found stores_path unless store.present?
     store.assign_attributes store_params
+    store.name = params[:store][:name].camelize
+    store.address = params[:store][:address].camelize
     store.save! if store.changed?
-    return redirect_to stores_path
+    return redirect_success stores_path
   end
 
   private

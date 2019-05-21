@@ -10,10 +10,10 @@ class RegistersController < ApplicationController
     @user = User.new user_params
     @user.save
     if @user.invalid?
-      return redirect_to new_register_path, flash: {error: 'Email is already taken'}
+      return redirect_success new_register_path, flash: {error: 'Email is already taken'}
     end
 
-    redirect_to sign_in_path, flash: {success: 'Success'}
+    redirect_success sign_in_path, flash: {success: 'Success'}
   end
 
   private

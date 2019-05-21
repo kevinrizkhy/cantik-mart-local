@@ -10,10 +10,10 @@
 br
 .container-fluid
   .col-lg-12.col-md-12
-    .card.mb-4
-      .card-header.white-text.info-color
+    .card-header.white-text.info-color
         h5.font-weight-500.my-1
           | Pencarian
+    .card.mb-4
       .card-body
         = form_for :member, url: members_path, method: 'GET' do |form|
           .row
@@ -24,16 +24,17 @@ br
                 | Cari
 .container-fluid
   .col-lg-12.col-md-12
-    .card.mb-4
-      .card-header.white-text.info-color
+    .card-header.white-text.info-color
         h5.font-weight-500.my-1
           | Data
+    .card.mb-4
       .card-body
         table class="table"
           thead
             th Name
-            th Nomor Kartu
             th Alamat
+            th Nomor Kartu
+            th KTP
             th Nomor Telepon
             th Jenis Kelamin
             th Action

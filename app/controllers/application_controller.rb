@@ -27,4 +27,8 @@ class ApplicationController < ActionController::Base
     redirect_back fallback_location: current_path, flash: { error: 'Data tidak valid' }
   end
 
+  def redirect_success current_path
+    redirect_to current_path, flash: { success: 'Data berhasil disimpan' }
+  end
+
 end

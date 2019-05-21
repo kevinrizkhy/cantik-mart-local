@@ -5,7 +5,7 @@
         h5.font-weight-500.my-1
           | Ubah Kategori Barang (#{@item_cat.name})
       .card-body 
-        = form_for :item_cat, url: item_cats_path, method: "POST" do |form|
+        = form_for :item_cat, url: item_cat_path, method: "PUT" do |form|
 		  .form-group
 		    label for="name" Nama
 		    = form.text_field :name, required: true, class: "form-control md-form", id: "name"

@@ -3,13 +3,16 @@ tr
   	td #{supplier.address}
   	td #{supplier.phone}
   	td
-	    | &nbsp &nbsp
 	    a href='#{supplier_items_path(id: supplier.id)}'
 	    	button.btn.btn-rounded.btn-primary type="button" 
 		        | Item
-	    | &nbsp &nbsp
+
 		a href='#{new_order_path(supplier_id: supplier.id)}'
-	    	button.btn.btn-rounded.btn-warning.black-text type="button" 
+	    	button.btn.btn-rounded.btn-success type="button" 
 		        | Order
+
+    	a href='#{edit_supplier_path(id: supplier.id)}'
+    		button.btn.btn-rounded.btn-warning type="button" 
+	       		| Edit
 
 

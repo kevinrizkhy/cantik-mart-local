@@ -56,7 +56,7 @@ class TransfersController < ApplicationController
       next if qty < 1
       TransferItem.create item_id: item[0], transfer_id: transfer.id, request_quantity: qty, description: item[2]
     end
-    return redirect_to transfers_path
+    return redirect_success transfers_path
   end
 
   def confirmation
@@ -81,7 +81,7 @@ class TransfersController < ApplicationController
     end
     
     transfer.save!
-    return redirect_to transfers_path id: params[:id]
+    return redirect_success transfers_path id: params[:id]
   end
 
   def picked
@@ -101,7 +101,7 @@ class TransfersController < ApplicationController
     transfer.date_picked = DateTime.now
     transfer.save!
     sent_items params[:id]
-    return redirect_to transfers_path
+    return redirect_success transfers_path
   end
 
   def receive
@@ -121,7 +121,7 @@ class TransfersController < ApplicationController
     transfer.status = DateTime.now
     transfer.save!
     receive_items params[:id]
-    return redirect_to transfers_path
+    return redirect_success transfers_path
   end
 
   def destroy
@@ -131,7 +131,7 @@ class TransfersController < ApplicationController
     return redirect_back_no_access_right if retur.date_approve.present?
     TransferItem.where(retur_id: params[:id]).destroy_all
     retur.destroy
-    return redirect_to transfers_path
+    return redirect_success transfers_path
   end
 
   private

@@ -365,7 +365,7 @@ class CashFlowsController < ApplicationController
       CashFlow.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description, 
                       finance_type: CashFlow::FIX_COST, invoice: invoice
     end
-    return redirect_to cash_flows_path
+    return redirect_success cash_flows_path
   end
 
   private

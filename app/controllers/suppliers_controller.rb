@@ -17,9 +17,11 @@ class SuppliersController < ApplicationController
 
   def create
     supplier = Supplier.new supplier_params
+    supplier.pic = params[:supplier][:pic].camelize
+    supplier.address = params[:supplier][:address].camelize
     return redirect_back_data_not_found new_supplier_path if supplier.invalid?
     supplier.save!
-    return redirect_to suppliers_path
+    return redirect_success suppliers_path
   end
 
   def edit
@@ -33,8 +35,10 @@ class SuppliersController < ApplicationController
     supplier = Supplier.find_by_id params[:id]
     return redirect_back_data_not_found suppliers_pathunless supplier.present?
     supplier.assign_attributes supplier_params
+    supplier.pic = params[:supplier][:pic].camelize
+    supplier.address = params[:supplier][:address].camelize
     supplier.save! if supplier.changed?
-    return redirect_to suppliers_path
+    return redirect_success suppliers_path
   end
 
   private
