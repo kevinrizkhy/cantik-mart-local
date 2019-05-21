@@ -31,7 +31,6 @@ class ItemsController < ApplicationController
   def create
     item = Item.new item_params
     return redirect_back_data_invalid new_item_path if item.invalid?
-
     item.save!
     insert_into_all_store item.id
     return redirect_to items_path
@@ -39,6 +38,7 @@ class ItemsController < ApplicationController
   end
 
   def edit
+    @name = "qwerty"
     return redirect_back_data_not_found items_path unless params[:id].present?
     @item = Item.find_by_id params[:id]
     return redirect_back_data_not_found items_path unless @item.present?

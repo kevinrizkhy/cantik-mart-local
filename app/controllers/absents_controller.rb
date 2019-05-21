@@ -22,7 +22,7 @@ class AbsentsController < ApplicationController
     res = Net::HTTP.start(url.host, url.port) {|http|
       http.request(req)
     }
-    return if res.code != "200"
+    return if res.body.include? "Gagal"
     datas = JSON.parse(res.body)
     datas.each_with_index do |data, index|
       next if data==datas.first || data==datas.last
@@ -41,11 +41,11 @@ class AbsentsController < ApplicationController
         absent.check_out = date_time
         work_hours = calculate_work_hour absent.check_in, absent.check_out
         absent.work_hour = work_hours
-      elsif check_type == "2"
+      elsif check_type == "4"
         absent.overtime_in = date_time
         work_hours = calculate_work_hour absent.check_in, absent.check_out
         absent.work_hour = work_hours
-      elsif check_type == "3"
+      elsif check_type == "5"
         absent.overtime_out = date_time
         work_hours = calculate_work_hour absent.check_in, absent.check_out
         absent.work_hour = work_hours
