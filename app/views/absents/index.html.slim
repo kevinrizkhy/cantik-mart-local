@@ -1,7 +1,10 @@
 .row
   .col.text-left
     h5
-      | Daftar Absensi Pengguna Sistem    
+      | Daftar Absensi Pengguna Sistem   
+    - if @status.present?
+      h5.text-danger
+        | #{@status} 
 br
 .container-fluid
   .col-lg-12.col-md-12
