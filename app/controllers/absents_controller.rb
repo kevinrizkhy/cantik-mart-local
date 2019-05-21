@@ -1,7 +1,10 @@
 class AbsentsController < ApplicationController
   before_action :require_login
   def index
-    get_data
+    status = get_data
+    if !status
+      @status = "Fingerprint tidak terhubung."
+    end
     @absents = Absent.page param_page
     if params[:id].present?
       if params[:id].to_i == current_user.id
@@ -22,7 +25,7 @@ class AbsentsController < ApplicationController
     res = Net::HTTP.start(url.host, url.port) {|http|
       http.request(req)
     }
-    return if res.body.include? "Gagal"
+    return false if res.body.include? "Gagal"
     datas = JSON.parse(res.body)
     datas.each_with_index do |data, index|
       next if data==datas.first || data==datas.last
@@ -52,6 +55,7 @@ class AbsentsController < ApplicationController
       end
       absent.save!
     end
+    return true
   end
 
   def calculate_work_hour check_in, check_out
