@@ -25,7 +25,9 @@ class AbsentsController < ApplicationController
     res = Net::HTTP.start(url.host, url.port) {|http|
       http.request(req)
     }
+    
     return false if res.body.include? "Gagal"
+
     datas = JSON.parse(res.body)
     datas.each_with_index do |data, index|
       next if data==datas.first || data==datas.last
@@ -34,8 +36,9 @@ class AbsentsController < ApplicationController
       next if user.nil?
       check_type = data["status"]
       date_time = data["waktu"]
+      return next if date_time.to_time.to_date != DateTime.now.to_date
       absent = Absent.find_by("DATE(check_in) = ? AND user_id = ?", DateTime.now.to_date, user.id)
-      return false if absent.nil? && check_type != "1"
+      next if absent.nil? && check_type != "1"
       absent = Absent.create user: user, check_in: date_time if absent.nil? 
       if check_type == "0"
         absent.check_in = date_time
