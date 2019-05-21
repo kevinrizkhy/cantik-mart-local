@@ -26,7 +26,7 @@ class WarningItemsController < ApplicationController
     item = StoreItem.find_by_id params[:id]
     item.assign_attributes stock_params
     item.save! if item.changed?
-    return redirect_to stocks_path
+    return redirect_success stocks_path
   end
 
   private

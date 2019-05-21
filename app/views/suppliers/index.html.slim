@@ -10,24 +10,27 @@
 br
 .container-fluid
   .col-lg-12.col-md-12
-    .card.mb-4
-      .card-header.white-text.info-color
+    .card-header.white-text.info-color
         h5.font-weight-500.my-1
           | Pencarian
+    .card.mb-4 
+      
       .card-body
         = form_for :supplier, url: suppliers_path, method: 'GET' do |form|
           .row.align-middle
             .col-md-10
               input type="text" class="form-control md-form" id="search" name="search"
-            .col-md-2
+            .col-md-2.text-center
               button class="btn btn-rounded btn-primary"
                 | Cari
-.container-fluid
+
+.container-fluid 
   .col-lg-12.col-md-12
-    .card.mb-4
-      .card-header.white-text.info-color
+    .card-header.white-text.info-color
         h5.font-weight-500.my-1
           | Data Supplier
+    .card.mb-4 
+      
       .card-body
         table class="table"
           thead

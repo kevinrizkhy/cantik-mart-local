@@ -391,9 +391,9 @@ class Finances2Controller < ApplicationController
       finance.description = inv+" ("+finance.description+")"
       finance.status = true
     end
-    return redirect_to new_user_path if finance.invalid?
+    return redirect_success new_user_path if finance.invalid?
     finance.save!
-    return redirect_to finances_path
+    return redirect_success finances_path
   end
 
   private

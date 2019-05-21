@@ -63,7 +63,7 @@ class ComplainsController < ApplicationController
     #   store_stock.stock = store_stock.stock + complain_item[1].to_i
     #   store_stock.save!
     # end
-    # return redirect_to complains_path
+    # return redirect_success complains_path
   end
 
   private

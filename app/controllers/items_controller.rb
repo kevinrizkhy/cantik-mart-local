@@ -33,7 +33,7 @@ class ItemsController < ApplicationController
     return redirect_back_data_invalid new_item_path if item.invalid?
     item.save!
     insert_into_all_store item.id
-    return redirect_to items_path
+    return redirect_success items_path
 
   end
 
@@ -50,7 +50,7 @@ class ItemsController < ApplicationController
     item = Item.find_by_id params[:id]
     item.assign_attributes item_params
     item.save! if item.changed?
-    return redirect_to items_path
+    return redirect_success items_path
   end
 
   private

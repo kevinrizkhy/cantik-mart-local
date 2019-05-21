@@ -30,7 +30,7 @@ class SupplierItemsController < ApplicationController
     supplier_item.supplier_id = supplier.id
     return redirect_back_invalid suppliers_path if supplier_item.invalid?
     supplier_item.save!
-    return redirect_to supplier_items_path(id: params[:id])
+    return redirect_success supplier_items_path(id: params[:id])
   end
 
   def edit
@@ -46,7 +46,7 @@ class SupplierItemsController < ApplicationController
     item = StoreItem.find_by_id params[:id]
     item.assign_attributes stock_params
     item.save! if item.changed?
-    return redirect_to stocks_path
+    return redirect_success stocks_path
   end
 
   private

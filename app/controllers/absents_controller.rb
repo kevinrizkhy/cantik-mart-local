@@ -35,7 +35,8 @@ class AbsentsController < ApplicationController
       check_type = data["status"]
       date_time = data["waktu"]
       absent = Absent.find_by("DATE(check_in) = ? AND user_id = ?", DateTime.now.to_date, user.id)
-      absent = Absent.create user: user, check_in: date_time if absent.nil?
+      return false if absent.nil? && check_type != "1"
+      absent = Absent.create user: user, check_in: date_time if absent.nil? 
       if check_type == "0"
         absent.check_in = date_time
         work_hours = calculate_work_hour absent.check_in, absent.check_out

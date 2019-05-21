@@ -70,7 +70,7 @@ class ReturItemsController < ApplicationController
     end
     retur.status = Time.now
     retur.save
-    return redirect_to retur_items_path(id: retur.id)
+    return redirect_success retur_items_path(id: retur.id)
   end
 
   private

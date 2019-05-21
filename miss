@@ -1,8 +1,8 @@
 TASK : 
+- alert notification in all controller (adding flash in all return success)
 - debt
 - in new order -> delete item feature cant accessible rite now
 - fixing "col" if page is resizing ==> table + search field
-- alert notification in all controller (adding flash in all return success)
 - js in add new row (all) ==> remove add new row button in new HTML
 - add profit chart
 - change all view to new bootstrap
@@ -13,14 +13,10 @@ TASK :
 - change order "add new item" to use API
 - post using API, set token CSRF
 - notification
-- profile
-- save image profile
-- add img into item
 - add card into home 
 - check selecting data is on this current user or all 
 - add restriction method
 - checking all trx 
-- fingerprint api
 - fingerprint ==> fix_cost
 
 
@@ -38,3 +34,7 @@ DONE:
 - returs cant find id
 - pay bug if nomial 0
 - order cant find if clicked base on items
+- profile
+- save image profile
+- add img into item
+- fingerprint api

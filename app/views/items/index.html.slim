@@ -15,10 +15,10 @@ br
 br
 .container-fluid
   .col-lg-12.col-md-12
-    .card.mb-4
-      .card-header.white-text.info-color
+    .card-header.white-text.info-color
         h5.font-weight-500.my-1
           | Pencarian
+    .card.mb-4
       .card-body
         = form_for :items, url: items_path, method: 'GET' do |form|
           .row
@@ -58,12 +58,12 @@ br
             b
               | #{@order_type} 
         
-
+.container-fluid
   .col-lg-12.col-md-12
-    .card.mb-4
-      .card-header.white-text.info-color
-        h5.font-weight-500.my-1
-          | Data
+    .card-header.white-text.info-color
+          h5.font-weight-500.my-1
+            | Data
+    .card.mb-4 
       .card-body
         table class="table"
           thead
@@ -75,7 +75,7 @@ br
             th Beli
             th Jual
             th Supplier
-            th Aksi
+            th Action
           tbody
             = render partial: 'list', collection: @items, as: :item
         = paginate @items
