@@ -16,6 +16,7 @@ class HomesController < ApplicationController
 	res = Net::HTTP.start(url.host, url.port) {|http|
 	  http.request(req)
 	}
+	return if res.code != "200"
 	datas = JSON.parse(res.body)
 	datas.each_with_index do |data, index|
 		next if data==datas.first || data==datas.last
@@ -23,6 +24,7 @@ class HomesController < ApplicationController
 		check_type = data["status"]
 		date_tiem = data["waktu"]
 	end
+	puts datas
   end
 
   private
