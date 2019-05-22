@@ -1,12 +1,15 @@
 class AbsentsController < ApplicationController
   before_action :require_login
+
   def index
     status = get_data
     if !status
       @status = "Fingerprint tidak terhubung."
     end
+    @search_text = "Pencarian  "
     @absents = Absent.page param_page
     if params[:id].present?
+      @search_id = params[:id]
       if params[:id].to_i == current_user.id
         @absents = @absents.where(user: current_user)
       end
@@ -15,7 +18,15 @@ class AbsentsController < ApplicationController
     if params[:search].present?
       @search = params[:search].downcase
       search = "%"+@search+"%"
-      @users = @users.where("lower(name) like ?", search)
+      @search_text+= " '"+@search+"' "
+      users = User.where("lower(name) like ?", search).pluck(:id)
+      @absents = @absents.where(user_id: users)
+    end
+
+    if params[:date_search].present?
+      @search_date = params[:date_search].to_date
+      @search_text+= "tanggal "+@search_date.to_s
+      @absents = @absents.where("DATE(check_in) = ?", @search_date)
     end
   end
 
@@ -36,23 +47,26 @@ class AbsentsController < ApplicationController
       next if user.nil?
       check_type = data["status"]
       date_time = data["waktu"]
-      return next if date_time.to_time.to_date != DateTime.now.to_date
+      next if date_time.to_date != DateTime.now.to_date
       absent = Absent.find_by("DATE(check_in) = ? AND user_id = ?", DateTime.now.to_date, user.id)
-      next if absent.nil? && check_type != "1"
-      absent = Absent.create user: user, check_in: date_time if absent.nil? 
+      absent = Absent.create user: user, check_in: date_time if absent.nil? && check_type == "0"
       if check_type == "0"
+        next if absent.check_in.present?
         absent.check_in = date_time
         work_hours = calculate_work_hour absent.check_in, absent.check_out
         absent.work_hour = work_hours
       elsif check_type == "1"
+        next if absent.check_out.present?
         absent.check_out = date_time
         work_hours = calculate_work_hour absent.check_in, absent.check_out
         absent.work_hour = work_hours
       elsif check_type == "4"
+        next if absent.overtime_in.present?
         absent.overtime_in = date_time
         work_hours = calculate_work_hour absent.check_in, absent.check_out
         absent.work_hour = work_hours
       elsif check_type == "5"
+        next if absent.overtime_out.present?
         absent.overtime_out = date_time
         work_hours = calculate_work_hour absent.check_in, absent.check_out
         absent.work_hour = work_hours

@@ -1,5 +1,6 @@
 class StocksController < ApplicationController
   before_action :require_login
+  before_action :require_fingerprint
   def index
     @inventories = StoreItem.page param_page
     @inventories = @inventories.where(store: current_user.store)

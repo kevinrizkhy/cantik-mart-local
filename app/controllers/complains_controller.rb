@@ -1,5 +1,6 @@
 class ComplainsController < ApplicationController
   before_action :require_login
+  before_action :require_fingerprint
   def index
     @complains = Complain.page param_page
     if params[:search].present?

@@ -1,5 +1,6 @@
 class OrdersController < ApplicationController
   before_action :require_login
+  before_action :require_fingerprint
   def index
     @orders = Order.order("date_created DESC").page param_page
     @orders_new = Order.where("date_receive is null").order("date_created DESC").page param_page

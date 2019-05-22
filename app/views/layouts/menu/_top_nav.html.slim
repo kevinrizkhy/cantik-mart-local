@@ -42,21 +42,21 @@ nav.navbar.fixed-top.navbar-expand-lg.scrolling-navbar.double-nav
               br
               | #{current_user.name} - #{current_user.level}
               - absent = Absent.find_by("DATE(check_in) = ? AND user_id = ?", DateTime.now.to_date, current_user.id)
-                - if absent.present?
-                  - check_in = absent.check_in
-                  - divide_hour = DateTime.now.to_time - check_in.to_time
-                  - raw_hour = divide_hour / 1.hour
-                  - hour = raw_hour.to_i.to_s
-                  - divide_min = raw_hour - raw_hour.to_i
-                  - raw_min = divide_min*60
-                  - minute = raw_min.to_i.to_s
-                  br
-                    .font-weight-bold.red-text
-                      | #{hour} Jam #{minute} Menit
-                - else
-                  br
-                    .font-weight-bold.red-text
-                      | Silahkan melakukan absensi
+              - if absent.present?
+                - check_in = absent.check_in
+                - divide_hour = DateTime.now.to_time - check_in.to_time
+                - raw_hour = divide_hour / 1.hour
+                - hour = raw_hour.to_i.to_s
+                - divide_min = raw_hour - raw_hour.to_i
+                - raw_min = divide_min*60
+                - minute = raw_min.to_i.to_s
+                br
+                  .font-weight-bold.red-text
+                    | #{hour} Jam #{minute} Menit
+              - else
+                br
+                  .font-weight-bold.red-text
+                    | Silahkan melakukan absensi
               #txt
             .col-12
               hr

@@ -1,5 +1,6 @@
 class TransferItemsController < ApplicationController
   before_action :require_login
+  before_action :require_fingerprint
   def index
     return redirect_back_data_not_found transfers_path unless params[:id].present?
     @transfer_items = TransferItem.page param_page

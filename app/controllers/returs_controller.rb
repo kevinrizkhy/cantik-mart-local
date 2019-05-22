@@ -1,5 +1,6 @@
 class RetursController < ApplicationController
   before_action :require_login
+  before_action :require_fingerprint
   def index
 
     @returs = Retur.order("date_created DESC").page param_page

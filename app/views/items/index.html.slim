@@ -79,3 +79,7 @@ br
           tbody
             = render partial: 'list', collection: @items, as: :item
         = paginate @items
+javascript:
+  $('.datepicker').pickadate({
+    editable: true
+    })

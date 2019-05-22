@@ -1,5 +1,6 @@
 class ItemCatsController < ApplicationController
   before_action :require_login
+  before_action :require_fingerprint
   def index
     @item_cats = ItemCat.page param_page
     if params[:search].present?

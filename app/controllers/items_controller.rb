@@ -1,5 +1,7 @@
 class ItemsController < ApplicationController
   before_action :require_login
+  before_action :require_fingerprint
+  
   def index
     # insert_prod = InsertProdlist.new
     # insert_prod.read

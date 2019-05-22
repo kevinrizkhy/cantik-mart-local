@@ -1,5 +1,6 @@
 class SuppliersController < ApplicationController
   before_action :require_login
+  before_action :require_fingerprint
   def index
     @suppliers = Supplier.page param_page
     @suppliers = @suppliers.where(supplier_type: 0)

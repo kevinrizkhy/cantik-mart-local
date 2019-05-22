@@ -1,5 +1,6 @@
 class OrderItemsController < ApplicationController
   before_action :require_login
+  before_action :require_fingerprint
   def index
     return redirect_back_data_not_found orders_path unless params[:id].present?
     order = Order.find_by(id: params[:id])

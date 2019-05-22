@@ -1,5 +1,6 @@
 class ItemSuppliersController < ApplicationController
   before_action :require_login
+  before_action :require_fingerprint
   def index
     return redirect_back_data_not_found suppliers_path unless params[:id].present?
     @inventories = SupplierItem.page param_page
