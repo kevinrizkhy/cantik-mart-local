@@ -1,6 +1,7 @@
 class WarningItemsController < ApplicationController
   before_action :require_login
   before_action :require_fingerprint
+
   def index
     @inventories = StoreItem.page param_page
     store_id = current_user.store.id

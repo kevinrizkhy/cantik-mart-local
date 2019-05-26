@@ -3,11 +3,15 @@ class User < ApplicationRecord
   validates :level, :email, presence: true
   validates_uniqueness_of :email
 
-  enum level: { super_admin: 2,
+  enum level: { 
                 owner: 1,
+                super_admin: 2,
                 stock_admin: 3,
                 cashier: 4,
-                super_visi: 5
+                super_visi: 5,
+                finance: 6,
+                stock_user: 7,
+                driver: 8
   }
 
   enum sex: {
@@ -20,11 +24,22 @@ class User < ApplicationRecord
 
   default_scope { order(created_at: :desc) }
 
+  # PARDEV
   SUPER_ADMIN = 'super_admin'
+  # KINDI / SYIFA
   OWNER = 'owner'
-  STOCK_ADMIN = 'stock_admin'
-  CASHIER = "cashier"
-  SUPER_VISI = 'super_visi'
+  # KEPALA GUDANG
+  STOCK_ADMIN = 'stock_admin' 
+  # PEGAWAI GUDANG
+  STOCK_USER = 'stock_user'
+  # KASIR
+  CASHIER = 'cashier'
+  # SUPER VISI TOKO
+  SUPERVISI = 'super_visi'
+  # KEUANGAN
+  FINANCE = 'finance'
+  # SUPIR
+  DRIVER = 'driver'
 
   MALE = 'laki_laki'
   FEMALE = 'perempuan'

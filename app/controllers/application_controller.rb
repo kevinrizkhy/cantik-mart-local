@@ -16,6 +16,7 @@ class ApplicationController < ActionController::Base
   end
 
   def require_fingerprint
+    authorization
     # user = current_user
     # absent = Absent.find_by("DATE(check_in) = ? AND user_id = ?", DateTime.now.to_date, user.id)
     # redirect_to absents_path, flash: { error: 'Silakan untuk melakukan absensi terlebih dahulu' }
@@ -35,6 +36,24 @@ class ApplicationController < ActionController::Base
 
   def redirect_success current_path
     redirect_to current_path, flash: { success: 'Data berhasil disimpan' }
+  end
+
+  def authorization
+    extracted_path = Rails.application.routes.recognize_path(request.original_url)
+    controller_name = extracted_path[:controller].to_sym
+    method_name = extracted_path[:action].to_sym
+    accessible = authentication controller_name, method_name
+    redirect_to root_path, flash: { error: 'Tidak memiliki hak akses' }
+  end
+
+  def authentication controller_name, method_name
+    # binding.pry
+    return true if current_user.level == User::SUPER_ADMIN || current_user.level == User::OWNER
+    
+    get_access = access[controller_name][method_name]
+    return true if get_access.nil?
+    accesible = get_access.include? current_user.level
+    return accesible
   end
 
 end
