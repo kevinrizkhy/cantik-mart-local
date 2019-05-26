@@ -1,5 +1,9 @@
 .card.mb-4{
-	overflow-x: auto;
+	/*overflow-x: auto;*/
+}
+
+.mod-mb-4{
+	overflow-x: auto;	
 }
 
 .navsup{
