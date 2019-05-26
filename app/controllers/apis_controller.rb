@@ -4,7 +4,7 @@ class ApisController < ApplicationController
 
   def index
   	json_result = []
-  	search = params[:search]
+  	search = params[:search].strip!
   	return render :json => json_result unless search.present?
   	if params[:api_type] == "item"
       items = Item.where('lower(name) like ?', "%"+search.downcase+"%").pluck(:id)

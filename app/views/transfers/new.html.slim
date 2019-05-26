@@ -1,25 +1,19 @@
-.text-center
-  h4
-    | Buat Transfer
-  br
-
 = form_for :transfer, url: transfers_path, method: "POST" do |form|
   .container-fluid
     .col-lg-12.col-md-12
-      .card.mb-4
-        .card-header.white-text.info-color
+      .card-header.white-text.info-color
           h5.font-weight-500.my-1
-            | Informasi Transfer
+            | Data Buat Pesanan Baru
+      .card.mb-4
         .card-body
           .row
-            .col-md-6
-              .form-group
-                label for="from" Dari
-                input type="text" class="form-control md-form" disabled=true value="#{current_user.store.name}"
-            .col-md-6
+            .col-8
+              label for="from" Kode Barang
+              input class="md-form form-control" placeholder="Barcode Barang..." id="itemId" onkeyup="getData('transfer')"
+            .col-4.text-right
               .form-group
                 label for="from" Kepada
-                select class="mdb-select md-outline colorful-select dropdown-primary" searchable="Cari..." name="transfer[store_id]"
+                select class="mdb-select md-form md-outline colorful-select dropdown-primary" searchable="Cari..." name="transfer[store_id]"
                   - @stores.each do |store|
                     option data-subtext="#{store.address}" value="#{store.id}"
                       | #{store.name}
@@ -31,46 +25,20 @@
             | Daftar Barang
         .card-body
           .row
-            .col-md-12.text-right
-              button type="button" class="btn btn-rounded btn-deep-orange" onclick="addNewRowRetur()"
-                | + Item
-              br
-              br
             .col-md-12  
               table.table id="myTable"
                 tr
                   th
-                    | Item - Kategori
+                    | Kode
+                  th
+                    | Item 
+                  th
+                    | Kategori
                   th
                     | Jumlah
                   th
                     | Deskripsi
-                  th
-                - idx = 0
-                tr
-                  td
-                    select class="mdb-select md-outline colorful-select dropdown-primary" searchable="Cari..." name="transfer[transfer_items][#{idx}][item_id]"
-                      - @inventories.each do |inventory|
-                        option data-subtext="#{inventory.item.item_cat.name}" value="#{inventory.item.id}" 
-                          | #{inventory.item.name}
-                  td
-                    input type="number" required=true class="form-control md-form" id="quantity" name="transfer[transfer_items][#{idx}][quantity]"
-                  td
-                    input type="textarea" class="form-control md-form" id="description" name="transfer[transfer_items][#{idx}][description]"
-                  td
-                    i.fa.fa-trash.text-danger onclick="removeThisRow(this)"
-                tr
-                  td
-                    select class="mdb-select md-outline colorful-select dropdown-primary" searchable="Cari..." name="transfer[transfer_items][#{idx+1}][item_id]"
-                      - @inventories.each do |inventory|
-                        option data-subtext="#{inventory.item.item_cat.name}" value="#{inventory.item.id}" 
-                          | #{inventory.item.name}
-                  td
-                    input type="number" required=true class="form-control md-form" id="quantity" name="transfer[transfer_items][#{idx+1}][quantity]"
-                  td
-                    input type="textarea" class="form-control md-form" id="description" name="transfer[transfer_items][#{idx+1}][description]"
-                  td
-                    i.fa.fa-trash.text-danger onclick="removeThisRow(this)"
+                  th                
             .col-md-12.text-center
               .form-group.text-center
                 = form.submit "Buat Transfer", class: "btn btn-rounded btn-primary"

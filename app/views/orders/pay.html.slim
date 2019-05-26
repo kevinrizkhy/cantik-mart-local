@@ -38,11 +38,13 @@
             | Piutang
         .card-body
           = form_for :order_pay, url: order_paid_path, method: "POST" do |form|
-            .form-group style="display: none;"
+            .form-group
               .form-check
                 input#materialChecked2.form-check-input[type="checkbox",name="order_pay[user_receivable]", checked]
                 label.form-check-label[for="materialChecked2"] 
                   | Gunakan Piutang
+            .form-group style="display: none;"
+              input type="text" name="order_pay[user_receivable]" value='on'
             .form-group
               label for="nominal" Piutang yang Digunakan
               = form.number_field :receivable_nominal, required: true, class: "form-control md-form", id: "nominal", value:0
@@ -51,7 +53,7 @@
               input type="date" class="form-control md-form" name="order_pay[date_paid]" value="#{Date.today}"
             .form-group.text-center
               = form.submit "Bayar", class: "btn btn-rounded btn-primary"
-
+              
 .container-fluid
   .col-lg-12.col-md-12
     .card.mb-4
