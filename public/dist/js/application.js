@@ -15,46 +15,6 @@ function removeThisRow(params){
 	}
 }
 
-function addNewRow(){
-	var table = document.getElementById("myTable");
-	var row = table.insertRow(table.rows.length);
-
-	var cell1 = row.insertCell(0);
-	var cell2 = row.insertCell(1);
-	var cell3 = row.insertCell(2);
-	var cell4 = row.insertCell(3);
-	var cell5 = row.insertCell(4);
-
-	cell1.innerHTML = '<select id="selectpicker'+add_counter+'" class="mdb-select md-outline colorful-select dropdown-primary" searchable="Cari..." name="order[order_items]['+add_counter+'][item_id]">'+
-	gon.select_options+'</select>';
-	cell2.innerHTML = '<input type="number" required=true class="form-control" id="quantity" name="order[order_items]['+add_counter+'][quantity]">'; 
-	cell3.innerHTML = '<input type="number" required=true class="form-control" id="quantity" name="order[order_items]['+add_counter+'][price]">'; 
-	cell4.innerHTML = '<input type="textarea" required=true class="form-control" id="description" name="order[order_items]['+add_counter+'][description]">'; 
-	cell5.innerHTML = "<i class='fa fa-trash text-danger' onclick='removeThisRow(this)'></i>"; 
-
-	$('#selectpicker'+add_counter).material_select();
-	add_counter++;
-}
-
-function addNewRowRetur(){
-	var table = document.getElementById("myTable");
-	var row = table.insertRow(table.rows.length);
-
-	var cell1 = row.insertCell(0);
-	var cell2 = row.insertCell(1);
-	var cell3 = row.insertCell(2);
-	var cell4 = row.insertCell(3);
-
-	cell1.innerHTML = '<select id="selectpicker'+add_counter+'" class="mdb-select md-outline colorful-select dropdown-primary" searchable="Cari..." name="retur[retur_items]['+add_counter+'][item_id]">'+
-	gon.select_options+'</select>';
-	cell2.innerHTML = '<input type="number" required=true class="form-control" id="quantity" name="retur[retur_items]['+add_counter+'][quantity]">'; 
-	cell3.innerHTML = '<input type="textarea" required=true class="form-control" id="description" name="retur[retur_items]['+add_counter+'][description]">'; 
-	cell4.innerHTML = "<i class='fa fa-trash text-danger' onclick='removeThisRow(this)'></i>"; 
-
-	// $('#selectpicker'+add_counter).selectpicker('refresh');
-	$('#selectpicker'+add_counter).material_select();
-	add_counter++;
-}
 
 function addNewRowComplain(){
 	var table = document.getElementById("myTable");
@@ -172,7 +132,8 @@ var debt = new Chart(ctx, {
     });
 
     var timeout = null;
-    function getData() {
+
+    function getData(table_types) {
          clearTimeout(timeout);
          timeout = setTimeout(function() {
            var item_id = document.getElementById("itemId").value;
@@ -181,39 +142,12 @@ var debt = new Chart(ctx, {
              cache: false,
              url: "/api/order?search=" + item_id,
              success: function(result_arr) {
-                 var table = document.getElementById("myTable");
-                 var result = result_arr[0];
-                 var qty = 1;
-                 var total = parseFloat(qty) * (parseFloat(result[3]) - parseFloat("100"));
-                 
-                 var row = table.insertRow(-1);
-                 var cell1 = row.insertCell(0);
-                 var cell2 = row.insertCell(1);
-                 var cell3 = row.insertCell(2);
-                 var cell4 = row.insertCell(3);
-                 var cell5 = row.insertCell(4);
-                 var cell6 = row.insertCell(5);
-                 var cell7 = row.insertCell(6);
-
-
-                 let id = "<input type='text' class='md-form form-control' value='"+result[4]+"' readonly name='order[order_items]["+add_counter+"][item_id]'/>";
-                 let code = "<input type='text' class='md-form form-control' value='"+result[0]+"' readonly name='order[order_items]["+add_counter+"][code]'/>";
-                 let name = "<input type='text' class='md-form form-control' value='"+result[1]+"' readonly name='order[order_items]["+add_counter+"][name]'/>";
-                 let cat = "<input type='text' class='md-form form-control' value='"+result[2]+"' readonly name='order[order_items]["+add_counter+"][item_cat]'/>";
-                 let quantity = "<input type='number' min=1 class='md-form form-control' value='1' name='order[order_items]["+add_counter+"][quantity]'/>";
-                 let price = "<input type='number' class='md-form form-control' value='100' min=100 name='order[order_items]["+add_counter+"][price]'/>";
-                 let desc = "<input type='text' class='md-form form-control' value=''  name='order[order_items]["+add_counter+"][description]'/>";
-
-                 cell1.innerHTML = id;
-                 cell2.innerHTML = code;
-                 cell3.innerHTML = cat;
-                 cell4.innerHTML = name;
-                 cell5.innerHTML = quantity;
-                 cell6.innerHTML = price;
-                 cell7.innerHTML = desc;
-                 add_counter++;
-                 cell7.style.display = "none";
-                 document.getElementById("itemId").value = "";
+                 if (table_types == "order"){
+                  addNewRowOrder(result_arr);
+                 }
+                 else if(table_types == "retur"){
+                  addNewRowRetur(result_arr);
+                 }
              },
              error: function(error) {
                  document.getElementById("itemId").value = "";
@@ -223,6 +157,73 @@ var debt = new Chart(ctx, {
            });
          }, 300);
       };
+
+    function addNewRowOrder(result_arr){
+       var table = document.getElementById("myTable");
+       var result = result_arr[0];
+       var qty = 1;
+       var total = parseFloat(qty) * (parseFloat(result[3]) - parseFloat("100"));
+       
+       var row = table.insertRow(-1);
+       var cell1 = row.insertCell(0);
+       var cell2 = row.insertCell(1);
+       var cell3 = row.insertCell(2);
+       var cell4 = row.insertCell(3);
+       var cell5 = row.insertCell(4);
+       var cell6 = row.insertCell(5);
+       var cell7 = row.insertCell(6);
+
+
+       let id = "<input style='display: none;' type='text' class='md-form form-control' value='"+result[4]+"' readonly name='order[order_items]["+add_counter+"][item_id]'/>";
+       let code = id+"<input type='text' class='md-form form-control' value='"+result[0]+"' readonly name='order[order_items]["+add_counter+"][code]'/>";
+       let name = "<input type='text' class='md-form form-control' value='"+result[1]+"' readonly name='order[order_items]["+add_counter+"][name]'/>";
+       let cat = "<input type='text' class='md-form form-control' value='"+result[2]+"' readonly name='order[order_items]["+add_counter+"][item_cat]'/>";
+       let quantity = "<input type='number' min=1 class='md-form form-control' value='1' name='order[order_items]["+add_counter+"][quantity]'/>";
+       let price = "<input type='number' class='md-form form-control' value='100' min=100 name='order[order_items]["+add_counter+"][price]'/>";
+       let desc = "<input type='text' class='md-form form-control' value=''  name='order[order_items]["+add_counter+"][description]'/>";
+       let remove = "<i class='fa fa-trash text-danger' onclick='removeThisRow(this)'></i>"; 
+       cell1.innerHTML = code;
+       cell2.innerHTML = name;
+       cell3.innerHTML = cat;
+       cell4.innerHTML = quantity;
+       cell5.innerHTML = price;
+       cell6.innerHTML = desc;
+       cell7.innerHTML = remove;
+       add_counter++;
+       document.getElementById("itemId").value = "";
+    }
+
+    function addNewRowRetur(result_arr){
+       var table = document.getElementById("myTable");
+       var result = result_arr[0];
+       var qty = 1;
+       var total = parseFloat(qty) * (parseFloat(result[3]) - parseFloat("100"));
+       
+       var row = table.insertRow(-1);
+       var cell1 = row.insertCell(0);
+       var cell2 = row.insertCell(1);
+       var cell3 = row.insertCell(2);
+       var cell4 = row.insertCell(3);
+       var cell5 = row.insertCell(4);
+       var cell6 = row.insertCell(5);
+
+
+       let id = "<input style='display: none;' type='text' class='md-form form-control' value='"+result[4]+"' readonly name='order[order_items]["+add_counter+"][item_id]'/>";
+       let code = id+"<input type='text' class='md-form form-control' value='"+result[0]+"' readonly name='order[order_items]["+add_counter+"][code]'/>";
+       let name = "<input type='text' class='md-form form-control' value='"+result[1]+"' readonly name='order[order_items]["+add_counter+"][name]'/>";
+       let cat = "<input type='text' class='md-form form-control' value='"+result[2]+"' readonly name='order[order_items]["+add_counter+"][item_cat]'/>";
+       let quantity = "<input type='number' min=1 class='md-form form-control' value='1' name='order[order_items]["+add_counter+"][quantity]'/>";
+       let desc = "<input type='text' class='md-form form-control' value=''  name='order[order_items]["+add_counter+"][description]'/>";
+       let remove = "<i class='fa fa-trash text-danger' onclick='removeThisRow(this)'></i>"; 
+       cell1.innerHTML = code;
+       cell2.innerHTML = name;
+       cell3.innerHTML = cat;
+       cell4.innerHTML = quantity;
+       cell5.innerHTML = desc;
+       cell6.innerHTML = remove;
+       add_counter++;
+       document.getElementById("itemId").value = "";
+    }
          
 
     $(function () {

@@ -3,6 +3,7 @@ class AbsentsController < ApplicationController
 
   def index
     status = get_data
+    @bool_stats = status
     if !status
       @status = "Fingerprint tidak terhubung."
     end
@@ -31,11 +32,13 @@ class AbsentsController < ApplicationController
   end
 
   def get_data
-    url = URI.parse('http://localhost/getData.php')
+    url = URI.parse('http://localhost/getDatas.php')
     req = Net::HTTP::Get.new(url.to_s)
     res = Net::HTTP.start(url.host, url.port) {|http|
       http.request(req)
     }
+
+    return false if res.code == "404"
     
     return false if res.body.include? "Gagal"
 

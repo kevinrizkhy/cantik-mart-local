@@ -1,68 +1,53 @@
 = form_for :retur, url: returs_path, method: "POST" do |form|
   .container-fluid
     .col-lg-12.col-md-12
-      .card.mb-4
-        .card-header.white-text.info-color
+      .card-header.white-text.info-color
           h5.font-weight-500.my-1
-            | Buat Retur Supplier
+            | Data Buat Pesanan Baru
+      .card.mb-4
         .card-body
           .row
-            .col-md-6
+            .col-8
+              label for="from" Kode Barang
+              input class="md-form form-control" placeholder="Barcode Barang..." id="itemId" onkeyup="getData('retur')"
+            .col-4.text-right
               .form-group
-                label for="from" Dari
-                select onchange="changeSupplier()" class="mdb-select md-form md-outline colorful-select dropdown-primary"  disabled="disabled"
-                  option data-subtext="#{current_user.name}"  selected="selected"
-                    | #{current_user.store.name}
-                    
-            .col-md-6
-              .form-group
-                label for="from" Kepada
-                select onchange="changeSupplier()" class="mdb-select md-form md-outline colorful-select dropdown-primary" searchable="Cari..."  name="retur[supplier_id]" id="supplierId"
-                  - @suppliers.each do |supplier|
-                    - if supplier.id == @supplier_id
-                      option data-subtext="#{supplier.address}" value="#{supplier.id}" selected="selected"
-                        | #{supplier.pic}
-                    -else
-                      option data-subtext="#{supplier.address}" value="#{supplier.id}"
-                        | #{supplier.pic}
-                / input type="text" class="form-control md-form" disabled=true value="GUDANG"
+                label for="from" Supplier
+                select onchange="changeSupplier()" class="md-form mdb-select  md-outline colorful-select dropdown-primary" searchable="Cari..." name="order[supplier_id]" id="supplierId"
+                  - if @supplier.present?
+                    option data-subtext="#{@supplier.address}" value="#{@supplier.id}"
+                      | #{@supplier.pic}
+                  - else
+                    - @suppliers.each do |supplier|
+                      - if supplier.id == @supplier_id
+                        option data-subtext="#{supplier.address}" value="#{supplier.id}" selected="selected"
+                          | #{supplier.pic}
+                      -else
+                        option data-subtext="#{supplier.address}" value="#{supplier.id}"
+                          | #{supplier.pic}
   .container-fluid
     .col-lg-12.col-md-12
       .card.mb-4
         .card-header.white-text.info-color
           h5.font-weight-500.my-1
-            | Buat Retur Supplier
+            | Daftar Barang
         .card-body
           .row
-            .col-md-12.text-right
-              button type="button" class="btn btn-rounded btn-deep-orange" onclick="addNewRowRetur()"
-                | + Item
-              br 
-              br
             .col-md-12  
               table.table id="myTable"
                 tr
                   th
-                    | Item - Kategori
+                    | Kode
+                  th
+                    | Nama 
+                  th
+                    | Kategori
                   th
                     | Jumlah
                   th
                     | Deskripsi
                   th
-                - idx = 0
-                tr
-                  td
-                    select class="mdb-select md-outline colorful-select dropdown-primary" searchable="Cari..." name="retur[retur_items][#{idx}][item_id]"
-                      - @supplier_items.each do |supplier_item|
-                        option data-subtext="#{supplier_item.item.item_cat.name}" value="#{supplier_item.item.id}" 
-                          | #{supplier_item.item.name}
-                  td
-                    input type="number" required=true class="form-control md-form" id="quantity" name="retur[retur_items][#{idx}][quantity]"
-                  td
-                    input type="textarea" class="form-control md-form" id="description" name="retur[retur_items][#{idx}][description]" required="required"
-                  td
-                    i.fa.fa-trash.text-danger onclick="removeThisRow(this)"
-
+        
             .col-md-12.text-center
               .form-group.text-center
                 = form.submit "Buat Retur", class: "btn btn-rounded btn-primary"

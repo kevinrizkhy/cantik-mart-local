@@ -3,13 +3,13 @@
     .col-lg-12.col-md-12
       .card-header.white-text.info-color
           h5.font-weight-500.my-1
-            | Data Pesanan
+            | Data Buat Pesanan Baru
       .card.mb-4
         .card-body
           .row
             .col-8
               label for="from" Kode Barang
-              input class="md-form form-control" placeholder="Barcode Barang..." id="itemId" onkeyup="getData()"
+              input class="md-form form-control" placeholder="Barcode Barang..." id="itemId" onkeyup="getData('order')"
             .col-4.text-right
               .form-group
                 label for="from" Supplier
@@ -37,6 +37,7 @@
             .col-md-12  
               table.table id="myTable"
                 tr
+                  th style="display: none;"
                   th
                     | Kode
                   th
