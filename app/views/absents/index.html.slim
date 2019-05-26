@@ -2,7 +2,10 @@
   .col.text-left
     h5
       - if @search_id.nil?
-        | Daftar Absensi Pengguna Sistem   
+        | Daftar Absensi Pengguna Sistem  
+        - if !@bool_status
+          .text-danger
+            | #{@status}
       - else
         - user = User.find @search_id
         | Absensi #{user.name}

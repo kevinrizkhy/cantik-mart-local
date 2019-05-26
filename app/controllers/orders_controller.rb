@@ -8,7 +8,6 @@ class OrdersController < ApplicationController
     @orders_complete = Order.where("date_paid_off  is not null").order("date_created DESC").page param_page
     if params[:type].present?
       @type = params[:type]
-      
       if @type == "ongoing" 
         @type = "sedang dalam proses"
         @orders = @orders.where(store_id: current_user.store.id).where('date_receive is null')

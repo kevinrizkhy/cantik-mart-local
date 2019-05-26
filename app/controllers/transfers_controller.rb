@@ -2,7 +2,7 @@ class TransfersController < ApplicationController
   before_action :require_login
   before_action :require_fingerprint
   def index
-    @transfers = Transfer.page param_page
+    @transfers = Transfer.order("date_created DESC").page param_page
     if params[:search].present?
       search = params[:search].downcase
       @search = search
