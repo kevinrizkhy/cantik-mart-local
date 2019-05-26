@@ -15,3 +15,8 @@
 .navsup li{
 	display: inline-block;
 }
+
+#myTable td{
+	vertical-align: middle;
+	text-align: center;
+}
