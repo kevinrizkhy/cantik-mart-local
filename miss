@@ -4,17 +4,16 @@ TASK :
 - debt
 - add profit chart
 - change all view to new bootstrap
-	* NEW ORDER ==> JS
 	* ALL FINANCES
 - consumer retur
 - retur to warehouse
-- change order "add new item" to use API
 - post using API, set token CSRF
 - notification
 - add card into home 
 - check selecting data is on this current user or all 
 - checking all trx 
 - fingerprint ==> fix_cost
+- log all activity
 
 
 DONE:
@@ -39,3 +38,4 @@ DONE:
 - add "before_action :require_fingerprint" in all controllers except home and absent
 - js in add new row (all) ==> remove add new row button in new HTML
 - in new order -> delete item feature cant accessible rite now
+- change order "add new item" to use API

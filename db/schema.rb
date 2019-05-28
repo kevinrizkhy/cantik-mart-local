@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_21_112912) do
+ActiveRecord::Schema.define(version: 2019_05_28_155711) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -91,6 +91,16 @@ ActiveRecord::Schema.define(version: 2019_05_21_112912) do
     t.index ["store_id"], name: "index_complains_on_store_id"
   end
 
+  create_table "controller_methods", force: :cascade do |t|
+    t.bigint "controller_id", null: false
+    t.string "name", null: false
+    t.index ["controller_id"], name: "index_controller_methods_on_controller_id"
+  end
+
+  create_table "controllers", force: :cascade do |t|
+    t.string "name", null: false
+  end
+
   create_table "debts", force: :cascade do |t|
     t.bigint "store_id", null: false
     t.bigint "user_id", null: false
@@ -107,7 +117,7 @@ ActiveRecord::Schema.define(version: 2019_05_21_112912) do
   create_table "finances", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "store_id", null: false
-    t.float "nominal", null: false
+    t.integer "nominal", null: false
     t.integer "finance_type", default: 1, null: false
     t.datetime "date_created"
     t.string "description"
@@ -363,6 +373,13 @@ ActiveRecord::Schema.define(version: 2019_05_21_112912) do
     t.index ["to_store_id"], name: "index_transfers_on_to_store_id"
   end
 
+  create_table "user_methods", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "controller_method_id", null: false
+    t.index ["controller_method_id"], name: "index_user_methods_on_controller_method_id"
+    t.index ["user_id"], name: "index_user_methods_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name", null: false
     t.string "email", null: false
@@ -398,6 +415,7 @@ ActiveRecord::Schema.define(version: 2019_05_21_112912) do
   add_foreign_key "complain_items", "items"
   add_foreign_key "complains", "members"
   add_foreign_key "complains", "stores"
+  add_foreign_key "controller_methods", "controllers"
   add_foreign_key "debts", "stores"
   add_foreign_key "debts", "users"
   add_foreign_key "finances", "stores"
@@ -434,5 +452,7 @@ ActiveRecord::Schema.define(version: 2019_05_21_112912) do
   add_foreign_key "transfer_items", "transfers"
   add_foreign_key "transfers", "stores", column: "from_store_id"
   add_foreign_key "transfers", "stores", column: "to_store_id"
+  add_foreign_key "user_methods", "controller_methods"
+  add_foreign_key "user_methods", "users"
   add_foreign_key "users", "stores"
 end

@@ -43,17 +43,17 @@ class ApplicationController < ActionController::Base
     controller_name = extracted_path[:controller].to_sym
     method_name = extracted_path[:action].to_sym
     accessible = authentication controller_name, method_name
-    redirect_to root_path, flash: { error: 'Tidak memiliki hak akses' }
+    redirect_to root_path, flash: { error: 'Tidak memiliki hak akses' } if !accessible
   end
 
   def authentication controller_name, method_name
-    # binding.pry
-    return true if current_user.level == User::SUPER_ADMIN || current_user.level == User::OWNER
-    
-    get_access = access[controller_name][method_name]
-    return true if get_access.nil?
-    accesible = get_access.include? current_user.level
-    return accesible
+    controller = Controller.find_by(name: controller_name.to_s)
+    find_method = ControllerMethod.find_by(controller: controller, name: method_name.to_s)
+
+    get_access = UserMethod.find_by(user: current_user, controller_method: find_method)
+
+    return true if get_access.present?
+    return false
   end
 
 end

@@ -89,4 +89,8 @@ Rails.application.routes.draw do
   resources :stock_values, only: %i[index new create]
   # resources :assets, only: %i[index new create]
 
+  resources :controllers
+  resources :methods
+  # resources :user_methods
+
 end

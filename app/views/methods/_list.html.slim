@@ -1,0 +1,14 @@
+- users_id = UserMethod.where(controller_method: method).pluck(:user_id)
+- users = User.where(id: users_id)
+- users_name = ""
+- users.each do |user|
+	- if users.last == user
+		- users_name += user.name
+	- else
+		- users_name += user.name + ", "
+tr
+	td #{method.name.camelize}
+	td #{users_name}
+	td
+
+		
