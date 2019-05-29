@@ -37,9 +37,9 @@ class ControllersController < ApplicationController
   end
 
   def insert_new_user_method new_method
-    user_method = UserMethod.find_by(user: current_user, controller_method: new_method)
+    user_method = UserMethod.find_by(user_level: current_user.level, controller_method: new_method)
     return if user_method.present?
-    UserMethod.create controller_method: new_method, user: current_user
+    UserMethod.create controller_method: new_method, user_level: current_user.level
   end
 
   private

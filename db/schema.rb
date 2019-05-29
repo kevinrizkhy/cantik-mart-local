@@ -374,10 +374,9 @@ ActiveRecord::Schema.define(version: 2019_05_28_155711) do
   end
 
   create_table "user_methods", force: :cascade do |t|
-    t.bigint "user_id", null: false
+    t.string "user_level", null: false
     t.bigint "controller_method_id", null: false
     t.index ["controller_method_id"], name: "index_user_methods_on_controller_method_id"
-    t.index ["user_id"], name: "index_user_methods_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -453,6 +452,5 @@ ActiveRecord::Schema.define(version: 2019_05_28_155711) do
   add_foreign_key "transfers", "stores", column: "from_store_id"
   add_foreign_key "transfers", "stores", column: "to_store_id"
   add_foreign_key "user_methods", "controller_methods"
-  add_foreign_key "user_methods", "users"
   add_foreign_key "users", "stores"
 end

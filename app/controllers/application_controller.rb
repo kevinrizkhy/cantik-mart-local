@@ -49,9 +49,7 @@ class ApplicationController < ActionController::Base
   def authentication controller_name, method_name
     controller = Controller.find_by(name: controller_name.to_s)
     find_method = ControllerMethod.find_by(controller: controller, name: method_name.to_s)
-
-    get_access = UserMethod.find_by(user: current_user, controller_method: find_method)
-
+    get_access = UserMethod.find_by(user_level: current_user.level, controller_method: find_method)
     return true if get_access.present?
     return false
   end
