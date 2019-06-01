@@ -35,10 +35,11 @@ br
           thead
             th Foto
             th Nama
+            th Jabatan
             th Alamat
             th No. Telp
             th Jenis Kelamin
-            th Action
+            th Aksi
           tbody
             = render partial: 'list', collection: @users, as: :user
         = paginate @users

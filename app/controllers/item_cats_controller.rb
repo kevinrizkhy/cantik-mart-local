@@ -25,6 +25,7 @@ class ItemCatsController < ApplicationController
     item_cat.name = item_name
     return redirect_back_data_invalid new_item_cat_path if item_cat.invalid?
     item_cat.save!
+    item_cat.create_activity :create, owner: current_user
     return redirect_success item_cats_path
   end
 

@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  get 'activities/index'
 	Clearance.configure do |config|
   		config.routes = false
 	end
@@ -91,6 +92,7 @@ Rails.application.routes.draw do
 
   resources :controllers
   resources :methods
-  # resources :user_methods
+
+  resources :activities, only: %i[index]
 
 end

@@ -1,0 +1,7 @@
+tr
+  td #{activity.key.split('.')[1]}
+  td #{activity.trackable_type}
+  td #{activity.created_at}
+  td #{User.find_by(id: activity.owner_id.to_i).name}
+  td 
+    = link_to activity.trackable.name, activity.trackable

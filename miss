@@ -1,5 +1,9 @@
 TASK : 
-- add restriction method
+- add filter into activity
+- add 'show' into all controller 
+- add save activity into update, destroy and create method
+- move item_cat url into navbar
+- check and testing in all method --> if cant access, return redirect_back_no_access_right
 - fixing "col" if page is resizing ==> table + search field
 - debt
 - add profit chart
@@ -14,6 +18,7 @@ TASK :
 - checking all trx 
 - fingerprint ==> fix_cost
 - log all activity
+- customize router model, controller, view, router, migrate
 
 
 DONE:
@@ -39,3 +44,6 @@ DONE:
 - js in add new row (all) ==> remove add new row button in new HTML
 - in new order -> delete item feature cant accessible rite now
 - change order "add new item" to use API
+- add restriction method
+- show route with checking access in navbar
+- absents in current_user
