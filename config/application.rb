@@ -19,5 +19,6 @@ module Zerd
     # the framework and any gems in your application.
     config.serve_static_assets = true
     config.assets.compile = false
+    config.assets.precompile = ['*.js', '*.css']
   end
 end

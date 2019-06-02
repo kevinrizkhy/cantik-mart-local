@@ -1,14 +1,14 @@
 TASK : 
-- add filter into activity
+- change in filter activity --> controller name into model name
+- search how to use 'https://chartkick.com/' --> graph --> dashboard and finance
+- add filter and search into activity
 - add 'show' into all controller 
 - add save activity into update, destroy and create method
-- move item_cat url into navbar
+- log all activity
 - check and testing in all method --> if cant access, return redirect_back_no_access_right
 - fixing "col" if page is resizing ==> table + search field
 - debt
 - add profit chart
-- change all view to new bootstrap
-	* ALL FINANCES
 - consumer retur
 - retur to warehouse
 - post using API, set token CSRF
@@ -17,7 +17,7 @@ TASK :
 - check selecting data is on this current user or all 
 - checking all trx 
 - fingerprint ==> fix_cost
-- log all activity
+- add graph current user online
 - customize router model, controller, view, router, migrate
 
 
@@ -47,3 +47,6 @@ DONE:
 - add restriction method
 - show route with checking access in navbar
 - absents in current_user
+- move item_cat url into navbar
+- if user adding edit update create & etc, this user must be in index
+- activities routes
