@@ -1,7 +1,6 @@
 TASK : 
-- change in filter activity --> controller name into model name
 - search how to use 'https://chartkick.com/' --> graph --> dashboard and finance
-- add filter and search into activity
+- add filter and search into activity ==> selected not working
 - add 'show' into all controller 
 - add save activity into update, destroy and create method
 - log all activity
@@ -50,3 +49,4 @@ DONE:
 - move item_cat url into navbar
 - if user adding edit update create & etc, this user must be in index
 - activities routes
+- change in filter activity --> controller name into model name
