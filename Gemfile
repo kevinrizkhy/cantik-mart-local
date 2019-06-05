@@ -29,7 +29,7 @@ gem 'rails_12factor', group: :production
 # gem 'savon', '~> 2.12.0'
 gem 'public_activity'
 gem 'usagewatch'
-gem 'chartkick'
+# gem 'chartkick'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
