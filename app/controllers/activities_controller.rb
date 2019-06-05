@@ -4,7 +4,7 @@ class ActivitiesController < ApplicationController
 		@models = PublicActivity::Activity.pluck(:trackable_type)
 	  	@activities = PublicActivity::Activity.order("created_at desc").page param_page
 		@search_text = "Pencarian "
-		@date_search = DateTime.now.to_date
+		@date_search = nil
 		if params[:activity].present?
 			@date_search = params[:activity][:date_search] 
 			@access_levels = params[:activity][:access_levels] 
@@ -34,7 +34,7 @@ class ActivitiesController < ApplicationController
 
 		if @date_search.present?
 			@activities = @activities.where(created_at: @date_search)
-			@search_text+= "pada tanggal " + @date_search 
+			@search_text+= "pada tanggal " + @date_search.to_s
 		end
 		# @activities.delete_all
 	end

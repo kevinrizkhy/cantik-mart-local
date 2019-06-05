@@ -39,6 +39,7 @@ class ApplicationController < ActionController::Base
     end
 
     def authorization
+      return if current_user.level == "owner" || current_user.level == "super_admin"
       extracted_path = Rails.application.routes.recognize_path(request.original_url)
       controller_name = extracted_path[:controller].to_sym
       method_name = extracted_path[:action].to_sym

@@ -15,6 +15,12 @@ class ItemCatsController < ApplicationController
     end
   end
 
+  def show
+    return redirect_back_data_not_found item_cats_path unless params[:id].present?
+    @item_cat = ItemCat.find_by_id params[:id]
+    return redirect_back_data_invalid new_item_cat_path unless @item_cat.present?
+  end
+
   def new
     @item_cats = ItemCat.all
   end
@@ -42,6 +48,7 @@ class ItemCatsController < ApplicationController
     item_name = params[:item_cat][:name].camelize
     item_cat.name = item_name
     item_cat.save! if item_cat.changed?
+    item_cat.create_activity :edit, owner: current_user
     return redirect_success item_cats_path
   end
 

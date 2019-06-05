@@ -46,8 +46,8 @@ Rails.application.routes.draw do
   get '/api/:api_type', to: 'apis#index'
   post '/api/trx/post', to: 'transactions#create_trx'
 
-  resources :items, only: %i[index new create edit update]
-  resources :item_cats, only: %i[index new create edit update]
+  resources :items
+  resources :item_cats
 
   resources :stocks, only: %i[index edit update]
   resources :users

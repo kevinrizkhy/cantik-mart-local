@@ -1,25 +1,39 @@
-TASK : 
-- search how to use 'https://chartkick.com/' --> graph --> dashboard and finance
-- add 'show' into all controller 
-- add save activity into update, destroy and create method
-- log all activity
-- check and testing in all method --> if cant access, return redirect_back_no_access_right
-- fixing "col" if page is resizing ==> table + search field
-- debt
-- add profit chart
-- consumer retur
-- retur to warehouse
-- post using API, set token CSRF
-- notification
-- add card into home 
-- check selecting data is on this current user or all 
-- checking all trx 
-- fingerprint ==> fix_cost
-- add graph current user online
-- customize router model, controller, view, router, migrate
+/ RESEARCH
+= CHECKING & TESTING
+- SOMETHING THAT IS ON THE JOB & HASNT BEEN DONE
++ SOMETHING NEW FEATURE
+_____________________________________________________________
 
+TASK : 
+_____________________________________________________________
+
+/1 search how to use 'https://chartkick.com/' --> graph --> dashboard and finance
+
+=1 check and testing in all method --> if cant access, return redirect_back_no_access_right
+=2 fixing "col" if page is resizing ==> table + search field
+=3 check selecting data is on this current user or all 
+=4 checking all trx 
+
+-1 debt
+-2 consumer retur
+-3 retur to warehouse
+-4 post using API, set token CSRF
+-5 notification
+-6 add card into home 
+	* profit chart
+	* add graph current user online
+-7 fingerprint ==> fix_cost
+
++1 add save activity into update, destroy and create method
++2 add 'show' into all controller 
++3 customize router model, controller, view, router, migrate
+
+
+_____________________________________________________________
 
 DONE:
+_____________________________________________________________
+
 - check if order "edit", new qty > curr qty
 - check if retur "new", qty > curr stock
 - insert brand automatically from 'first' word in item name
@@ -50,3 +64,4 @@ DONE:
 - activities routes
 - change in filter activity --> controller name into model name
 - add filter and search into activity ==> selected not working
+- log all activity

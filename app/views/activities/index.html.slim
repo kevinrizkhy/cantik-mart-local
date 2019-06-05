@@ -29,11 +29,14 @@ br
                 - users_level = UserMethod.where(controller_method: @method).pluck(:user_level)
                 - levels = User.levels
                 - levels.keys.each do |level|
-                  - lv = User.levels[level].to_s
-                  - if @access_levels.include? lv
-                    option selected="selected" value="#{levels[level]}"  #{level.underscore.humanize.upcase}
-                  - else
-                    option value="#{levels[level]}"  #{level.underscore.humanize.upcase}
+                    - lv = User.levels[level].to_s
+                    - if @access_levels.present?
+                      - if @access_levels.include? lv
+                        option selected="selected" value="#{levels[level]}"  #{level.underscore.humanize.upcase}
+                      - else
+                        option value="#{levels[level]}"  #{level.underscore.humanize.upcase}
+                    - else
+                      option value="#{levels[level]}"  #{level.underscore.humanize.upcase}
             .col-md-4.text-center
               select.mdb-select.colorful-select.dropdown-primary.md-form multiple="multiple" searchable=("Cari Target")  name="activity[targets][]"
                 - @models.each do |mod|
