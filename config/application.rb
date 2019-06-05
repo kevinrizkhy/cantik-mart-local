@@ -20,5 +20,6 @@ module Zerd
     config.serve_static_assets = true
     config.assets.compile = false
     config.assets.precompile = ['*.js', '*.css']
+    config.assets.initialize_on_precompile = false
   end
 end
