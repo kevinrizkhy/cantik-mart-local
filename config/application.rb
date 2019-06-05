@@ -11,15 +11,12 @@ module Zerd
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.2
     # config.action_controller.asset_host = 'mycdnsubdomain.fictional-cdn.com'
-  	config.time_zone = 'Jakarta'
-  	config.active_record.default_timezone = :local # Or :utc
+    config.time_zone = 'Jakarta'
+    config.active_record.default_timezone = :local # Or :utc
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
     config.serve_static_assets = true
     config.assets.compile = false
-    config.assets.precompile = ['*.js', '*.css']
-    config.assets.initialize_on_precompile = false
-  end
 end
