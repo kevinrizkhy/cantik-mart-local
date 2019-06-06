@@ -7,13 +7,15 @@ _____________________________________________________________
 TASK : 
 _____________________________________________________________
 
-/1 search how to use 'https://chartkick.com/' --> graph --> dashboard and finance
+/1 search how to use 'https://chartkick.com/' --> graph 
+/2 server usage data
 
 =1 check and testing in all method --> if cant access, return redirect_back_no_access_right
 =2 fixing "col" if page is resizing ==> table + search field
 =3 check selecting data is on this current user or all 
 =4 checking all trx 
 =5 checking printing receipt cashier
+=6 log all activity
 
 -1 debt
 -2 consumer retur
@@ -45,34 +47,3 @@ _____________________________________________________________
 DONE:
 _____________________________________________________________
 
-- check if order "edit", new qty > curr qty
-- check if retur "new", qty > curr stock
-- insert brand automatically from 'first' word in item name
-- order items controller line 5
-- if order from retur (total is 0), automatically set date_paid_off is current time
-- alert notification in all controller (adding flash in all return error)
-- change navbar img => image_tag
-- add image link into items
-- top nav ==> img
-- dropdown text if md-form is deleted -> change into black text
-- returs cant find id
-- pay bug if nomial 0
-- order cant find if clicked base on items
-- profile
-- save image profile
-- add img into item
-- fingerprint api
-- alert notification in all controller (adding flash in all return success)
-- add "before_action :require_fingerprint" in all controllers except home and absent
-- js in add new row (all) ==> remove add new row button in new HTML
-- in new order -> delete item feature cant accessible rite now
-- change order "add new item" to use API
-- add restriction method
-- show route with checking access in navbar
-- absents in current_user
-- move item_cat url into navbar
-- if user adding edit update create & etc, this user must be in index
-- activities routes
-- change in filter activity --> controller name into model name
-- add filter and search into activity ==> selected not working
-- log all activity
