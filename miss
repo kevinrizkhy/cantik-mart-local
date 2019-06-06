@@ -26,7 +26,8 @@ _____________________________________________________________
 
 +1 add save activity into update, destroy and create method
 +2 add 'show' into all controller 
-+3 customize router model, controller, view, router, migrate
++3 add 'destroy' in some controller
++4 customize router model, controller, view, router, migrate
 
 
 _____________________________________________________________

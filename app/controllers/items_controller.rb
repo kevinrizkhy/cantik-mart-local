@@ -26,6 +26,12 @@ class ItemsController < ApplicationController
     end
   end
 
+  def show
+    return redirect_back_data_not_found items_path unless params[:id].present?
+    @item = Item.find_by_id params[:id]
+    return redirect_back_data_not_found items_path unless @item.present?
+  end
+
   def new
     @item_cats = ItemCat.all
   end
@@ -34,13 +40,12 @@ class ItemsController < ApplicationController
     item = Item.new item_params
     return redirect_back_data_invalid new_item_path if item.invalid?
     item.save!
-    insert_into_all_store item.id
+    item.create_activity :create, owner: current_user
     return redirect_success items_path
 
   end
 
   def edit
-    @name = "qwerty"
     return redirect_back_data_not_found items_path unless params[:id].present?
     @item = Item.find_by_id params[:id]
     return redirect_back_data_not_found items_path unless @item.present?
@@ -52,6 +57,7 @@ class ItemsController < ApplicationController
     item = Item.find_by_id params[:id]
     item.assign_attributes item_params
     item.save! if item.changed?
+    item.create_activity :edit, owner: current_user
     return redirect_success items_path
   end
 
@@ -64,12 +70,5 @@ class ItemsController < ApplicationController
 
     def param_page
       params[:page]
-    end
-
-    def insert_into_all_store item_id
-      stores = Store.all.pluck(:id)
-      stores.each do |store_id|
-        StoreItem.create item_id: item_id, store_id: store_id
-      end
     end
 end
