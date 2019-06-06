@@ -13,6 +13,7 @@ _____________________________________________________________
 =2 fixing "col" if page is resizing ==> table + search field
 =3 check selecting data is on this current user or all 
 =4 checking all trx 
+=5 checking printing receipt cashier
 
 -1 debt
 -2 consumer retur
@@ -23,12 +24,21 @@ _____________________________________________________________
 	* profit chart
 	* add graph current user online
 -7 fingerprint ==> fix_cost
+-8 print report
+	* order
+	* retur
+		# consument
+		# supplier
+		# warehouse
+	* transfer
 
 +1 add save activity into update, destroy and create method
 +2 add 'show' into all controller 
 +3 add 'destroy' in some controller
 +4 customize router model, controller, view, router, migrate
-
++5 notification if data is deleted
++6 add delete in some model
++7 check before delete, that object is used by another model or not
 
 _____________________________________________________________
 
