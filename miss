@@ -4,11 +4,11 @@
 + SOMETHING NEW FEATURE
 _____________________________________________________________
 
-TASK : 
+TO DO: 
 _____________________________________________________________
 
 /1 search how to use 'https://chartkick.com/' --> graph 
-/2 server usage data
+
 
 =1 check and testing in all method --> if cant access, return redirect_back_no_access_right
 =2 fixing "col" if page is resizing ==> table + search field
@@ -16,6 +16,7 @@ _____________________________________________________________
 =4 checking all trx 
 =5 checking printing receipt cashier
 =6 log all activity
+
 
 -1 debt
 -2 consumer retur
@@ -33,6 +34,7 @@ _____________________________________________________________
 		# supplier
 		# warehouse
 	* transfer
+-9 Price based on QTY
 
 +1 add save activity into update, destroy and create method
 +2 add 'show' into all controller 
@@ -42,8 +44,10 @@ _____________________________________________________________
 +6 add delete in some model
 +7 check before delete, that object is used by another model or not
 
+
 _____________________________________________________________
 
-DONE:
+DONE: (I => Ilham , K => Kevin , T => Tobi)
 _____________________________________________________________
 
+/K server usage data
