@@ -49,7 +49,7 @@ Rails.application.routes.draw do
   resources :items
   resources :item_cats
 
-  resources :stocks, only: %i[index edit update]
+  resources :stocks
   resources :users
   resources :stores
 

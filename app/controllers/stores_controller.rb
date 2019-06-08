@@ -50,8 +50,8 @@ class StoresController < ApplicationController
 
   def show
     return redirect_back_data_not_found members_path unless params[:id].present?
-    @stores = Store.find_by_id params[:id]
-    return redirect_back_data_not_found members_path unless @stores.present?
+    @store = Store.find_by_id params[:id]
+    return redirect_back_data_not_found members_path unless @store.present?
   end
 
   private

@@ -1,0 +1,28 @@
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Detil Stok - #{@item.name} (#{@item.code})
+      .card-body
+        = form_for :item, url: "" do |form|
+          .form-group
+            label for="code" Kode
+            = form.text_field :code, required: true, class: "form-control md-form", id: "code", disabled: true
+          .form-group
+            label for="name" Nama
+            = form.text_field :name, required: true, class: "form-control md-form", id: "name", disabled: true
+          .form-group
+            label for="item" Kategori
+            input type='text' value="#{@item.item_cat.name}" disabled= true class="form-control md-form"
+          .form_group
+            label for="category" Stok 
+            input type='number' value="#{@stock.stock}" disabled= true class="form-control md-form"
+          .form-group
+            label for="stock" Limit
+            = form.number_field :min_stock, required: true, class: "form-control md-form", id: "stock", value:"#{@stock.min_stock}"
+          .form-group
+            label for="sell" Harga Jual
+            = form.number_field :sell, required: true, class: "form-control md-form", id: "sell", disabled: true
+          .form-group.text-center
+            = form.submit "Ubah Stok Item - #{@item.name}", class: "btn btn-rounded btn-primary"

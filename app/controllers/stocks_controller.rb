@@ -31,8 +31,9 @@ class StocksController < ApplicationController
 
   def show
     return redirect_back_data_not_found stocks_path unless params[:id].present?
-    @stock = Member.find_by_id params[:id]
+    @stock = StoreItem.find_by_id params[:id]
     return redirect_back_data_not_found stocks_path unless @stock.present?
+    @item = @stock.item
   end
 
   private

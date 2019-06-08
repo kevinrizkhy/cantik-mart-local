@@ -45,7 +45,6 @@ _____________________________________________________________
 -9 Price based on QTY
 
 +1 add save activity into update, destroy and create method
-+2 add 'show' into all controller 
 +3 add 'destroy' in some controller
 +4 customize router model, controller, view, router, migrate
 +5 notification if data is deleted
@@ -59,3 +58,4 @@ DONE: (I => Ilham , K => Kevin , T => Tobi)
 _____________________________________________________________
 
 /K server usage data
++I add 'show' into all controller 
