@@ -37,6 +37,12 @@ class MembersController < ApplicationController
     return redirect_success members_path
   end
 
+  def show
+    return redirect_back_data_not_found members_path unless params[:id].present?
+    @member = Member.find_by_id params[:id]
+    return redirect_back_data_not_found members_path unless @member.present?
+  end
+
   private
     def member_params
       params.require(:member).permit(

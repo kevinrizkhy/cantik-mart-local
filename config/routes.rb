@@ -51,35 +51,35 @@ Rails.application.routes.draw do
 
   resources :stocks, only: %i[index edit update]
   resources :users
-  resources :stores, only: %i[index new create edit update]
+  resources :stores
 
-  resources :suppliers, only: %i[index new create edit update]
-  resources :supplier_items, only: %i[index new create edit update]
-  resources :item_suppliers, only: %i[index]
+  resources :suppliers
+  resources :supplier_items
+  resources :item_suppliers, only: %i[index show]
 
-  resources :members, only: %i[index new create edit update]
+  resources :members
 
   resources :returs
-  resources :retur_items, only: %i[index new create edit update]
+  resources :retur_items
 
   resources :complains, only: %i[index new create]
-  resources :complain_items, only: %i[index]
+  resources :complain_items, only: %i[index show]
 
-  resources :absents, only: %i[index]
+  resources :absents, only: %i[index show]
 
   resources :transfers
-  resources :transfer_items, only: %i[index new create edit update]
+  resources :transfer_items
   
-  resources :retur_warehouses, only: %i[index new create edit update]
-  resources :retur_warehouse_items, only: %i[index new create edit update]
+  resources :retur_warehouses
+  resources :retur_warehouse_items
 
-  resources :warning_items, only: %i[index new create edit update]
+  resources :warning_items
 
   resources :orders
-  resources :order_items, only: %i[index new create edit update]
+  resources :order_items
 
   resources :transactions, only: %i[index new create]
-  resources :transaction_items, only: %i[index]
+  resources :transaction_items, only: %i[index show]
 
   resources :cash_flows, only: %i[index new create]
   resources :debts, only: %i[index new create]
@@ -93,6 +93,6 @@ Rails.application.routes.draw do
   resources :controllers
   resources :methods
 
-  resources :activities, only: %i[index]
+  resources :activities, only: %i[index show]
 
 end

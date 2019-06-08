@@ -43,6 +43,12 @@ class ControllersController < ApplicationController
     UserMethod.create controller_method: new_method, user_level: 'super_admin'
   end
 
+  def show
+    return redirect_back_data_not_found controllers_path unless params[:id].present?
+    @controller = Controller.find_by_id params[:id]
+    return redirect_back_data_not_found controllers_path unless @controller.present?
+  end
+
   private
   	def param_page
       params[:page]

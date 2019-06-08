@@ -74,6 +74,12 @@ class ReturItemsController < ApplicationController
     return redirect_success retur_items_path(id: retur.id)
   end
 
+  def show
+    return redirect_back_data_not_found retur_items_path unless params[:id].present?
+    @retur_item = ReturItem.find_by_id params[:id]
+    return redirect_back_data_invalid new_retur_item_path unless @retur_item.present?
+  end
+
   private
     def param_page
       params[:page]

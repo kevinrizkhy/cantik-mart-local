@@ -42,6 +42,12 @@ class SuppliersController < ApplicationController
     return redirect_success suppliers_path
   end
 
+  def show
+    return redirect_back_data_not_found suppliers_path unless params[:id].present?
+    @supplier = Supplier.find_by_id params[:id]
+    return redirect_back_data_invalid new_supplier_path unless @suplier.present?
+  end
+
   private
     def supplier_params
       params.require(:supplier).permit(

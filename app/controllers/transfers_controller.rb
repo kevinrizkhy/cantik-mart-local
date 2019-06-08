@@ -135,6 +135,12 @@ class TransfersController < ApplicationController
     return redirect_success transfers_path
   end
 
+  def show
+    return redirect_back_data_not_found transfers_path unless params[:id].present?
+    @transfer = Transfer.find_by_id params[:id]
+    return redirect_back_data_not_found transfers_path unless @transfer.present?
+  end
+
   private
     def transfer_items
       items = []
