@@ -42,7 +42,7 @@ class ActivitiesController < ApplicationController
 	def show
 		return redirect_back_data_not_found activities_path unless params[:id].present?
 	    @activities = Activity.find_by_id params[:id]
-	    return redirect_back_data_not_found activities_path unless @item.present?
+	    return redirect_back_data_not_found activities_path unless @activities.present?
 	end
 
 	private

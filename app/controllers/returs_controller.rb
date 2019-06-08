@@ -168,6 +168,12 @@ class RetursController < ApplicationController
     return redirect_success returs_path
   end
 
+  def show
+    return redirect_back_data_not_found returs_path unless params[:id].present?
+    @retur = Retur.find_by_id params[:id]
+    return redirect_back_data_not_found returs_path unless @retur.present?
+  end
+
   private
     def retur_items
       items = []

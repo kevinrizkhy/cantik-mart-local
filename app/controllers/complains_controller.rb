@@ -67,6 +67,12 @@ class ComplainsController < ApplicationController
     # return redirect_success complains_path
   end
 
+  def show
+    return redirect_back_data_not_found complains_path unless params[:id].present?
+    @complain = Complain.find_by_id params[:id]
+    return redirect_back_data_not_found complains_path unless @complain.present?
+  end
+
   private
     def complain_items
       items = []

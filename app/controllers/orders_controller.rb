@@ -256,6 +256,12 @@ class OrdersController < ApplicationController
     return redirect_success order_items_path(id: params[:id])
   end
 
+  def show
+    return redirect_back_data_not_found orders_path unless params[:id].present?
+    @order = Order.find_by_id params[:id]
+    return redirect_back_data_not_found orders_path unless @order.present?
+  end
+
   private
     def paid_params
       params.require(:order_pay).permit(

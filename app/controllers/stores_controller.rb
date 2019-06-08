@@ -48,6 +48,12 @@ class StoresController < ApplicationController
     return redirect_success stores_path
   end
 
+  def show
+    return redirect_back_data_not_found members_path unless params[:id].present?
+    @stores = Store.find_by_id params[:id]
+    return redirect_back_data_not_found members_path unless @stores.present?
+  end
+
   private
     def store_params
       params.require(:store).permit(

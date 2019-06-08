@@ -50,6 +50,12 @@ class SupplierItemsController < ApplicationController
     return redirect_success stocks_path
   end
 
+  def show
+    return redirect_back_data_not_found supplier_items_path unless params[:id].present?
+    @supplier_item = SupplierItem.find_by_id params[:id]
+    return redirect_back_data_invalid new_supplier_path unless @supplier_item.present?
+  end
+
   private
     def supplier_item_params
       params.require(:supplier_item).permit(
