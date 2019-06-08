@@ -94,6 +94,12 @@ class AbsentsController < ApplicationController
     return hour+":"+minute+":"+sec
   end
 
+  def show
+    return redirect_back_data_not_found absents_path unless params[:id].present?
+    @absents = Absent.find_by_id params[:id]
+    return redirect_back_data_not_found absents_path unless @item.present?
+  end
+
   private
   	def param_page
       params[:page]
