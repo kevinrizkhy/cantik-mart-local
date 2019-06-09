@@ -5,6 +5,7 @@ class ApisController < ApplicationController
   def index
   	json_result = []
   	search = params[:search].squish
+    qty = params[:qty]
     search = search.gsub(/\s+/, "")
   	return render :json => json_result unless search.present?
   	if params[:api_type] == "item"
@@ -28,7 +29,18 @@ class ApisController < ApplicationController
         item << item_store.item.code
         item << item_store.item.name
         item << item_store.item_cat.name
-        item << item_store.item.sell
+        curr_item = item_store.item
+        grocer_price = curr_item.grocer_items
+        if grocer_price.present?
+          find_price = grocer_items.where('max >= ?', qty).order("max ASC")
+          if find_price.present?
+            item << find_price.first.price
+          else
+            item << item_store.item.sell
+          end
+        else
+          item << item_store.item.sell
+        end
         json_result << item
       end
     elsif params[:api_type] == "order"
