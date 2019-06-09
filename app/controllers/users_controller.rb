@@ -25,6 +25,7 @@ class UsersController < ApplicationController
     user = User.new user_params
     return redirect_back_data_not_found new_user_path if user.invalid?
     user.save!
+    user.create_activity :create, owner: current_user
     return redirect_success users_path
   end
 
@@ -49,6 +50,7 @@ class UsersController < ApplicationController
     user.image = filename
     user.assign_attributes user_params
     user.save! if user.changed?
+    user.create_activity :create, owner: current_user
     return redirect_success users_path
   end
 

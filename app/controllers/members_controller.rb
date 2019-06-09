@@ -21,6 +21,7 @@ class MembersController < ApplicationController
     member.store = current_user.store
     return redirect_back_data_invalid new_member_path if member.invalid?
     member.save!
+    member.create_activity :create, owner: current_user
     return redirect_success members_path
   end
 
@@ -36,6 +37,7 @@ class MembersController < ApplicationController
     member.assign_attributes member_params
     member.name = params[:member][:name].camelize
     member.save! if member.changed?
+    member.create_activity :create, owner: current_user
     return redirect_success members_path
   end
 
