@@ -27,10 +27,7 @@ class StoresController < ApplicationController
     store.save!
     supplier.save!
     store.create_activity :create, owner: current_user
-<<<<<<< HEAD
-=======
     supplier.create_activity :create, owner: current_user
->>>>>>> 8e2056969e4d407ad93d48ffa3e38012fb18c238
     return redirect_success stores_path
   end
 
