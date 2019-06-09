@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_09_124215) do
+ActiveRecord::Schema.define(version: 2019_06_09_130722) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -142,6 +142,14 @@ ActiveRecord::Schema.define(version: 2019_06_09_124215) do
     t.string "description"
     t.index ["store_id"], name: "index_finances_on_store_id"
     t.index ["user_id"], name: "index_finances_on_user_id"
+  end
+
+  create_table "grocier_items", force: :cascade do |t|
+    t.bigint "item_id", null: false
+    t.integer "min", null: false
+    t.integer "max", null: false
+    t.float "price", null: false
+    t.index ["item_id"], name: "index_grocier_items_on_item_id"
   end
 
   create_table "incomes", force: :cascade do |t|
@@ -443,6 +451,7 @@ ActiveRecord::Schema.define(version: 2019_06_09_124215) do
   add_foreign_key "debts", "users"
   add_foreign_key "finances", "stores"
   add_foreign_key "finances", "users"
+  add_foreign_key "grocier_items", "items"
   add_foreign_key "incomes", "stores"
   add_foreign_key "incomes", "users"
   add_foreign_key "items", "item_cats"

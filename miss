@@ -17,7 +17,7 @@ _____________________________________________________________
 =5 checking printing receipt cashier
 =6 log all activity
 
--0 Change Supplier.pic into Supplier.name (--> cant trackable on Activiities)
+
 -1 debt
 -2 consumer retur
 -3 retur to warehouse
@@ -56,7 +56,13 @@ _____________________________________________________________
 DONE: (I => Ilham , K => Kevin , T => Tobi)
 _____________________________________________________________
 
+
 /K server usage data
+
+
 +I add 'show' into all controller 
 +K add save activity into update and create method
 +K customize router model, controller, view, router, migrate
+
+
+-K Change Supplier.pic into Supplier.name (--> cant trackable on Activiities)

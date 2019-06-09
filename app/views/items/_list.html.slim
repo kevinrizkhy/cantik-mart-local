@@ -18,6 +18,10 @@ tr
         - else
           |  #{sup_item.supplier.name}, 
   td
+    a href='#{item_path(id: item.id)}'
+      button.btn.btn-rounded.btn-info type="button" 
+        | Detil
+    | &nbsp &nbsp
     a href='#{edit_item_path(id: item.id)}'
       button.btn.btn-rounded.btn-warning type="button" 
           | Edit
@@ -25,8 +29,4 @@ tr
     a href='#{item_suppliers_path(id: item.id)}'
       button.btn.btn-rounded.btn-primary type="button" 
           | Supplier
-    | &nbsp &nbsp
-    / a href='#{new_order_path(item_id: item.id)}'
-      / button.btn.btn-rounded.btn-primary type="button" 
-          / | Order
 

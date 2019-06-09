@@ -19,9 +19,8 @@
               label for="item" Kategori
               input class="md-form form-control" value="#{@item.item_cat.name}"
           .form-group
-            label for="buy" Harga Beli
+            label for="buy" Harga Beli Satuan
             = form.number_field :buy, required: true, class: "form-control md-form", id: "buy"
           .form-group
-            label for="sell" Harga Jual
+            label for="sell" Harga Jual Satuan
             = form.number_field :sell, required: true, class: "form-control md-form", id: "sell"
-          .form-group.text-center
