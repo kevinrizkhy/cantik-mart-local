@@ -26,6 +26,7 @@ class StocksController < ApplicationController
     item = StoreItem.find_by_id params[:id]
     item.assign_attributes stock_params
     item.save! if item.changed?
+    item.create_activity :edit, owner: current_user
     return redirect_success stocks_path
   end
 

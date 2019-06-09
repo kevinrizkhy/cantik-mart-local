@@ -19,15 +19,15 @@ class StoresController < ApplicationController
     store.name = params[:store][:name].camelize
     store.address = params[:store][:address].camelize
     return redirect_back_data_invalid stores_path if store.invalid?
-
     supplier = Supplier.new pic: "GUDANG - "+params[:store][:name],
       phone: params[:store][:phone],
       address: params[:store][:address],
       supplier_type: 1
     return redirect_back_data_invalid stores_path if supplier.invalid?
-
     store.save!
     supplier.save!
+    store.create_activity :create, owner: current_user
+    supplier.create_activity :create, owner: current_user
     return redirect_success stores_path
   end
 
@@ -45,6 +45,7 @@ class StoresController < ApplicationController
     store.name = params[:store][:name].camelize
     store.address = params[:store][:address].camelize
     store.save! if store.changed?
+    store.create_activity :edit, owner: current_user
     return redirect_success stores_path
   end
 

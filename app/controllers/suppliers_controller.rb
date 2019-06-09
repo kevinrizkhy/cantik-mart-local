@@ -22,6 +22,7 @@ class SuppliersController < ApplicationController
     supplier.address = params[:supplier][:address].camelize
     return redirect_back_data_not_found new_supplier_path if supplier.invalid?
     supplier.save!
+    supplier.create_activity :create, owner: current_user
     return redirect_success suppliers_path
   end
 
@@ -39,6 +40,7 @@ class SuppliersController < ApplicationController
     supplier.pic = params[:supplier][:pic].camelize
     supplier.address = params[:supplier][:address].camelize
     supplier.save! if supplier.changed?
+    supplier.create_activity :edit, owner: current_user
     return redirect_success suppliers_path
   end
 
