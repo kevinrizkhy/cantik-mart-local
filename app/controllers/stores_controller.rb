@@ -27,7 +27,10 @@ class StoresController < ApplicationController
     store.save!
     supplier.save!
     store.create_activity :create, owner: current_user
+<<<<<<< HEAD
+=======
     supplier.create_activity :create, owner: current_user
+>>>>>>> 8e2056969e4d407ad93d48ffa3e38012fb18c238
     return redirect_success stores_path
   end
 
@@ -45,7 +48,11 @@ class StoresController < ApplicationController
     store.name = params[:store][:name].camelize
     store.address = params[:store][:address].camelize
     store.save! if store.changed?
+<<<<<<< HEAD
+    store.create_activity :create, owner: current_user
+=======
     store.create_activity :edit, owner: current_user
+>>>>>>> 8e2056969e4d407ad93d48ffa3e38012fb18c238
     return redirect_success stores_path
   end
 

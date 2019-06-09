@@ -37,7 +37,11 @@ class MembersController < ApplicationController
     member.assign_attributes member_params
     member.name = params[:member][:name].camelize
     member.save! if member.changed?
+<<<<<<< HEAD
+    member.create_activity :create, owner: current_user
+=======
     member.create_activity :edit, owner: current_user
+>>>>>>> 8e2056969e4d407ad93d48ffa3e38012fb18c238
     return redirect_success members_path
   end
 

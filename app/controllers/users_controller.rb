@@ -50,7 +50,11 @@ class UsersController < ApplicationController
     user.image = filename
     user.assign_attributes user_params
     user.save! if user.changed?
+<<<<<<< HEAD
+    user.create_activity :create, owner: current_user
+=======
     user.create_activity :edit, owner: current_user
+>>>>>>> 8e2056969e4d407ad93d48ffa3e38012fb18c238
     return redirect_success users_path
   end
 
