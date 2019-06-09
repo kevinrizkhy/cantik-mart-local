@@ -15,3 +15,16 @@
           .form-group
             label for="phone" Nomor Telepon
             = form.number_field :phone, required: true, class: "form-control md-form", id: "phone"
+          .form-group
+            label for="phone" Jumlah Member
+            - members_count = Member.where(store: @store).count
+            input type="number" class="form-control md-form" value='#{members_count}'
+          .form-group
+            label for="user" Karyawan
+            textarea class="form-control md-form"
+              - users = User.where(store: @store).pluck(:name)
+              - users.each do |user|
+                -if users.last == user
+                  | #{user}
+                - else
+                  | #{user}, 

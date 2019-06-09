@@ -47,4 +47,5 @@ class User < ApplicationRecord
   has_many :transactions
   has_many :absents
   has_many :methods
+  has_many :members
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_01_202856) do
+ActiveRecord::Schema.define(version: 2019_06_09_104618) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -136,7 +136,7 @@ ActiveRecord::Schema.define(version: 2019_06_01_202856) do
   create_table "finances", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "store_id", null: false
-    t.float "nominal", null: false
+    t.integer "nominal", null: false
     t.integer "finance_type", default: 1, null: false
     t.datetime "date_created"
     t.string "description"
@@ -189,6 +189,10 @@ ActiveRecord::Schema.define(version: 2019_06_01_202856) do
     t.string "address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "store_id"
+    t.bigint "user_id"
+    t.index ["store_id"], name: "index_members_on_store_id"
+    t.index ["user_id"], name: "index_members_on_user_id"
   end
 
   create_table "order_invs", force: :cascade do |t|
@@ -441,6 +445,8 @@ ActiveRecord::Schema.define(version: 2019_06_01_202856) do
   add_foreign_key "incomes", "stores"
   add_foreign_key "incomes", "users"
   add_foreign_key "items", "item_cats"
+  add_foreign_key "members", "stores"
+  add_foreign_key "members", "users"
   add_foreign_key "order_invs", "orders"
   add_foreign_key "order_items", "items"
   add_foreign_key "order_items", "orders"

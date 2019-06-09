@@ -17,14 +17,16 @@
           = form.number_field :phone, required: true, class: "form-control md-form", id: "phone"
         .form-group
           label for="sex" Sex
-          select name="member[sex]" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary"
-            option value='laki_laki'
-              | Laki - laki
-            option value='perempuan'
-              | Perempuan
+          input type="text" class="form-control md-form" value='#{@member.sex}'
         .form-group
           label for="id-card" KTP
           = form.text_field :id_card, required: true, class: "form-control md-form", id: "id-card"
         .form-group
           label for="card-card" Nomor Kartu
           = form.text_field :card_number, required: true, class: "form-control md-form", id: "card_number"
+        .form-group
+          label for="card-card" Dibuat Di Toko
+          input type="text" class="form-control md-form" value='#{@member.store.name}'
+        .form-group
+          label for="card-card" Dibuat Oleh
+          input type="text" class="form-control md-form" value='#{@member.user.name}'

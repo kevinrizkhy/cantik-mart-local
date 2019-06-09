@@ -17,6 +17,8 @@ class MembersController < ApplicationController
   def create
     member = Member.new member_params
     member.name = params[:member][:name].camelize
+    member.user = current_user
+    member.store = current_user.store
     return redirect_back_data_invalid new_member_path if member.invalid?
     member.save!
     return redirect_success members_path
