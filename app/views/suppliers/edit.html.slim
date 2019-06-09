@@ -3,12 +3,12 @@
     .card.mb-4
       .card-header.white-text.info-color
         h5.font-weight-500.my-1
-          | Ubah Supplier - #{@supplier.pic}
+          | Ubah Supplier - #{@supplier.name}
       .card-body
         = form_for :supplier, url: supplier_path(id: @supplier.id), method: "PUT" do |form|
           .form-group
             label for="name" Nama
-            = form.text_field :pic, required: true, class: "form-control md-form", id: "name"
+            = form.text_field :name, required: true, class: "form-control md-form", id: "name"
           .form_group
             label for="address" Alamat
             = form.text_field :address, required: true, class: "form-control md-form", id: "address"
@@ -16,4 +16,4 @@
             label for="phone" Nomor Telepon
             = form.number_field :phone, required: true, class: "form-control md-form", id: "phone"
           .form-group
-            = form.submit "Ubah Supplier - #{@supplier.pic}", class: "btn btn-rounded btn-primary"
+            = form.submit "Ubah Supplier - #{@supplier.name}", class: "btn btn-rounded btn-primary"

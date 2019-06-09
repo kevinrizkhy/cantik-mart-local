@@ -14,7 +14,7 @@ h5
   .col-md-4
     .form-group
       label for="from" Kepada
-      input type="text" class="form-control md-form" disabled=true value="#{@retur.supplier.pic}"
+      input type="text" class="form-control md-form" disabled=true value="#{@retur.supplier.name}"
 hr style="border-top: 1px solid black;"
 .row
   = form_for :retur, url: retur_feedback_confirmation_path, method: "POST" do |form|

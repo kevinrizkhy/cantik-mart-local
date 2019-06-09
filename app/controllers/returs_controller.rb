@@ -94,6 +94,7 @@ class RetursController < ApplicationController
   def create
     invoice = "RE-" + Time.now.to_i.to_s
     items = retur_items
+    return redirect_back_data_invalid orders_path if items.empty?
     total_item = items.size
     address_to = params[:retur][:supplier_id]
 
@@ -177,8 +178,10 @@ class RetursController < ApplicationController
   private
     def retur_items
       items = []
-      params[:retur][:retur_items].each do |item|
-        items << item[1].values
+      if params[:retur][:retur_items].present?
+        params[:retur][:retur_items].each do |item|
+          items << item[1].values
+        end
       end
       items
     end

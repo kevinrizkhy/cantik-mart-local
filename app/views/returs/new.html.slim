@@ -16,15 +16,15 @@
                 select class="md-form mdb-select  md-outline colorful-select dropdown-primary" searchable="Cari..." name="order[supplier_id]" id="supplierId"
                   - if @supplier.present?
                     option data-subtext="#{@supplier.address}" value="#{@supplier.id}"
-                      | #{@supplier.pic}
+                      | #{@supplier.name}
                   - else
                     - @suppliers.each do |supplier|
                       - if supplier.id == @supplier_id
                         option data-subtext="#{supplier.address}" value="#{supplier.id}" selected="selected"
-                          | #{supplier.pic}
+                          | #{supplier.name}
                       -else
                         option data-subtext="#{supplier.address}" value="#{supplier.id}"
-                          | #{supplier.pic}
+                          | #{supplier.name}
   .container-fluid
     .col-lg-12.col-md-12
       .card.mb-4

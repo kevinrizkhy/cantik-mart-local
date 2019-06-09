@@ -14,9 +14,9 @@ tr
     - supplier_items = SupplierItem.where(item_id: item.id)
     - supplier_items.each do |sup_item|
         - if supplier_items.last == sup_item
-          | #{sup_item.supplier.pic}
+          | #{sup_item.supplier.name}
         - else
-          |  #{sup_item.supplier.pic}, 
+          |  #{sup_item.supplier.name}, 
   td
     a href='#{edit_item_path(id: item.id)}'
       button.btn.btn-rounded.btn-warning type="button" 

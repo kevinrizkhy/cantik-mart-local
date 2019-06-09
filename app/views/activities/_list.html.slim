@@ -4,4 +4,4 @@ tr
   td #{activity.created_at}
   td #{User.find_by(id: activity.owner_id.to_i).name}
   td 
-    = link_to activity.trackable.name, activity.trackable
+    / = link_to activity.trackable.name, activity.trackable
