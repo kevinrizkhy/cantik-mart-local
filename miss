@@ -7,27 +7,27 @@ _____________________________________________________________
 TO DO: 
 _____________________________________________________________
 
-/1 search how to use 'https://chartkick.com/' --> graph 
+/ search how to use 'https://chartkick.com/' --> graph 
 
 
-=1 check and testing in all method --> if cant access, return redirect_back_no_access_right
-=2 fixing "col" if page is resizing ==> table + search field
-=3 check selecting data is on this current user or all 
-=4 checking all trx 
-=5 checking printing receipt cashier
-=6 log all activity
+= check and testing in all method --> if cant access, return redirect_back_no_access_right
+= fixing "col" if page is resizing ==> table + search field
+= check selecting data is on this current user or all 
+= checking all trx 
+= checking printing receipt cashier
+= log all activity
 
 
--1 debt
--2 consumer retur
--3 retur to warehouse
--4 post using API, set token CSRF
--5 notification
--6 add card into home 
+- debt
+- consumer retur
+- retur to warehouse
+- post using API, set token CSRF
+- notification
+- add card into home 
 	* profit chart
 	* add graph current user online
--7 fingerprint ==> fix_cost
--8 print report
+- fingerprint ==> fix_cost
+- print report
 	* order
 	* retur
 		# consument
@@ -42,13 +42,12 @@ _____________________________________________________________
 	* tax
 	* operational
 	* assets value
--9 Price based on QTY (Grocier)
+- In cashier, send qty too for searching price by QTY (something wrong in JS AJAX)
 
-+1 add save activity into destroy 
-+3 add 'destroy' in some controller
-+5 notification if data is deleted
-+6 add delete in some model
-+7 check before delete, that object is used by another model or not
++ add 'destroy' in some controller
++ check before delete, that object is used by another model or not
++ add save activity into destroy 
++ notification if data is deleted
 
 
 _____________________________________________________________
@@ -66,3 +65,4 @@ _____________________________________________________________
 
 
 -K Change Supplier.pic into Supplier.name (--> cant trackable on Activiities)
+-K Price based on QTY (Grocier)

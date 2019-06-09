@@ -5,5 +5,6 @@ class Item < ApplicationRecord
   has_many :retur_items
   has_many :order_items
   has_many :transaction_items
+  has_many :grocer_items
 end
 

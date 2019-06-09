@@ -1,0 +1,22 @@
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Tambah Kategori Barang
+      .card-body
+        = form_for :item, url: grocer_items_path(id: @id), method: "POST" do |form|
+          .form-group
+            label for="name" Nama
+            input typr="text" class="form-control md-form" value="#{@name}" 
+          .form-group
+            label for="name" Min
+            = form.number_field :min, required: true, class: "form-control md-form", id: "name"
+          .form-group
+            label for="name" Max
+            = form.number_field :max, required: true, class: "form-control md-form", id: "name"
+          .form-group
+            label for="name" Harga
+            = form.number_field :price, required: true, class: "form-control md-form", id: "price"
+          .form-group.text-center
+            = form.submit "Tambah Harga Barang", class: "btn btn-rounded btn-primary"
