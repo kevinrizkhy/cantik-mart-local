@@ -13,9 +13,9 @@ tr
     - supplier_items = SupplierItem.where(item_id: inventory.item.id)
     - supplier_items.each do |supplier_item|
       	- if supplier_items.last == supplier_item
-        	| #{supplier_item.supplier.pic}
+        	| #{supplier_item.supplier.name}
       	- else
-        	| #{supplier_item.supplier.pic},&nbsp
+        	| #{supplier_item.supplier.name},&nbsp
   td
     - if @ongoing_orders.present?
       - @ongoing_orders.each do |order|

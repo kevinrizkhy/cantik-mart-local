@@ -18,10 +18,11 @@ class SuppliersController < ApplicationController
 
   def create
     supplier = Supplier.new supplier_params
-    supplier.pic = params[:supplier][:pic].camelize
+    supplier.name = params[:supplier][:name].camelize
     supplier.address = params[:supplier][:address].camelize
     return redirect_back_data_not_found new_supplier_path if supplier.invalid?
     supplier.save!
+    supplier.create_activity :create, owner: current_user
     return redirect_success suppliers_path
   end
 
@@ -36,9 +37,10 @@ class SuppliersController < ApplicationController
     supplier = Supplier.find_by_id params[:id]
     return redirect_back_data_not_found suppliers_pathunless supplier.present?
     supplier.assign_attributes supplier_params
-    supplier.pic = params[:supplier][:pic].camelize
+    supplier.name = params[:supplier][:name].camelize
     supplier.address = params[:supplier][:address].camelize
     supplier.save! if supplier.changed?
+    supplier.create_activity :edit, owner: current_user
     return redirect_success suppliers_path
   end
 
@@ -51,7 +53,7 @@ class SuppliersController < ApplicationController
   private
     def supplier_params
       params.require(:supplier).permit(
-        :pic, :address, :phone
+        :name, :address, :phone
       )
     end
 

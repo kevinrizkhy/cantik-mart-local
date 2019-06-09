@@ -21,7 +21,7 @@
               b
                 | KEKURANGAN : #{number_to_currency(@pay, unit: "Rp. ")}
           .col-6.text-left
-            | #{@order.supplier.pic}
+            | #{@order.supplier.name}
           .col-6.text-right
             - if receive.present?
               h5.text-success

@@ -55,7 +55,7 @@ class OrdersController < ApplicationController
   end
 
   def new
-    @suppliers = Supplier.select(:id, :pic, :address).order("supplier_type DESC").all
+    @suppliers = Supplier.select(:id, :name, :address).order("supplier_type DESC").all
     if params[:item_id].present?
       @add_item = Item.find params[:item_id]
       # return redirect_back_data_not_found new_order_path if @add_items.nil?
@@ -76,9 +76,9 @@ class OrdersController < ApplicationController
   def create
     invoice = "ORD-" + Time.now.to_i.to_s
     ordered_items = order_items
+    return redirect_back_data_invalid orders_path if ordered_items.empty?
     total_item = ordered_items.size
     address_to = params[:order][:supplier_id]
-
     order = Order.create invoice: invoice,
       total_items: total_item,
       store_id: current_user.store.id,
@@ -271,22 +271,26 @@ class OrdersController < ApplicationController
 
     def order_items
       items = []
-      params[:order][:order_items].each do |item|
-        items << item[1].values
+      if params[:order][:order_items].present?
+        params[:order][:order_items].each do |item|
+          items << item[1].values
+        end
       end
       items
     end
 
     def edit_order_items
       items = []
-      params[:order][:order_items].each do |item|
-        item_id = item[1][:item_id].to_i
-        order_item = OrderItem.find item_id
-        if order_item.present?
-          if order_item.receive < item[1][:total].to_i
-            items << item[1].values
-          else
-            return []
+      if params[:order][:order_items].present?
+        params[:order][:order_items].each do |item|
+          item_id = item[1][:item_id].to_i
+          order_item = OrderItem.find item_id
+          if order_item.present?
+            if order_item.receive < item[1][:total].to_i
+              items << item[1].values
+            else
+              return []
+            end
           end
         end
       end
