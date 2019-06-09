@@ -47,6 +47,7 @@ Rails.application.routes.draw do
   post '/api/trx/post', to: 'transactions#create_trx'
 
   resources :items
+  resources :grocer_items
   resources :item_cats
 
   resources :stocks

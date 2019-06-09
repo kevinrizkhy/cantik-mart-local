@@ -136,7 +136,7 @@ ActiveRecord::Schema.define(version: 2019_06_09_130722) do
   create_table "finances", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "store_id", null: false
-    t.float "nominal", null: false
+    t.integer "nominal", null: false
     t.integer "finance_type", default: 1, null: false
     t.datetime "date_created"
     t.string "description"
@@ -144,12 +144,12 @@ ActiveRecord::Schema.define(version: 2019_06_09_130722) do
     t.index ["user_id"], name: "index_finances_on_user_id"
   end
 
-  create_table "grocier_items", force: :cascade do |t|
+  create_table "grocer_items", force: :cascade do |t|
     t.bigint "item_id", null: false
     t.integer "min", null: false
     t.integer "max", null: false
     t.float "price", null: false
-    t.index ["item_id"], name: "index_grocier_items_on_item_id"
+    t.index ["item_id"], name: "index_grocer_items_on_item_id"
   end
 
   create_table "incomes", force: :cascade do |t|
@@ -185,6 +185,7 @@ ActiveRecord::Schema.define(version: 2019_06_09_130722) do
     t.float "wholesale", default: 0.0, null: false
     t.float "box", default: 0.0, null: false
     t.string "image"
+    t.integer "buy_grocer", default: 0
     t.index ["item_cat_id"], name: "index_items_on_item_cat_id"
   end
 
@@ -451,7 +452,7 @@ ActiveRecord::Schema.define(version: 2019_06_09_130722) do
   add_foreign_key "debts", "users"
   add_foreign_key "finances", "stores"
   add_foreign_key "finances", "users"
-  add_foreign_key "grocier_items", "items"
+  add_foreign_key "grocer_items", "items"
   add_foreign_key "incomes", "stores"
   add_foreign_key "incomes", "users"
   add_foreign_key "items", "item_cats"
