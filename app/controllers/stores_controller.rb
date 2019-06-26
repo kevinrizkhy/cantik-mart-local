@@ -14,6 +14,12 @@ class StoresController < ApplicationController
 
   end
 
+  def destroy
+    return redirect_back_no_access_right unless params[:id].present?
+    store = Store.find params[:id]
+    return redirect_back_no_access_right unless store.present?
+  end
+
   def create
     store = Store.new store_params
     store.name = params[:store][:name].camelize
