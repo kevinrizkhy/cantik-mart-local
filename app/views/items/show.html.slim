@@ -32,6 +32,7 @@
                 th Max
                 th Harga
                 th
+                th
               tbody
                 tr
                   td 0
@@ -44,12 +45,15 @@
                       td #{item.min}
                       td #{item.max}
                       td #{item.price}
-                      td.text-danger
-                        a class="text-danger" href="#{edit_grocer_item_path(id: item.id)}"
+                      td
+                        a class="text-warning" href="#{edit_grocer_item_path(id: item.id)}"
                           |   Ubah
+                      td
+                        a class="text-danger" href="#{grocer_item_path(id: item.id)}"
+                          |   Hapus
 
           .form-group.text-center
             a href="#{new_grocer_item_path(id: @item.id)}"
-              button.btn.btn-rounded.btn-info.black-text type="button" 
+              button.btn.btn-rounded.btn-info type="button" 
                 i.fas.fa-plus 
                 |   Tambah Harga

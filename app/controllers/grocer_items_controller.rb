@@ -89,6 +89,20 @@ class GrocerItemsController < ApplicationController
     end
   end
 
+  def show
+    return redirect_back_data_not_found item_cats_path unless params[:id].present?
+    @grocer_item = GrocerItem.find_by_id params[:id]
+    return redirect_back_data_invalid new_item_cat_path unless @grocer_item.present?
+  end
+
+  def destroy
+    return redirect_back_data_not_found item_cats_path unless params[:id].present?
+    @grocer_item = GrocerItem.find_by_id params[:id]
+    return redirect_back_data_invalid new_item_cat_path unless @grocer_item.present?
+    @grocer_item.destroy
+    return redirect_success item_path(id: @grocer_item.item.id)
+  end
+
   private
     def grocer_item_params
       params.require(:grocer_item).permit(
