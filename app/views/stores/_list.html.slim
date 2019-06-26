@@ -4,10 +4,15 @@ tr
   td #{store.address}
   td #{store.phone}
   td
-	a href='#{store_path(id: store.id)}'
-    	button.btn.btn-rounded.btn-info type="button" 
-	       	| Detil
+  	a href='#{store_path(id: store.id)}'
+      	button.btn.btn-rounded.btn-info type="button" 
+  	       	| Detil
+
     a href='#{edit_store_path(id: store.id)}'
-    	button.btn.btn-rounded.btn-warning type="button" 
-	       	| Edit
+    	 button.btn.btn-rounded.btn-warning type="button" 
+         	  | Edit
+
+    a href='#{edit_store_path(id: store.id)}'
+       button.btn.btn-rounded.btn-danger type="button" 
+            | Delete
 

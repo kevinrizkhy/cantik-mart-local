@@ -54,6 +54,18 @@ class UsersController < ApplicationController
     return redirect_success users_path
   end
 
+  def destroy
+    return redirect_back_no_access_right unless params[:id].present?
+    user = User.find params[:id]
+    return redirect_back_no_access_right unless user.present?
+    if user.level == "owner" || user.level == "super_admin"
+      return redirect_back_no_access_right 
+    else 
+      user.destroy
+      return redirect_success users_path
+    end
+  end
+
   private
     def user_params
       params.require(:user).permit(

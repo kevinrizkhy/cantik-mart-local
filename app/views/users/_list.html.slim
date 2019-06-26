@@ -10,7 +10,8 @@ tr
   	td #{user.phone}
   	td #{user.sex}
   	td
-    	a href='#{edit_user_path(id: user.id)}' 
-    		button.btn.btn-rounded.btn-warning.black-text type="button" 
-	       		| Edit
-
+    	a href='#{edit_user_path(id: user.id)}'
+        button.btn.btn-rounded.btn-warning type="button" 
+          | Edit
+    td
+      = button_to "Hapus", user, :method=>:delete, :class=>"btn btn-rounded btn-danger"
