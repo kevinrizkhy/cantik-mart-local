@@ -42,7 +42,8 @@ _____________________________________________________________
 	* tax
 	* operational
 	* assets value
-- In cashier, send qty too for searching price by QTY (something wrong in JS AJAX)
+- Update & Delete in Grocer
+- In cashier, send qty too for searching price base on QTY (something wrong in JS AJAX)
 
 + add 'destroy' in some controller
 + check before delete, that object is used by another model or not
@@ -65,4 +66,4 @@ _____________________________________________________________
 
 
 -K Change Supplier.pic into Supplier.name (--> cant trackable on Activiities)
--K Price based on QTY (Grocier)
+-K Price based on QTY (Grocier - item)
