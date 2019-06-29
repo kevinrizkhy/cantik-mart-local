@@ -52,6 +52,16 @@ class ItemCatsController < ApplicationController
     return redirect_success item_cats_path
   end
 
+  def destroy
+    # binding.pry
+    return redirect_back_data_not_found item_cats_path unless params[:id].present?
+    item_cat = ItemCat.find params[:id]
+    return redirect_back_data_not_found item_cats_path unless item_cat.present?
+    return redirect_back_data_not_found item_cats_path if item_cat.item.present?
+    item_cat.destroy
+    return redirect_success item_cats_path
+  end
+
   private
     def item_cat_params
       params.require(:item_cat).permit(

@@ -8,4 +8,4 @@ tr
 	a href='#{item_cat_path(id: item_cat.id)}'
     	button.btn.btn-rounded.btn-info type="button" 
 	       	| Detil
-
+	= button_to "Hapus", item_cat, :method=>:delete, :class=>"btn btn-rounded btn-danger"
