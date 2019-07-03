@@ -42,11 +42,7 @@ _____________________________________________________________
 	* tax
 	* operational
 	* assets value
-- Update & Delete in Grocer
-- In cashier, send qty too for searching price base on QTY (something wrong in JS AJAX)
 
-+ add 'destroy' in some controller
-+ check before delete, that object is used by another model or not
 + add save activity into destroy 
 + notification if data is deleted
 
@@ -63,7 +59,11 @@ _____________________________________________________________
 +I add 'show' into all controller 
 +K add save activity into update and create method
 +K customize router model, controller, view, router, migrate
++IK add 'destroy' in some controller
++ check before delete, that object is used by another model or not
 
 
+-K Update & Delete in Grocer
 -K Change Supplier.pic into Supplier.name (--> cant trackable on Activiities)
 -K Price based on QTY (Grocier - item)
+-K In cashier, send qty too for searching price base on QTY (something wrong in JS AJAX)

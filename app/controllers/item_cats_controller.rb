@@ -53,7 +53,6 @@ class ItemCatsController < ApplicationController
   end
 
   def destroy
-    # binding.pry
     return redirect_back_data_not_found item_cats_path unless params[:id].present?
     item_cat = ItemCat.find params[:id]
     return redirect_back_data_not_found item_cats_path unless item_cat.present?

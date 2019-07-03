@@ -61,6 +61,18 @@ class ItemsController < ApplicationController
     return redirect_success items_path
   end
 
+  def destroy
+    return redirect_back_data_not_found items_path unless params[:id].present?
+    item = Item.find_by_id params[:id]
+    return redirect_back_data_not_found items_path unless item.present?
+    if item.store_items.present? || item.supplier_items.present?
+      return redirect_back_data_invalid items_path
+    else
+      item.destroy
+      return redirect_success items_path
+    end
+  end
+
   private
     def item_params
       params.require(:item).permit(

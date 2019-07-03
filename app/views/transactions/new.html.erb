@@ -448,10 +448,11 @@
          clearTimeout(timeout);
          timeout = setTimeout(function() {
          var item_id = document.getElementById("itemId").value;
+         var item_qty = document.getElementById("item_qty").value;
          $.ajax({
          method: "GET",
          cache: false,
-         url: "/api/trx?search=" + item_id,
+         url: "/api/trx?search=" + item_id + "&qty=" + item_qty,
          success: function(result_arr) {
              var table = $('#itemList').DataTable();
              var result = result_arr[0];

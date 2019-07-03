@@ -28,11 +28,11 @@ class ApisController < ApplicationController
         item = []
         item << item_store.item.code
         item << item_store.item.name
-        item << item_store.item_cat.name
+        item << item_store.item.item_cat.name
         curr_item = item_store.item
         grocer_price = curr_item.grocer_items
         if grocer_price.present?
-          find_price = grocer_items.where('max >= ?', qty).order("max ASC")
+          find_price = grocer_price.where('max >= ? AND min <= ?', qty, qty).order("max ASC")
           if find_price.present?
             item << find_price.first.price
           else
