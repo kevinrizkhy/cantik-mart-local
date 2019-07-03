@@ -16,7 +16,7 @@ _____________________________________________________________
 = checking all trx 
 = checking printing receipt cashier
 = log all activity
-
+= checking if all deleting is ok
 
 - debt
 - consumer retur
@@ -42,6 +42,7 @@ _____________________________________________________________
 	* tax
 	* operational
 	* assets value
+- Message if something happened
 
 + add save activity into destroy 
 + notification if data is deleted

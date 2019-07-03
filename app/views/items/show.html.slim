@@ -57,4 +57,5 @@
               button.btn.btn-rounded.btn-info type="button" 
                 i.fas.fa-plus 
                 |   Tambah Harga
-            = button_to "Hapus Barang", @item, :method=>:delete, :class=>"btn btn-rounded btn-danger"
+            - if !@item.store_items.present? && !@item.supplier_items.present?
+              = button_to "Hapus Barang", @item, :method=>:delete, :class=>"btn btn-rounded btn-danger"

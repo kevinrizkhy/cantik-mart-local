@@ -3,6 +3,10 @@ tr
   	td #{supplier.address}
   	td #{supplier.phone}
   	td 
+  		a href='#{supplier_path(id: supplier.id)}'
+    		button.btn.btn-rounded.btn-info type="button" 
+	       		| Detil
+	       		
 	    a href='#{supplier_items_path(id: supplier.id)}'
 	    	button.btn.btn-rounded.btn-primary type="button" 
 		        | Item

@@ -9,11 +9,15 @@ class SuppliersController < ApplicationController
       search = "%"+@search+"%"
       @suppliers = @suppliers.where("lower(pic) like ? OR phone like ?", search, search)
     end
+  end
 
+  def show
+    return redirect_back_data_not_found suppliers_path unless params[:id].present?
+    @supplier = Supplier.find_by_id params[:id]
+    return redirect_back_data_not_found suppliers_path unless @supplier.present?
   end
 
   def new
-
   end
 
   def create
@@ -35,7 +39,7 @@ class SuppliersController < ApplicationController
   def update
     return redirect_back_data_not_found suppliers_path unless params[:id].present?
     supplier = Supplier.find_by_id params[:id]
-    return redirect_back_data_not_found suppliers_pathunless supplier.present?
+    return redirect_back_data_not_found suppliers_path unless supplier.present?
     supplier.assign_attributes supplier_params
     supplier.name = params[:supplier][:name].camelize
     supplier.address = params[:supplier][:address].camelize
@@ -44,10 +48,16 @@ class SuppliersController < ApplicationController
     return redirect_success suppliers_path
   end
 
-  def show
+  def destroy
     return redirect_back_data_not_found suppliers_path unless params[:id].present?
-    @supplier = Supplier.find_by_id params[:id]
-    return redirect_back_data_invalid new_supplier_path unless @supplier.present?
+    supplier = Supplier.find_by_id params[:id]
+    return redirect_back_data_invalid new_supplier_path unless supplier.present?
+    if supplier.supplier_items.present? || supplier.orders.present? 
+      return redirect_back_data_invalid suppliers_path
+    else
+      supplier.destroy
+      return redirect_success suppliers_path
+    end
   end
 
   private

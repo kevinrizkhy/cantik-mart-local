@@ -17,7 +17,13 @@ class StoresController < ApplicationController
   def destroy
     return redirect_back_no_access_right unless params[:id].present?
     store = Store.find params[:id]
-    return redirect_back_no_access_right unless store.present?
+    return redirect_back_data_not_found unless store.present?
+    if store.store_items.present? || store.users.present?
+      return redirect_back_data_invalid unless store.present?
+    else
+      store.destroy
+      return redirect_success stores_path
+    end
   end
 
   def create

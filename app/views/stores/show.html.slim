@@ -28,3 +28,6 @@
                   | #{user}
                 - else
                   | #{user}, 
+        .text-center
+          - if !@store.users.present? && !@store.store_items.present?
+            = button_to "Hapus Toko", @store, :method=>:delete, :class=>"btn btn-rounded btn-danger"
