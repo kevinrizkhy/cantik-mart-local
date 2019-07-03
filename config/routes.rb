@@ -96,4 +96,6 @@ Rails.application.routes.draw do
 
   resources :activities, only: %i[index show]
 
+  resources :server_informations, only: %i[index]
+
 end

@@ -1,0 +1,33 @@
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Informasi Server
+      .card-body
+      	p
+			| #{@usw.uw_diskused}
+		p
+			| #{@usw.uw_diskused_perc}
+		p
+			| #{@usw.uw_cpuused}
+		p
+			| #{@usw.uw_tcpused}
+		p
+			| #{@usw.uw_udpused}
+		p
+			| #{@usw.uw_memused}
+		p
+			| #{@usw.uw_load}
+		p
+			| #{@usw.uw_bandrx}
+		p
+			| #{@usw.uw_bandtx}
+		p
+			| #{@usw.uw_diskioreads}
+		p
+			| #{@usw.uw_diskiowrites}
+		p
+			| #{@usw.uw_cputop}
+		p
+			| #{@usw.uw_memtop}
