@@ -5,29 +5,48 @@
         h5.font-weight-500.my-1
           | Informasi Server
       .card-body
-      	p
-			| #{@usw.uw_diskused}
-		p
-			| #{@usw.uw_diskused_perc}
-		p
-			| #{@usw.uw_cpuused}
-		p
-			| #{@usw.uw_tcpused}
-		p
-			| #{@usw.uw_udpused}
-		p
-			| #{@usw.uw_memused}
-		p
-			| #{@usw.uw_load}
-		p
-			| #{@usw.uw_bandrx}
-		p
-			| #{@usw.uw_bandtx}
-		p
-			| #{@usw.uw_diskioreads}
-		p
-			| #{@usw.uw_diskiowrites}
-		p
-			| #{@usw.uw_cputop}
-		p
-			| #{@usw.uw_memtop}
+      	table.table.table-bordered
+	      		thead
+	      			tr
+		      			th Komponen
+		      			th Terpakai
+		      	tbody
+		      		tr
+		      			td Disk Used
+		      			td #{@usw.uw_diskused}
+	      			tr
+		      			td Disk Used Percentage
+		      			td #{@usw.uw_diskused_perc}
+		      		tr
+		      			td CPU Used 
+		      			td #{@usw.uw_cpuused}
+		      		tr
+		      			td TCP Used
+		      			td #{@usw.uw_tcpused}
+		      		tr
+		      			td UDP Used
+		      			td #{@usw.uw_udpused}
+		      		tr
+		      			td Memory Used
+		      			td #{@usw.uw_memused}
+		      		tr
+		      			td System Load
+		      			td #{@usw.uw_load}
+		      		tr
+		      			td Bandwidth Received
+		      			td #{@usw.uw_bandrx}
+		      		tr
+		      			td Bandwidth Transmitted
+		      			td #{@usw.uw_bandtx}
+		      		tr
+		      			td Current Disk Read Completed
+		      			td #{@usw.uw_diskioreads}
+		      		tr
+		      			td Current Disk Write Completed
+		      			td #{@usw.uw_diskiowrites}
+		      		tr
+		      			td Top Ten Processes By CPU Completed
+		      			td #{@usw.uw_cputop}
+		      		tr
+		      			td Top Ten Processes By Memory Consumption
+		      			td #{@usw.uw_memtop}			
