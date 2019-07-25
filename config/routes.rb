@@ -49,6 +49,7 @@ Rails.application.routes.draw do
   resources :items
   resources :grocer_items
   resources :item_cats
+  resources :departments
 
   resources :stocks
   resources :users

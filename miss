@@ -21,7 +21,7 @@ _____________________________________________________________
 - debt
 - consumer retur
 - retur to warehouse
-- post using API, set token CSRF
+- post API using CSRF token
 - notification
 - add card into home 
 	* profit chart
@@ -43,6 +43,7 @@ _____________________________________________________________
 	* operational
 	* assets value
 - Message if something happened
+- index server_information
 
 + add save activity into destroy 
 + notification if data is deleted

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_09_130722) do
+ActiveRecord::Schema.define(version: 2019_07_25_012009) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -133,10 +133,14 @@ ActiveRecord::Schema.define(version: 2019_06_09_130722) do
     t.index ["user_id"], name: "index_debts_on_user_id"
   end
 
+  create_table "departments", force: :cascade do |t|
+    t.string "name", default: "DEFAULT (NO DEPARTMENT)", null: false
+  end
+
   create_table "finances", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "store_id", null: false
-    t.float "nominal", null: false
+    t.integer "nominal", null: false
     t.integer "finance_type", default: 1, null: false
     t.datetime "date_created"
     t.string "description"
@@ -172,6 +176,8 @@ ActiveRecord::Schema.define(version: 2019_06_09_130722) do
 
   create_table "item_cats", force: :cascade do |t|
     t.string "name", default: "DEFAULT", null: false
+    t.bigint "department_id"
+    t.index ["department_id"], name: "index_item_cats_on_department_id"
   end
 
   create_table "items", force: :cascade do |t|
@@ -455,6 +461,7 @@ ActiveRecord::Schema.define(version: 2019_06_09_130722) do
   add_foreign_key "grocer_items", "items"
   add_foreign_key "incomes", "stores"
   add_foreign_key "incomes", "users"
+  add_foreign_key "item_cats", "departments"
   add_foreign_key "items", "item_cats"
   add_foreign_key "members", "stores"
   add_foreign_key "members", "users"

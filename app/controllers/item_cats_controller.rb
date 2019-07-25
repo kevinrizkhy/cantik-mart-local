@@ -2,16 +2,22 @@ class ItemCatsController < ApplicationController
   before_action :require_login
   before_action :require_fingerprint
   def index
-    @item_cats = ItemCat.page param_page
-    if params[:search].present?
-      @search = params[:search].downcase
-      search = "%"+@search+"%"
-      search_arr = search.split(":")
-      if search_arr.size == 2
-        @item_cats = @item_cats.where("lower(name) like ?", search)
-      else
-        @item_cats = @item_cats.where("lower(name) like ?", search)
+    if params[:dept_id].present?
+      @item_cats = ItemCat.page param_page
+      @item_cats = @item_cats.where(department_id: params[:dept_id])
+      @dept = Department.find_by_id params[:dept_id]
+      if params[:search].present?
+        @search = params[:search].downcase
+        search = "%"+@search+"%"
+        search_arr = search.split(":")
+        if search_arr.size == 2
+          @item_cats = @item_cats.where("lower(name) like ?", search)
+        else
+          @item_cats = @item_cats.where("lower(name) like ?", search)
+        end
       end
+    else
+      return redirect_back_data_not_found departments_path
     end
   end
 

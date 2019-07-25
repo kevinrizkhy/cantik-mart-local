@@ -5,7 +5,7 @@ class ItemsController < ApplicationController
   def index
     # insert_prod = InsertProdlist.new
     # insert_prod.read
-    # insert_prod.update_brand
+    
     @items = Item.page param_page
     if params[:search].present?
       @search = params[:search].downcase
