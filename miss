@@ -17,6 +17,7 @@ _____________________________________________________________
 = checking printing receipt cashier
 = log all activity
 = checking if all deleting is ok
+= activity if object doesnt have name field
 
 - debt
 - consumer retur
@@ -43,8 +44,6 @@ _____________________________________________________________
 	* operational
 	* assets value
 - Message if something happened
-- index server_information
-- activity if object doesnt have name field
 
 + add save activity into destroy 
 + notification if data is deleted
@@ -70,3 +69,5 @@ _____________________________________________________________
 -K Change Supplier.pic into Supplier.name (--> cant trackable on Activiities)
 -K Price based on QTY (Grocier - item)
 -K In cashier, send qty too for searching price base on QTY (something wrong in JS AJAX)
+-K activity link
+-I index server_information
