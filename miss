@@ -45,8 +45,7 @@ _____________________________________________________________
 	* assets value
 - Message if something happened
 
-+ add save activity into destroy 
-+ notification if data is deleted
++ activity if data is deleted
 
 
 _____________________________________________________________

@@ -31,8 +31,9 @@ br
       .card-body
         table class="table"
           thead
-            th Name
-            th Action
+            th Nama
+            th Jumlah Barang
+            th Aksi
           tbody
             = render partial: 'list', collection: @item_cats, as: :item_cat
         = paginate @item_cats

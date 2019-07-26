@@ -2,6 +2,7 @@
   .col
     h5
       | Daftar Barang
+      / = link_to "PRINT", '#', onclick: "printpage()" 
   .col.text-right
     a href="#{new_item_path}"
       button.btn.btn-rounded.btn-success type="button" 
@@ -71,11 +72,7 @@ br
             th Beli
             th Jual
             th Supplier
-            th Action
+            th Aksi
           tbody
             = render partial: 'list', collection: @items, as: :item
         = paginate @items
-javascript:
-  $('.datepicker').pickadate({
-    editable: true
-    })

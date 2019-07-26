@@ -52,7 +52,7 @@ br
             th Selesai Lembur
             th Jam Kerja
             - if @search_id.nil?
-              th Action
+              th Aksi
           tbody
             = render partial: 'list', collection: @absents, as: :absent
         = paginate @absents

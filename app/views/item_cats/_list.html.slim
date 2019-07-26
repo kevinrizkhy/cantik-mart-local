@@ -1,6 +1,9 @@
 tr
   td #{item_cat.name}
   td
+  	- items_count = Item.where(item_cat: item_cat).count
+  	| #{items_count}
+  td
     a href='#{edit_item_cat_path(id: item_cat.id)}'
     	button.btn.btn-rounded.btn-warning.black-text type="button" 
 	       	| Edit

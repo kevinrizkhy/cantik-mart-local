@@ -55,7 +55,7 @@ br
               th Tgl. Buat
               th Tgl. Terima
               th Tgl. Lunas
-              th Action
+              th Aksi
             tbody
               = render partial: 'list', collection: @orders_new, as: :order
           = paginate @orders_new
@@ -78,7 +78,7 @@ br
               th Tgl. Buat
               th Tgl. Terima
               th Tgl. Lunas
-              th Action
+              th Aksi
             tbody
               = render partial: 'list', collection: @orders_debt, as: :order
           = paginate @orders_debt
@@ -101,7 +101,7 @@ br
               th Tgl. Buat
               th Tgl. Terima
               th Tgl. Lunas
-              th Action
+              th Aksi
             tbody
               = render partial: 'list', collection: @orders_complete, as: :order
           = paginate @orders_complete

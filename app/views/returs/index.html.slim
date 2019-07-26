@@ -37,7 +37,7 @@ br
             th Kepada
             th Total Item
             th Tgl. Buat
-            th Action
+            th Aksi
           tbody
             = render partial: 'list_new', collection: @returs_new, as: :retur
         = paginate @returs_new
@@ -56,7 +56,7 @@ br
             th Kepada
             th Total Item
             th Tgl. Konfirmasi
-            th Action
+            th Aksi
           tbody
             = render partial: 'list_waiting', collection: @returs_waiting, as: :retur
         = paginate @returs_waiting
@@ -75,7 +75,7 @@ br
             th Kepada
             th Total Item
             th Tgl. Pengambilan
-            th Action
+            th Aksi
           tbody
             = render partial: 'list_picked', collection: @returs_picked, as: :retur
         = paginate @returs_picked
@@ -94,7 +94,7 @@ br
             th Kepada
             th Total Item
             th Tgl. Selesai
-            th Action
+            th Aksi
           tbody
             = render partial: 'list_complete', collection: @returs_complete, as: :retur
         = paginate @returs_complete

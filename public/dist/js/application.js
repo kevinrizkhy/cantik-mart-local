@@ -1,4 +1,7 @@
-var add_counter = gon.inv_count;
+function printpage()
+{
+   window.print()
+}
 
 function removeThisRow(params){
 	var row_idx = params.parentNode.parentNode.rowIndex;
@@ -275,3 +278,4 @@ $(function () {
 
 
 
+var add_counter = gon.inv_count;
