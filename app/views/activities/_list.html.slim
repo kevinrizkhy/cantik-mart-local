@@ -4,4 +4,9 @@ tr
   td #{activity.created_at}
   td #{User.find_by(id: activity.owner_id.to_i).name}
   td 
-    / = link_to activity.trackable.name, activity.trackable
+  	- if activity.trackable.present?
+  		- class_name = activity.trackable.class.name 
+	  	- if class_name == "GrocerItem"
+	  		= link_to activity.trackable.item.name, item_path(id: activity.trackable.item_id)
+	  	- else
+	  		= link_to activity.trackable.name, activity.trackable

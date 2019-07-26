@@ -44,6 +44,7 @@ _____________________________________________________________
 	* assets value
 - Message if something happened
 - index server_information
+- activity if object doesnt have name field
 
 + add save activity into destroy 
 + notification if data is deleted
@@ -62,8 +63,8 @@ _____________________________________________________________
 +K add save activity into update and create method
 +K customize router model, controller, view, router, migrate
 +IK add 'destroy' in some controller
-+ check before delete, that object is used by another model or not
-
++IK check before delete, that object is used by another model or not
++K Restruct item_cat and department
 
 -K Update & Delete in Grocer
 -K Change Supplier.pic into Supplier.name (--> cant trackable on Activiities)

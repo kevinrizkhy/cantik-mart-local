@@ -30,7 +30,6 @@ class GrocerItemsController < ApplicationController
           return redirect_back_data_invalid new_grocer_item_path
         else
           check_same_value = grocer.where("min < ? AND max > ? ", min, min)
-          binding.pry
           if check_same_value.present?
             return redirect_back_data_invalid new_grocer_item_path
           else
