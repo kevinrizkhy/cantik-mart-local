@@ -1,37 +1,42 @@
-h5
-  | KONFIRMASI RETUR
-.row
-  .col-md-12
-    label for="form" INVOICE
-    input type="text" class="form-control md-form" disabled=true value="#{@transfer.invoice}"
-  .col-md-4
-    label for="form" Jumlah Barang
-    input type="number" class="form-control md-form" disabled=true value="#{@transfer.total_items}"
-  .col-md-4
-    .form-group
-      label for="from" Dari
-      input type="text" class="form-control md-form" disabled=true value="#{@transfer.from_store.name}"
-  .col-md-4
-    .form-group
-      label for="from" Kepada
-      input type="text" class="form-control md-form" disabled=true value="#{@transfer.to_store.name}"
-hr style="border-top: 1px solid black;"
-  table class="table"
-    thead
-      th Barang
-      th Kategori
-      th Jumlah
-      th Deskripsi
-    tbody
-      = render partial: 'conflist', collection: @transfer_items, as: :r_item
-  .row
-    .col.text-center
-      .form-group
-        = form_for :retur, url: transfer_accept_path, method: "POST" do |form|
-          input type="hidden" value=0 name="retur[cancel]"
-          = form.submit "Batalkan Permintaan", class: "btn btn-rounded btn-danger"
-    .col.text-center
-      .form-group
-        = form_for :retur, url: transfer_accept_path, method: "POST" do |form|
-          = form.submit "Konfirmasi Permintaan", class: "btn btn-rounded btn-primary"
+.container-fluid
+  .col-lg-12.col-md-12
+    .card-header.white-text.info-color
+      h5.font-weight-500.my-1
+       | Konfirmasi Transfer
+    .card.mb-4
+      .card-body
+        .row
+          .col-12
+            label Invoice
+            input disabled="disabled" class="form-control md-form" value="#{@transfer.invoice}"
+          .col
+            label Dari
+            input disabled="disabled" class="form-control md-form" value="#{@transfer.from_store.name}"
+          .col
+            label Kepada
+            input disabled="disabled" class="form-control md-form" value="#{@transfer.to_store.name}"
+          .col
+            label Total Barang
+            input disabled="disabled" class="form-control md-form" value="#{@transfer.total_items}"
+
+          hr style="border-top: 1px solid black;"
+            table class="table"
+              thead
+                th Barang
+                th Kategori
+                th Jumlah
+                th Deskripsi
+              tbody
+                = render partial: 'conflist', collection: @transfer_items, as: :r_item
+
+          .col.text-center
+            .form-group
+              = form_for :transfer, url: transfer_accept_path, method: "POST" do |form|
+                input type="hidden" value=0 name="transfer[status]"
+                = form.submit "Batalkan Permintaan", class: "btn btn-rounded btn-danger"
+          .col.text-center
+            .form-group
+              = form_for :transfer, url: transfer_accept_path, method: "POST" do |form|
+                input type="hidden" value=1 name="transfer[status]"
+                = form.submit "Ajukan Permintaan", class: "btn btn-rounded btn-primary"
     

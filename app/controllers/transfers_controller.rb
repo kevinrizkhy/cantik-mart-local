@@ -44,6 +44,8 @@ class TransfersController < ApplicationController
     total_item = items.size
     to_store = params[:transfer][:store_id]
 
+    return redirect_back_data_invalid transfers_path unless items.present?
+    
     transfer = Transfer.create invoice: invoice,
       total_items: total_item,
       from_store_id: current_user.store.id,
@@ -73,7 +75,7 @@ class TransfersController < ApplicationController
     transfer = Transfer.find params[:id]
     return redirect redirect_back_data_not_found transfers_path unless transfer.present?
     return redirect_back_data_not_found transfers_path if transfer.date_confirm.present? || transfer.date_picked.present?
-    if params[:retur][:cancel].present?
+    if params[:transfer][:status]=="0"
       transfer.date_approve = DateTime.now
       transfer.date_picked = "01-01-1999".to_date
       transfer.status = "01-01-1999".to_date
@@ -96,13 +98,21 @@ class TransfersController < ApplicationController
   def sent
     return redirect_back_no_access_right unless params[:id].present?
     transfer = Transfer.find params[:id]
-    return redirect_back_no_access_right if transfer.nil?
-    return redirect_back_no_access_right unless transfer.to_store_id == current_user.store.id
-    return redirect_back_no_access_right if transfer.date_picked.present? || transfer.status.present?
+    return redirect_back_data_not_found if transfer.nil?
+    return redirect_back_data_invalid unless transfer.to_store_id == current_user.store.id
+    return redirect_back_data_invalid if transfer.date_picked.present? || transfer.status.present?
+    status = sent_items params[:id] 
     transfer.date_picked = DateTime.now
-    transfer.save!
-    sent_items params[:id]
-    return redirect_success transfers_path
+    if status==false
+      transfer.status = "01-01-1999".to_date
+      transfer.save!
+      return redirect_success transfers_path
+    else
+      transfer.save!
+      return redirect_success transfers_path
+    end
+    
+    
   end
 
   def receive
@@ -127,11 +137,11 @@ class TransfersController < ApplicationController
 
   def destroy
     return redirect_back_no_access_right unless params[:id].present?
-    retur = Transfer.find params[:id]
-    return redirect_back_no_access_right unless retur.present?
-    return redirect_back_no_access_right if retur.date_approve.present?
-    TransferItem.where(retur_id: params[:id]).destroy_all
-    retur.destroy
+    transfer = Transfer.find params[:id]
+    return redirect_back_no_access_right unless transfer.present?
+    return redirect_back_no_access_right if transfer.date_approve.present?
+    TransferItem.where(transfer_id: params[:id]).destroy_all
+    transfer.destroy
     return redirect_success transfers_path
   end
 
@@ -144,6 +154,7 @@ class TransfersController < ApplicationController
   private
     def transfer_items
       items = []
+      return items if params[:transfer][:transfer_items].nil?
       params[:transfer][:transfer_items].each do |item|
         items << item[1].values
       end
@@ -151,17 +162,21 @@ class TransfersController < ApplicationController
     end
 
     def sent_items transfer_id
+      status = false
       transfer_items.each do |item|
         transfer_item = TransferItem.find item[2]
         store_item = StoreItem.find_by(item_id: item[0], store_id: current_user.store.id)
         qty = item[1].to_i
+        
         if store_item.present?
           if transfer_item.request_quantity < qty
             qty = transfer_item.request_quantity
+            status = true if store_item.stock > qty 
           end
         else
           qty = 0
         end
+        
         transfer_item.sent_quantity = qty
         transfer_item.save!
         next if store_item.nil?
@@ -169,6 +184,8 @@ class TransfersController < ApplicationController
         store_item.stock = new_stock
         store_item.save!
       end
+      return true if status
+      return false
     end
 
     def receive_items transfer_id

@@ -22,6 +22,7 @@ _____________________________________________________________
 - debt
 - consumer retur
 - retur to warehouse
+- transfer 
 - post API using CSRF token
 - notification
 - add card into home 
@@ -43,7 +44,9 @@ _____________________________________________________________
 	* tax
 	* operational
 	* assets value
+- Transfer picked => input field not proper (too many space)
 - Message if something happened
+- Add 'Keterangan' in Transfer if that transfer was automation canceled by system
 
 + activity if data is deleted
 
