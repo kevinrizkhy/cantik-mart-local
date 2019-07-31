@@ -131,9 +131,9 @@ class TransfersController < ApplicationController
     return redirect_back_no_access_right if transfer.nil?
     return redirect_back_no_access_right unless transfer.from_store_id == current_user.store.id
     return redirect_back_no_access_right if transfer.date_picked.nil? || transfer.date_approve.nil? || transfer.status.present?
+    receive_items params[:id]
     transfer.status = DateTime.now
     transfer.save!
-    receive_items params[:id]
     return redirect_success transfers_path
   end
 
@@ -173,8 +173,8 @@ class TransfersController < ApplicationController
         if store_item.present?
           if transfer_item.request_quantity < qty
             qty = transfer_item.request_quantity
-            status = true if store_item.stock > qty 
           end
+          status = true if store_item.stock >= qty 
         else
           qty = 0
         end
@@ -186,11 +186,11 @@ class TransfersController < ApplicationController
         store_item.stock = new_stock
         store_item.save!
       end
-      return true if status
-      return false
+      return status
     end
 
     def receive_items transfer_id
+      status = true
       transfer_items.each do |item|
         transfer_item = TransferItem.find item[2]
         qty = item[1].to_i.abs
@@ -200,10 +200,15 @@ class TransfersController < ApplicationController
         if store_item.nil?
           StoreItem.create store: current_user.store, item_id: item[0], stock: qty
         else
+          sent_qty = transfer_item.sent_quantity
+          if qty != sent_qty 
+            status = false
+          end 
           store_item.stock =  store_item.stock.to_i + qty
           store_item.save!
         end
       end
+      return status
     end
 
     def param_page

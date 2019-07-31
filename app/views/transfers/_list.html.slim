@@ -16,16 +16,19 @@ tr
   td
     - if transfer.date_picked.nil?
       | - 
-    - elsif transfer.date_picked.to_date == "01-01-1999".to_date
-      .text-danger
-        | x
-    - else
-      - if transfer.status.present?
-        - if transfer.status.to_date == "01-01-1999".to_date
-          .text-danger
-            | #{transfer.date_picked.to_date}
+    - else 
+      - if transfer.date_picked.to_date == "01-01-1999".to_date
+        .text-danger
+          | x
       - else
-        | #{transfer.date_picked.to_date}
+        - if transfer.status.present?
+          - if transfer.status.to_date == "01-01-1999".to_date
+            .text-danger
+              | #{transfer.date_picked.to_date}
+          - else
+            | #{transfer.date_picked.to_date}
+        - else
+          | #{transfer.date_picked.to_date}
   td
     - if transfer.status.nil?
       | -

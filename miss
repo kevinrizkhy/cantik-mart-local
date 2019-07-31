@@ -22,7 +22,6 @@ _____________________________________________________________
 - debt
 - consumer retur
 - retur to warehouse
-- transfer 
 - post API using CSRF token
 - notification
 - add card into home 
@@ -45,7 +44,7 @@ _____________________________________________________________
 	* operational
 	* assets value
 - Message if something happened
-- Add 'Keterangan' in Transfer if that transfer was automation canceled by system
+
 
 + activity if data is deleted
 
@@ -73,3 +72,5 @@ _____________________________________________________________
 -K activity link
 -I index server_information
 -K Transfer picked => input field not proper (too many space)
+-K Add 'Keterangan' in Transfer if that transfer was automation canceled by system
+-K transfer 
