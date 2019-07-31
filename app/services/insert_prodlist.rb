@@ -31,7 +31,9 @@ class InsertProdlist
 	end
 
 	def insert_department
-
+		GrocerItem.delete_all
+		TransferItem.delete_all
+		Transfer.delete_all
 		Item.delete_all
 		ItemCat.delete_all
 		Department.delete_all
@@ -55,6 +57,7 @@ class InsertProdlist
 		item = Item.create code: code, name: name, buy: buy, 
 		sell: sell, wholesale: wholesale, box: box, 
 		item_cat_id: cat_id, brand: brand
+		StoreItem.create store: Store.first, stock: 9999, item: item
 	end
 
 	def find_cat cat_name

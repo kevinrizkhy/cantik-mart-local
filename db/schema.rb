@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_26_022131) do
+ActiveRecord::Schema.define(version: 2019_07_31_021659) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -448,6 +448,7 @@ ActiveRecord::Schema.define(version: 2019_07_26_022131) do
     t.integer "total_items"
     t.bigint "from_store_id", null: false
     t.bigint "to_store_id", null: false
+    t.string "description"
     t.index ["from_store_id"], name: "index_transfers_on_from_store_id"
     t.index ["to_store_id"], name: "index_transfers_on_to_store_id"
   end

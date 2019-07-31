@@ -5,30 +5,30 @@
        | Konfirmasi Transfer
     .card.mb-4
       .card-body
-        .row
-          .col-12
-            label Invoice
-            input disabled="disabled" class="form-control md-form" value="#{@transfer.invoice}"
-          .col
-            label Dari
-            input disabled="disabled" class="form-control md-form" value="#{@transfer.from_store.name}"
-          .col
-            label Kepada
-            input disabled="disabled" class="form-control md-form" value="#{@transfer.to_store.name}"
-          .col
-            label Total Barang
-            input disabled="disabled" class="form-control md-form" value="#{@transfer.total_items}"
+        = form_for :transfer, url: transfer_sent_path, method: "POST" do |form|
+          .row
+            .col-12
+              label Invoice
+              input disabled="disabled" class="form-control md-form" value="#{@transfer.invoice}"
+            .col
+              label Dari
+              input disabled="disabled" class="form-control md-form" value="#{@transfer.from_store.name}"
+            .col
+              label Kepada
+              input disabled="disabled" class="form-control md-form" value="#{@transfer.to_store.name}"
+            .col
+              label Total Barang
+              input disabled="disabled" class="form-control md-form" value="#{@transfer.total_items}"
 
-          = form_for :transfer, url: transfer_sent_path, method: "POST" do |form|
             table class="table"
               thead
                 th Barang
                 th Kategori
-                th Jumlah
                 th Deskripsi
+                th Jumlah
                 th Kirim
               tbody
                 = render partial: 'picked', collection: @transfer_items, as: :r_item
           
-            .text-center
+            .col.text-center
               = form.submit "KIRIM", class: "btn btn-rounded btn-primary"

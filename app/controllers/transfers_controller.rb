@@ -76,6 +76,7 @@ class TransfersController < ApplicationController
     return redirect redirect_back_data_not_found transfers_path unless transfer.present?
     return redirect_back_data_not_found transfers_path if transfer.date_confirm.present? || transfer.date_picked.present?
     if params[:transfer][:status]=="0"
+      transfer.description = "Dibatalkan oleh " + current_user.name + "("+current_user.store.name+")"
       transfer.date_approve = DateTime.now
       transfer.date_picked = "01-01-1999".to_date
       transfer.status = "01-01-1999".to_date
@@ -105,6 +106,7 @@ class TransfersController < ApplicationController
     transfer.date_picked = DateTime.now
     if status==false
       transfer.status = "01-01-1999".to_date
+      transfer.description = "Dibatalkan otomatis oleh sistem (tidak ada barang yang dikirim)" 
       transfer.save!
       return redirect_success transfers_path
     else

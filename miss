@@ -44,7 +44,6 @@ _____________________________________________________________
 	* tax
 	* operational
 	* assets value
-- Transfer picked => input field not proper (too many space)
 - Message if something happened
 - Add 'Keterangan' in Transfer if that transfer was automation canceled by system
 
@@ -73,3 +72,4 @@ _____________________________________________________________
 -K In cashier, send qty too for searching price base on QTY (something wrong in JS AJAX)
 -K activity link
 -I index server_information
+-K Transfer picked => input field not proper (too many space)
