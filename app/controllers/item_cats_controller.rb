@@ -17,60 +17,67 @@ class ItemCatsController < ApplicationController
         end
       end
     else
-      return redirect_back_data_not_found departments_path
+      return redirect_back_data_not_found departments_path, "ID Departemen Tidak Ditemukan"
     end
   end
 
   def show
-    return redirect_back_data_not_found item_cats_path unless params[:id].present?
+    return redirect_back_data_not_found departments_path, "ID Departemen Tidak Ditemukan" unless params[:id].present?
     @item_cat = ItemCat.find_by_id params[:id]
-    return redirect_back_data_invalid new_item_cat_path unless @item_cat.present?
+    return redirect_back_data_invalid departments_path, "Data Kategori Item Tidak Ditemukan" unless @item_cat.present?
   end
 
   def new
-    @item_cats = ItemCat.all
+    return redirect_back_data_not_found departments_path, "ID Departemen Tidak Ditemukan" unless params[:dept_id].present?
+    @department = Department.find_by_id params[:dept_id]
+    return redirect_back_data_invalid departments_path, "Data Kategori Item Tidak Ditemukan" unless @department.present?
   end
 
   def create
     item_cat = ItemCat.new item_cat_params
     item_name = params[:item_cat][:name].camelize
     item_cat.name = item_name
-    return redirect_back_data_invalid new_item_cat_path if item_cat.invalid?
+    return redirect_back_data_invalid new_item_cat_path, "Data Tidak Lengkap" if item_cat.invalid?
     item_cat.save!
     item_cat.create_activity :create, owner: current_user
-    return redirect_success item_cats_path
+    params = "?" + { :dept_id => item_cat.department_id }.to_param
+    return redirect_success item_cats_path + params, "Kategori Item - " + item_cat.name + " - Berhasil Disimpan"
   end
 
   def edit
-    return redirect_back_data_not_found item_cats_path unless params[:id].present?
+    return redirect_back_data_not_found departments_path, "Data Kategori Item Tidak Ditemukan" unless params[:id].present?
     @item_cat = ItemCat.find_by_id params[:id]
-    return redirect_back_data_invalid new_item_cat_path unless @item_cat.present?
+    return redirect_back_data_invalid item_cats_path, "Data Kategori Item Tidak Ditemukan" unless @item_cat.present?
   end
 
   def update
-    return redirect_back_data_not_found item_cats_path unless params[:id].present?
+    return redirect_back_data_not_found item_cats_path, "Data Kategori Item Tidak Ditemukan" unless params[:id].present?
     item_cat = ItemCat.find_by_id params[:id]
     item_cat.assign_attributes item_cat_params
     item_name = params[:item_cat][:name].camelize
     item_cat.name = item_name
     item_cat.save! if item_cat.changed?
     item_cat.create_activity :edit, owner: current_user
-    return redirect_success item_cats_path
+    params = "?" + { :dept_id => item_cat.department_id }.to_param
+    return redirect_success item_cats_path + params , "Kategori Item - " + item_cat.name + " Berhasil Diubah"
   end
 
   def destroy
-    return redirect_back_data_not_found item_cats_path unless params[:id].present?
+    return redirect_back_data_not_found departments_path, "Data Kategori Item Tidak Ditemukan" unless params[:id].present?
     item_cat = ItemCat.find params[:id]
-    return redirect_back_data_not_found item_cats_path unless item_cat.present?
-    return redirect_back_data_not_found item_cats_path if item_cat.item.present?
+    return redirect_back_data_not_found departments_path, "Data Kategori Item Tidak Ditemukan" unless item_cat.present?
+    return redirect_back_data_not_found departments_path, "Data Kategori Item Tidak Dapat Dihapus" if item_cat.item.present?
+    item_name = item_cat.name
+    dept_id = item_cat.department_id
     item_cat.destroy
-    return redirect_success item_cats_path
+    params = "?" + { :dept_id => dept_id }.to_param
+    return redirect_success item_cats_path + params, "Kategori Item - " + item_name + " - Berhasil Dihapus"
   end
 
   private
     def item_cat_params
       params.require(:item_cat).permit(
-        :name
+        :name, :department_id
       )
     end
 

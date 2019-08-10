@@ -3,7 +3,7 @@
     h5
       | Daftar Sub-Department (#{@dept.name})
   .col.text-right
-    a href="#{new_item_cat_path}"
+    a href="#{new_item_cat_path(dept_id: @dept.id)}"
       button.btn.btn-rounded.btn-success type="button" 
         i.fas.fa-plus 
         |   Tambah Sub-Department
