@@ -16,15 +16,15 @@ class WarningItemsController < ApplicationController
   end
 
   def edit
-    return redirect_back_data_not_found stocks_path unless params[:id].present?
+    return redirect_back_data_error stocks_path, "Data Stok Tidak Ditemukan" unless params[:id].present?
     @stock = StoreItem.find_by_id params[:id]
-    return redirect_back_data_not_found stocks_path unless @stock.present?
+    return redirect_back_data_error stocks_path, "Data Stok Tidak Ditemukan" unless @stock.present?
     @item = @stock.item
     @item_cats = ItemCat.all
   end
 
   def update
-    return redirect_back_data_not_found stocks_path unless params[:id].present?
+    return redirect_back_data_error stocks_path, "Data Stok Tidak Ditemukan" unless params[:id].present?
     item = StoreItem.find_by_id params[:id]
     item.assign_attributes stock_params
     item.save! if item.changed?

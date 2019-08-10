@@ -17,27 +17,27 @@ class ItemCatsController < ApplicationController
         end
       end
     else
-      return redirect_back_data_not_found departments_path, "ID Departemen Tidak Ditemukan"
+      return redirect_back_data_error departments_path, "ID Departemen Tidak Ditemukan"
     end
   end
 
   def show
-    return redirect_back_data_not_found departments_path, "ID Departemen Tidak Ditemukan" unless params[:id].present?
+    return redirect_back_data_error departments_path, "ID Departemen Tidak Ditemukan" unless params[:id].present?
     @item_cat = ItemCat.find_by_id params[:id]
-    return redirect_back_data_invalid departments_path, "Data Kategori Item Tidak Ditemukan" unless @item_cat.present?
+    return redirect_back_data_error departments_path, "Data Kategori Item Tidak Ditemukan" unless @item_cat.present?
   end
 
   def new
-    return redirect_back_data_not_found departments_path, "ID Departemen Tidak Ditemukan" unless params[:dept_id].present?
+    return redirect_back_data_error departments_path, "ID Departemen Tidak Ditemukan" unless params[:dept_id].present?
     @department = Department.find_by_id params[:dept_id]
-    return redirect_back_data_invalid departments_path, "Data Kategori Item Tidak Ditemukan" unless @department.present?
+    return redirect_back_data_error departments_path, "Data Kategori Item Tidak Ditemukan" unless @department.present?
   end
 
   def create
     item_cat = ItemCat.new item_cat_params
     item_name = params[:item_cat][:name].camelize
     item_cat.name = item_name
-    return redirect_back_data_invalid new_item_cat_path, "Data Tidak Lengkap" if item_cat.invalid?
+    return redirect_back_data_error new_item_cat_path, "Data Tidak Lengkap" if item_cat.invalid?
     item_cat.save!
     item_cat.create_activity :create, owner: current_user
     params = "?" + { :dept_id => item_cat.department_id }.to_param
@@ -45,13 +45,13 @@ class ItemCatsController < ApplicationController
   end
 
   def edit
-    return redirect_back_data_not_found departments_path, "Data Kategori Item Tidak Ditemukan" unless params[:id].present?
+    return redirect_back_data_error departments_path, "Data Kategori Item Tidak Ditemukan" unless params[:id].present?
     @item_cat = ItemCat.find_by_id params[:id]
-    return redirect_back_data_invalid item_cats_path, "Data Kategori Item Tidak Ditemukan" unless @item_cat.present?
+    return redirect_back_data_error item_cats_path, "Data Kategori Item Tidak Ditemukan" unless @item_cat.present?
   end
 
   def update
-    return redirect_back_data_not_found item_cats_path, "Data Kategori Item Tidak Ditemukan" unless params[:id].present?
+    return redirect_back_data_error item_cats_path, "Data Kategori Item Tidak Ditemukan" unless params[:id].present?
     item_cat = ItemCat.find_by_id params[:id]
     item_cat.assign_attributes item_cat_params
     item_name = params[:item_cat][:name].camelize
@@ -63,10 +63,10 @@ class ItemCatsController < ApplicationController
   end
 
   def destroy
-    return redirect_back_data_not_found departments_path, "Data Kategori Item Tidak Ditemukan" unless params[:id].present?
+    return redirect_back_data_error departments_path, "Data Kategori Item Tidak Ditemukan" unless params[:id].present?
     item_cat = ItemCat.find params[:id]
-    return redirect_back_data_not_found departments_path, "Data Kategori Item Tidak Ditemukan" unless item_cat.present?
-    return redirect_back_data_not_found departments_path, "Data Kategori Item Tidak Dapat Dihapus" if item_cat.item.present?
+    return redirect_back_data_error departments_path, "Data Kategori Item Tidak Ditemukan" unless item_cat.present?
+    return redirect_back_data_error departments_path, "Data Kategori Item Tidak Dapat Dihapus" if item_cat.item.present?
     item_name = item_cat.name
     dept_id = item_cat.department_id
     item_cat.destroy

@@ -2,20 +2,20 @@ class MethodsController < ApplicationController
   before_action :require_login
 
   def index
-    return redirect_back_data_not_found if params[:id].nil?
+    return redirect_back_data_error, "Data Tidak Ditemukan" if params[:id].nil?
   	@methods = ControllerMethod.where(controller_id: params[:id]).order("name ASC").page param_page
   end
 
   def edit
-  	return redirect_back_data_not_found controllers_path unless params[:id].present?
+  	return redirect_back_data_error controllers_path, "Data Tidak Ditemukan" unless params[:id].present?
     @method = ControllerMethod.find_by_id params[:id]
-    return redirect_back_data_not_found controllers_path unless @method.present?
+    return redirect_back_data_error controllers_path, "Data Tidak Ditemukan" unless @method.present?
   end
 
   def update
-    return redirect_back_data_not_found controllers_path unless params[:id].present?
+    return redirect_back_data_error controllers_path, "Data Tidak Ditemukan" unless params[:id].present?
     @method = ControllerMethod.find_by_id params[:id]
-    return redirect_back_data_not_found controllers_path unless @method.present?
+    return redirect_back_data_error controllers_path, "Data Tidak Ditemukan" unless @method.present?
     controller = @method.controller
     user_method = UserMethod.where(controller_method: @method)
     user_method.delete_all if user_method.present?
@@ -27,7 +27,8 @@ class MethodsController < ApplicationController
         all_user_access = UserMethod.where(controller_method_id: all_method_id).where.not(user_level: 'super_admin').where.not(user_level: 'owner')
         all_user_access.delete_all
       end
-      return redirect_success methods_path(id: @method.controller.id) 
+      urls = methods_path(id: @method.controller.id)
+      return redirect_success urls , "Perubahan Hak Akses Gagal"
     end
     new_access_levels = params[:method][:access_levels]
     new_access_levels.each do |access_level|
@@ -38,7 +39,8 @@ class MethodsController < ApplicationController
       next if @method.name != 'index' && !having_index_access
       UserMethod.create controller_method: @method, user_level: level
     end
-    return redirect_success methods_path(id: @method.controller.id)
+    urls = redirect_success methods_path(id: @method.controller.id)
+    return redirect_success urls, "Perubahan Hak Akses - (" + controller.name + " | " + @method.name + ") - Berhasil Disimpan"
   end
 
   private

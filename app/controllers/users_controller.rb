@@ -12,9 +12,9 @@ class UsersController < ApplicationController
   end
 
   def show
-    return redirect_back_data_not_found users_path, "Data Pengguna Tidak Ditemukan" unless params[:id].present?
+    return redirect_back_data_error users_path, "Data Pengguna Tidak Ditemukan" unless params[:id].present?
     @user = User.find_by_id params[:id]
-    return redirect_back_data_not_found users_path, "Data Pengguna Tidak Ditemukan" unless @user.present?
+    return redirect_back_data_error users_path, "Data Pengguna Tidak Ditemukan" unless @user.present?
   end
 
   def new
@@ -23,21 +23,21 @@ class UsersController < ApplicationController
 
   def create
     user = User.new user_params
-    return redirect_back_data_not_found new_user_path, "Data Pengguna Tidak Ditemukan" if user.invalid?
+    return redirect_back_data_error new_user_path, "Data Pengguna Tidak Ditemukan" if user.invalid?
     user.save!
     user.create_activity :create, owner: current_user
     return redirect_success users_path, "Pengguna - " + user.name + " - Berhasil Ditambahkan"
   end
 
   def edit
-    return redirect_back_data_not_found users_path, "Data Pengguna Tidak Ditemukan" unless params[:id].present?
+    return redirect_back_data_error users_path, "Data Pengguna Tidak Ditemukan" unless params[:id].present?
     @user = User.find_by_id params[:id]
     @stores = Store.all
-    return redirect_back_data_not_found users_path, "Data Pengguna Tidak Ditemukan" unless @user.present?
+    return redirect_back_data_error users_path, "Data Pengguna Tidak Ditemukan" unless @user.present?
   end
 
   def update
-    return redirect_back_data_not_found users_path, "Data Pengguna Tidak Ditemukan" unless params[:id].present?
+    return redirect_back_data_error users_path, "Data Pengguna Tidak Ditemukan" unless params[:id].present?
     file = params[:user][:image]
     upload_io = params[:user][:image]
     if file.present?
@@ -55,11 +55,11 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_error users_path, "Data Tidak Valid" unless params[:id].present?
     user = User.find params[:id]
-    return redirect_back_no_access_right unless user.present?
+    return redirect_back_data_error users_path, "Data Tidak Valid" unless user.present?
     if user.level == "owner" || user.level == "super_admin"
-      return redirect_back_no_access_right 
+      return redirect_back_data_error users_path, "Data Tidak Valid" 
     else 
       user.destroy
       return redirect_success users_path, "Data Pengguna - " + user.name + " - Berhasil Dihapus"

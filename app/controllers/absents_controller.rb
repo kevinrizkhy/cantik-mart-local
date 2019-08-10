@@ -95,9 +95,9 @@ class AbsentsController < ApplicationController
   end
 
   def show
-    return redirect_back_data_not_found absents_path unless params[:id].present?
+    return redirect_back_data_error absents_path unless params[:id].present?
     @absents = Absent.find_by_id params[:id]
-    return redirect_back_data_not_found absents_path unless @absents.present?
+    return redirect_back_data_error absents_path unless @absents.present?
   end
 
   private

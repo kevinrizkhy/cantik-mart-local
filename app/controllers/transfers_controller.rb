@@ -8,7 +8,7 @@ class TransfersController < ApplicationController
       @search = search
       search_arr = search.split(":")
       if search_arr.size > 2
-        return redirect_back_no_access_right
+        return redirect_back_data_error transfers_path, "Data Transfer Tidak Ditemukan"
       elsif search_arr.size == 2
         store = Store.where('lower(name) like ?', "%"+search_arr[1].downcase+"%").pluck(:id)
         if store.present?
@@ -44,7 +44,7 @@ class TransfersController < ApplicationController
     total_item = items.size
     to_store = params[:transfer][:store_id]
 
-    return redirect_back_data_invalid transfers_path unless items.present?
+    return redirect_back_data_error transfers_path, "Data Transfer Tidak Ditemukan" unless items.present?
     
     transfer = Transfer.create invoice: invoice,
       total_items: total_item,
@@ -59,22 +59,23 @@ class TransfersController < ApplicationController
       next if qty < 1
       TransferItem.create item_id: item[0], transfer_id: transfer.id, request_quantity: qty, description: item[2]
     end
-    return redirect_success transfers_path
+    urls = transfer_items_path id: transfer.id
+    return redirect_success urls, "Data Transfer - " + transfer.invoice + " - Berhasil Disimpan"
   end
 
   def confirmation
-    return redirect_back_data_not_found transfers_path unless params[:id].present?
+    return redirect_back_data_error transfers_path unless params[:id].present?
     @transfer = Transfer.find params[:id]
-    return redirect_back_data_not_found transfers_path unless @transfer.present?
-    return redirect_back_data_not_found transfers_path if @transfer.date_approve.present?
+    return redirect_back_data_error transfers_path unless @transfer.present?
+    return redirect_back_data_error transfers_path if @transfer.date_approve.present?
     @transfer_items = TransferItem.where(transfer_id: @transfer.id)
   end
 
   def accept
-    return redirect_back_data_not_found transfers_path unless params[:id].present?
+    return redirect_back_data_error transfers_path, "Data Transfer Tidak Ditemukan" unless params[:id].present?
     transfer = Transfer.find params[:id]
-    return redirect redirect_back_data_not_found transfers_path unless transfer.present?
-    return redirect_back_data_not_found transfers_path if transfer.date_confirm.present? || transfer.date_picked.present?
+    return redirect redirect_back_data_error transfers_path, "Data Transfer Tidak Ditemukan" unless transfer.present?
+    return redirect_back_data_error transfers_path "Data Transfer Tidak Valid" if transfer.date_confirm.present? || transfer.date_picked.present?
     if params[:transfer][:status]=="0"
       transfer.description = "Dibatalkan oleh " + current_user.name + "("+current_user.store.name+")"
       transfer.date_approve = DateTime.now
@@ -85,23 +86,24 @@ class TransfersController < ApplicationController
     end
     
     transfer.save!
-    return redirect_success transfers_path id: params[:id]
+    urls = transfer_items_path id: params[:id]
+    return redirect_success urls, "Data Transfer " + transfer.invoice + " Telah Dikonfirmasi"
   end
 
   def picked
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_error, "Data Transfer Tidak Ditemukan" unless params[:id].present?
     @transfer = Transfer.find params[:id]
-    return redirect_back_no_access_right unless @transfer.present?
-    return redirect_back_no_access_right if @transfer.date_approve.nil? || @transfer.date_picked.present?
+    return redirect_back_data_error, "Data Transfer Tidak Ditemukan" unless @transfer.present?
+    return redirect_back_data_error, "Data Transfer Tidak Valid" if @transfer.date_approve.nil? || @transfer.date_picked.present?
     @transfer_items = TransferItem.where(transfer_id: @transfer.id)
   end
 
   def sent
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_error, "Data Transfer Tidak Ditemukan" unless params[:id].present?
     transfer = Transfer.find params[:id]
-    return redirect_back_data_not_found if transfer.nil?
-    return redirect_back_data_invalid unless transfer.to_store_id == current_user.store.id
-    return redirect_back_data_invalid if transfer.date_picked.present? || transfer.status.present?
+    return redirect_back_data_error, "Data Transfer Tidak Ditemukan" if transfer.nil?
+    return redirect_back_data_error, "Data Transfer Tidak Valid" unless transfer.to_store_id == current_user.store.id
+    return redirect_back_data_error, "Data Transfer Tidak Valid" if transfer.date_picked.present? || transfer.status.present?
     status = sent_items params[:id] 
     transfer.date_picked = DateTime.now
     if status==false
@@ -118,19 +120,19 @@ class TransfersController < ApplicationController
   end
 
   def receive
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_error, "Data Transfer Tidak Ditemukan" unless params[:id].present?
     @transfer = Transfer.find params[:id]
-    return redirect_back_no_access_right unless @transfer.present?
-    return redirect_back_no_access_right if @transfer.date_approve.nil? || @transfer.date_picked.nil?|| @transfer.status.present?
+    return redirect_back_data_error, "Data Transfer Tidak Ditemukan" unless @transfer.present?
+    return redirect_back_data_error, "Data Transfer Tidak Valid" if @transfer.date_approve.nil? || @transfer.date_picked.nil?|| @transfer.status.present?
     @transfer_items = TransferItem.where(transfer_id: @transfer.id)
   end
 
   def received
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_error unless params[:id].present?
     transfer = Transfer.find params[:id]
-    return redirect_back_no_access_right if transfer.nil?
-    return redirect_back_no_access_right unless transfer.from_store_id == current_user.store.id
-    return redirect_back_no_access_right if transfer.date_picked.nil? || transfer.date_approve.nil? || transfer.status.present?
+    return redirect_back_data_error, "Data Transfer Tidak Ditemukan" if transfer.nil?
+    return redirect_back_data_error, "Data Transfer Tidak Valid" unless transfer.from_store_id == current_user.store.id
+    return redirect_back_data_error, "Data Transfer Tidak Valid" if transfer.date_picked.nil? || transfer.date_approve.nil? || transfer.status.present?
     receive_items params[:id]
     transfer.status = DateTime.now
     transfer.save!
@@ -138,19 +140,19 @@ class TransfersController < ApplicationController
   end
 
   def destroy
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_error unless params[:id].present?
     transfer = Transfer.find params[:id]
-    return redirect_back_no_access_right unless transfer.present?
-    return redirect_back_no_access_right if transfer.date_approve.present?
+    return redirect_back_data_error unless transfer.present?
+    return redirect_back_data_error if transfer.date_approve.present?
     TransferItem.where(transfer_id: params[:id]).destroy_all
     transfer.destroy
     return redirect_success transfers_path
   end
 
   def show
-    return redirect_back_data_not_found transfers_path unless params[:id].present?
+    return redirect_back_data_error transfers_path unless params[:id].present?
     @transfer = Transfer.find_by_id params[:id]
-    return redirect_back_data_not_found transfers_path unless @transfer.present?
+    return redirect_back_data_error transfers_path unless @transfer.present?
   end
 
   private

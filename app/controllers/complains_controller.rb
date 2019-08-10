@@ -29,7 +29,7 @@ class ComplainsController < ApplicationController
     return redirect_back_no_access_right unless params[:id].present?
     id = params[:id]
     @transaction = Transaction.find id
-    return redirect_back_data_invalid new_complain_path if @transaction.nil? || @transaction.user.store != current_user.store
+    return redirect_back_data_error new_complain_path if @transaction.nil? || @transaction.user.store != current_user.store
     @transaction_items = @transaction.transaction_items
     @inventories = StoreItem.page param_page
     all_options = ""
@@ -68,9 +68,9 @@ class ComplainsController < ApplicationController
   end
 
   def show
-    return redirect_back_data_not_found complains_path unless params[:id].present?
+    return redirect_back_data_error complains_path unless params[:id].present?
     @complain = Complain.find_by_id params[:id]
-    return redirect_back_data_not_found complains_path unless @complain.present?
+    return redirect_back_data_error complains_path unless @complain.present?
   end
 
   private

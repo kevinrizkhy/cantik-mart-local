@@ -15,14 +15,14 @@ class StoresController < ApplicationController
   end
 
   def destroy
-    return redirect_back_data_not_found stores_path, "Toko Tidak Ditemukan" unless params[:id].present?
+    return redirect_back_data_error stores_path, "Data Toko Tidak Ditemukan" unless params[:id].present?
     store = Store.find params[:id]
-    return redirect_back_data_not_found stores_path, "Toko Tidak Ditemukan" unless store.present?
+    return redirect_back_data_error stores_path, "Data Toko Tidak Ditemukan" unless store.present?
     if store.store_items.present? || store.users.present?
-      return redirect_back_data_invalid stores_path, "Toko Tidak Ditemukan" unless store.present?
+      return redirect_back_data_error stores_path, "Data Toko Tidak Ditemukan" unless store.present?
     else
       store.destroy
-      return redirect_success stores_path, "Toko - " + store.name + " - Berhasil Dihapus"
+      return redirect_success stores_path, "Data Toko - " + store.name + " - Berhasil Dihapus"
     end
   end
 
@@ -30,12 +30,12 @@ class StoresController < ApplicationController
     store = Store.new store_params
     store.name = params[:store][:name].camelize
     store.address = params[:store][:address].camelize
-    return redirect_back_data_invalid stores_path if store.invalid?
+    return redirect_back_data_error stores_path if store.invalid?
     supplier = Supplier.new pic: "GUDANG - "+params[:store][:name],
       phone: params[:store][:phone],
       address: params[:store][:address],
       supplier_type: 1
-    return redirect_back_data_invalid stores_path, "Data Tidak Lengkap" if supplier.invalid?
+    return redirect_back_data_error stores_path, "Data Tidak Lengkap" if supplier.invalid?
     store.save!
     supplier.save!
     store.create_activity :create, owner: current_user
@@ -44,15 +44,15 @@ class StoresController < ApplicationController
   end
 
   def edit
-    return redirect_back_data_not_found stores_path, "Data Toko Tidak Ditemukan " unless params[:id].present?
+    return redirect_back_data_error stores_path, "Data Toko Tidak Ditemukan " unless params[:id].present?
     @store = Store.find_by_id params[:id]
     return redirect_success stores_path, "Toko - " + store.name + " - Berhasil Diubah" unless @store.present?
   end
 
   def update
-    return redirect_back_data_not_found stores_path, "Data Toko Tidak Ditemukan " unless params[:id].present?
+    return redirect_back_data_error stores_path, "Data Toko Tidak Ditemukan " unless params[:id].present?
     store = Store.find_by_id params[:id]
-    return redirect_back_data_not_found stores_path, "Data Toko Tidak Ditemukan " unless store.present?
+    return redirect_back_data_error stores_path, "Data Toko Tidak Ditemukan " unless store.present?
     store.assign_attributes store_params
     store.name = params[:store][:name].camelize
     store.address = params[:store][:address].camelize
@@ -62,9 +62,9 @@ class StoresController < ApplicationController
   end
 
   def show
-    return redirect_back_data_not_found stores_path, "Data Toko Tidak Ditemukan" unless params[:id].present?
+    return redirect_back_data_error stores_path, "Data Toko Tidak Ditemukan" unless params[:id].present?
     @store = Store.find_by_id params[:id]
-    return redirect_back_data_not_found stores_path, "Data Toko Tidak Ditemukan " unless @store.present?
+    return redirect_back_data_error stores_path, "Data Toko Tidak Ditemukan " unless @store.present?
   end
 
   private

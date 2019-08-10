@@ -31,7 +31,7 @@ class OrdersController < ApplicationController
       @search = search
       search_arr = search.split(":")
       if search_arr.size > 2
-        return redirect_back_no_access_right
+        return redirect_back_data_error orders_path, "Data Tidak Valid"
       elsif search_arr.size == 2
         supplier = Supplier.where('lower(pic) like ?', "%"+search_arr[1].downcase+"%").pluck(:id)
           if search_arr[0]== "supplier" && supplier.present?
@@ -58,11 +58,11 @@ class OrdersController < ApplicationController
     @suppliers = Supplier.select(:id, :name, :address).order("supplier_type DESC").all
     if params[:item_id].present?
       @add_item = Item.find params[:item_id]
-      # return redirect_back_data_not_found new_order_path if @add_items.nil?
+      # return redirect_back_data_error new_order_path if @add_items.nil?
     end
     if params[:supplier_id].present?
       @supplier = Supplier.find params[:supplier_id]
-      return redirect_back_data_not_found new_order_path if @supplier.nil?
+      return redirect_back_data_error new_order_path if @supplier.nil?
     end
 
     ongoing_order_ids = Order.where('date_receive is null and date_paid_off is null').pluck(:id)
@@ -76,7 +76,7 @@ class OrdersController < ApplicationController
   def create
     invoice = "ORD-" + Time.now.to_i.to_s
     ordered_items = order_items
-    return redirect_back_data_invalid orders_path if ordered_items.empty?
+    return redirect_back_data_error orders_path, "Data Item Tidak Valid (Tidak Boleh Kosong)" if ordered_items.empty?
     total_item = ordered_items.size
     address_to = params[:order][:supplier_id]
     order = Order.create invoice: invoice,
@@ -101,43 +101,43 @@ class OrdersController < ApplicationController
 
     order.total = total
     order.save!
-
-    return redirect_success orders_path
+    urls = order_items_path id: order.id
+    return redirect_success urls, "Order Berhasil Disimpan"
   end
 
    def destroy
-    return redirect_back_data_not_found orders_path unless params[:id].present?
+    return redirect_back_data_error orders_path, "Data Order Tidak Ditemukan" unless params[:id].present?
     order = Order.find params[:id]
-    return redirect_back_data_not_found orders_path unless order.present?
-    return redirect_back_data_not_found orders_path if order.date_receive.present?
+    return redirect_back_data_error orders_path, "Data Order Tidak Dapat Dihapus" unless order.present?
+    return redirect_back_data_error orders_path, "Data Order Tidak Dapat Dihapus" if order.date_receive.present?
     OrderItem.where(order_id: params[:id]).destroy_all
     order.destroy
-    return redirect_success orders_path
+    return redirect_success orders_path, "Data Order Behasil Dihapus"
   end
 
   def confirmation
-    return redirect_back_data_not_found orders_path unless params[:id].present?
+    return redirect_back_data_error orders_path unless params[:id].present?
     @order = Order.find params[:id]
-    return redirect_back_data_not_found orders_path if @order.date_receive.present? || @order.date_paid_off.present?
-    return redirect_success orders_path unless @order.present?
     @order_items = OrderItem.where(order_id: @order.id)
+    return redirect_back_data_error orders_path, "Data Order Tidak Valid" if @order.date_receive.present? || @order.date_paid_off.present?
+    return redirect_back_data_error orders_path, "Data Order Tidak Ditemukan" if @order.nil?
   end
 
   def edit_confirmation
-    return redirect_back_data_not_found orders_path unless params[:id].present?
+    return redirect_back_data_error orders_path unless params[:id].present?
     @order = Order.find params[:id]
-    return redirect_back_data_not_found orders_path unless @order.present? || @order.editable == false
-    return redirect_back_data_not_found orders_path if @order.date_paid_off.present? || @order.date_receive.nil?
+    return redirect_back_data_error orders_path unless @order.present? || @order.editable == false
+    return redirect_back_data_error orders_path if @order.date_paid_off.present? || @order.date_receive.nil?
     @order_items = OrderItem.where(order_id: @order.id)
   end
 
   def edit_receive
-    return redirect_back_data_not_found orders_path unless params[:id].present?
+    return redirect_back_data_error orders_path, "Data Order Tidak Ditemukan" unless params[:id].present?
     order = Order.find params[:id]
-    return redirect_success redirect_back_data_not_found orders_path unless order.present? || order.editable == false
-    return redirect_back_data_not_found orders_path if order.date_paid_off.present? || order.date_receive.nil?
+    return redirect_success redirect_back_data_error orders_path unless order.present? || order.editable == false
+    return redirect_back_data_error orders_path, "Data Order Tidak Ditemukan" if order.date_paid_off.present? || order.date_receive.nil?
     items = edit_order_items
-    return redirect_back_data_invalid orders_path if items.empty?
+    return redirect_back_data_error orders_path, "Data Order Tidak Ditemukan" if items.empty?
     new_total = 0
     items.each do |item|
       order_item = OrderItem.find item[0]
@@ -170,10 +170,10 @@ class OrdersController < ApplicationController
   end
 
   def receive
-    return redirect_back_data_not_found orders_path unless params[:id].present?
+    return redirect_back_data_error orders_path, "Data Order Tidak Ditemukan" unless params[:id].present?
     order = Order.find params[:id]
-    return redirect_back_data_not_found orders_path unless order.present?
-    return redirect_back_data_not_found orders_path if order.date_receive.present? || order.date_paid_off.present?
+    return redirect_back_data_error orders_path unless order.present?
+    return redirect_back_data_error orders_path, "Data Order Tidak Ditemukan" if order.date_receive.present? || order.date_paid_off.present?
     items = order_items
     new_total = 0
     items.each do |item|
@@ -201,35 +201,37 @@ class OrdersController < ApplicationController
     if order.total == 0
       order.date_paid_off = DateTime.now
       order.save!
-      return redirect_success order_items_path(id: params[:id])
+      urls = order_items_path(id: params[:id])
+      return redirect_success urls, "Order " + order.invoice + " Telah Diterima"
     end
 
     Debt.create user: current_user, store: current_user.store, nominal: new_total, 
                 deficiency: new_total, date_created: DateTime.now, ref_id: order.id,
                 description: order.invoice, finance_type: Debt::ORDER
     description = order.invoice + " (" + new_total.to_s + ")"
-    return redirect_success order_items_path(id: params[:id])
+    urls = order_items_path(id: params[:id])
+    return redirect_success urls, "Order " + order.invoice + " Telah Diterima"
   end
 
   def pay
-    return redirect_back_data_not_found orders_path unless params[:id].present?
+    return redirect_back_data_error orders_path, "Data Order Tidak Ditemukan" unless params[:id].present?
     @order = Order.find params[:id]
-    return redirect_back_data_not_found orders_path unless @order.present?
-    return redirect_back_data_not_found orders_path if @order.date_receive.nil? || @order.date_paid_off.present?
+    return redirect_back_data_error orders_path, "Data Order Tidak Ditemukan" if @order.nil?
+    return redirect_back_data_error orders_path, "Data Order Tidak Valid"if @order.date_receive.nil? || @order.date_paid_off.present?
     @order_invs = InvoiceTransaction.where(invoice: @order.invoice)
     @pay = @order.total.to_i - @order_invs.sum(:nominal) 
   end
 
   def paid
-    return redirect_back_data_not_found orders_path unless params[:id].present?
+    return redirect_back_data_error orders_path, "Data Order Tidak Ditemukan" unless params[:id].present?
     order = Order.find params[:id]
-    return redirect_back_data_not_found orders_path unless order.present?
-    return redirect_back_data_not_found orders_path if order.date_receive.nil? || order.date_paid_off.present?
+    return redirect_back_data_error orders_path, "Data Order Tidak Ditemukan" if order.nil?
+    return redirect_back_data_error orders_path, "Data Order Tidak Valid" if order.date_receive.nil? || order.date_paid_off.present?
     order_invs = InvoiceTransaction.where(invoice: order.invoice)
     paid = order.total.to_f - order_invs.sum(:nominal) 
     nominal = params[:order_pay][:nominal].to_i 
     nominal = params[:order_pay][:receivable_nominal].to_i if params[:order_pay][:user_receivable] == "on"
-    return redirect_back_data_invalid orders_path if (nominal.to_i > paid) || (nominal <= 100)
+    return redirect_back_data_error orders_path, "Data Order Tidak Valid (Pembayaran > Jumlah / Pembayaran < 100 )" if (nominal.to_i > paid) || (nominal < 100)
     order_inv = InvoiceTransaction.new 
     order_inv.invoice = order.invoice
     order_inv.transaction_type = 0
@@ -241,7 +243,7 @@ class OrdersController < ApplicationController
     debt = Debt.find_by(finance_type: Debt::ORDER, ref_id: order.id)
     if params[:order_pay][:user_receivable] == "on"
       dec_receivable = decrease_receivable order.supplier_id, nominal, order
-      return redirect_back_data_invalid orders_path unless dec_receivable
+      return redirect_back_data_error orders_path, "Data Order Tidak Valid" unless dec_receivable
     else
       CashFlow.create user: current_user, store: current_user.store, description: order.invoice, nominal: order_inv.nominal*-1, 
                     date_created: params[:order_pay][:date_paid], finance_type: CashFlow::OUTCOME, ref_id: order.id
@@ -253,13 +255,14 @@ class OrdersController < ApplicationController
       debt.deficiency = 0
     end
     debt.save!
-    return redirect_success order_items_path(id: params[:id])
+    urls = order_items_path(id: params[:id])
+    return redirect_success urls, "Pembayaran Order " + order.invoice + " Sebesar " + nominal.to_s + " Telah Dikonfirmasi"
   end
 
   def show
-    return redirect_back_data_not_found orders_path unless params[:id].present?
+    return redirect_back_data_error orders_path, "Data Order Tidak Ditemukan" unless params[:id].present?
     @order = Order.find_by_id params[:id]
-    return redirect_back_data_not_found orders_path unless @order.present?
+    return redirect_back_data_error orders_path, "Data Order Tidak Ditemukan" unless @order.present?
   end
 
   private

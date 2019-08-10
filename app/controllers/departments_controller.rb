@@ -16,9 +16,9 @@ class DepartmentsController < ApplicationController
   end
 
   def show
-    return redirect_back_data_not_found departments_path unless params[:id].present?
+    return redirect_back_data_error departments_path unless params[:id].present?
     @department = Department.find_by_id params[:id]
-    return redirect_back_data_invalid new_item_cat_path if @department.nil?
+    return redirect_back_data_error departments_path, "Data Dapartemen Tidak Ditemukan" if @department.nil?
     return redirect_to item_cats_path dept_id: @department.id
   end
 
@@ -30,36 +30,39 @@ class DepartmentsController < ApplicationController
     department = Department.new department_params
     department_name = params[:department][:name].camelize
     department.name = department_name
-    return redirect_back_data_invalid new_item_cat_path if department.invalid?
+    return redirect_back_data_error new_department_path, "Data Dapartemen Tidak Valid" if department.invalid?
     department.save!
     department.create_activity :create, owner: current_user
-    return redirect_success departments_path
+    urls = item_cats_path dept_id: department.id
+    return redirect_success urls, "Data Dapartemen - " + department.name + " - Berhasil Disimpan"
   end
 
   def edit
-    return redirect_back_data_not_found departments_path unless params[:id].present?
+    return redirect_back_data_error departments_path, "Data Dapartemen Tidak Ditemukan" unless params[:id].present?
     @department = Department.find_by_id params[:id]
-    return redirect_back_data_invalid new_item_cat_path unless @department.present?
+    return redirect_back_data_error departments_path, "Data Dapartemen Tidak Ditemukan" unless @department.present?
   end
 
   def update
-    return redirect_back_data_not_found departments_path unless params[:id].present?
+    return redirect_back_data_error departments_path, "Data Dapartemen Tidak Ditemukan" unless params[:id].present?
     department = Department.find_by_id params[:id]
     department.assign_attributes department_params
     item_name = params[:department][:name].camelize
     department.name = item_name
     department.save! if department.changed?
     department.create_activity :edit, owner: current_user
-    return redirect_success departments_path
+    urls = item_cats_path dept_id: department.id
+    return redirect_success urls, "Data Dapartemen - " + department.name + " - Berhasil Diubah"
   end
 
   def destroy
-    return redirect_back_data_not_found departments_path unless params[:id].present?
+    return redirect_back_data_error departments_path, "Data Dapartemen Tidak Ditemukan" unless params[:id].present?
     department = Department.find params[:id]
-    return redirect_back_data_not_found departments_path unless department.present?
-    return redirect_back_data_invalid departments_path if department.item_cat.present?
+    return redirect_back_data_error departments_path, "Data Dapartemen Tidak Ditemukan" unless department.present?
+    return redirect_back_data_error departments_path, "Data Dapartemen Tidak Ditemukan" if department.item_cat.present?
+    dept_name = department.name
     department.destroy
-    return redirect_success departments_path
+    return redirect_success departments_path, "Data Dapartemen - " + dept_name + " - Telah Dihapus"
   end
 
   private

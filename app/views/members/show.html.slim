@@ -30,3 +30,7 @@
         .form-group
           label for="card-card" Dibuat Oleh
           input type="text" class="form-control md-form" value='#{@member.user.name}'
+        .form-group.text-center
+          a href='#{edit_member_path(id: @member.id)}'
+            button.btn.btn-rounded.btn-warning type="button" 
+                | Edit

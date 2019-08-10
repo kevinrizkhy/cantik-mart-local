@@ -44,9 +44,9 @@ class ControllersController < ApplicationController
   end
 
   def show
-    return redirect_back_data_not_found controllers_path unless params[:id].present?
+    return redirect_back_data_error controllers_path unless params[:id].present?
     @controller = Controller.find_by_id params[:id]
-    return redirect_back_data_not_found controllers_path unless @controller.present?
+    return redirect_back_data_error controllers_path unless @controller.present?
   end
 
   private

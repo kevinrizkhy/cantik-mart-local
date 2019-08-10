@@ -2,24 +2,24 @@ class ReturItemsController < ApplicationController
   before_action :require_login
   before_action :require_fingerprint
   def index
-    return redirect_back_data_not_found returs_path unless params[:id].present?
+    return redirect_back_data_error returs_path, "Data Retur Tidak Ditemukan" unless params[:id].present?
     @retur_items = ReturItem.page param_page
     @retur_items = @retur_items.where(retur_id: params[:id])
   end
 
   def feedback
-    return redirect_back_data_not_found returs_path unless params[:id].present?
+    return redirect_back_data_error returs_path, "Data Retur Tidak Valid" unless params[:id].present?
     @retur = Retur.find params[:id]
-    return redirect_back_data_not_found returs_path unless @retur.present?
-    return redirect_back_data_not_found returs_path if @retur.status.present?
+    return redirect_back_data_error returs_path, "Data Retur Tidak Ditemukan" unless @retur.present?
+    return redirect_back_data_error returs_path, "Data Retur Tidak Valid" if @retur.status.present?
     @retur_items = ReturItem.where(retur_id: @retur.id)
   end
 
   def feedback_confirmation
-    return redirect_back_data_not_found returs_path unless params[:id].present?
+    return redirect_back_data_error returs_path, "Data Retur Tidak Ditemukan" unless params[:id].present?
     retur = Retur.find params[:id]
-    return redirect_back_data_not_found returs_path unless retur.present?
-    return redirect_back_data_invalid returs_path if retur.status.present?
+    return redirect_back_data_error returs_path, "Data Retur Tidak Ditemukan" unless retur.present?
+    return redirect_back_data_error returs_path, "Data Retur Tidak Valid" if retur.status.present?
     feed_value = feedback_value
     order = nil
     receivable = nil
@@ -71,13 +71,14 @@ class ReturItemsController < ApplicationController
     end
     retur.status = Time.now
     retur.save
-    return redirect_success retur_items_path(id: retur.id)
+    urls = retur_items_path(id: retur.id)
+    return redirect_success urls, "Data Retur " + retur.invoice + " Telah Dikonfirmasi"
   end
 
   def show
-    return redirect_back_data_not_found retur_items_path unless params[:id].present?
+    return redirect_back_data_error retur_items_path, "Data Retur Tidak Ditemukan" unless params[:id].present?
     @retur_item = ReturItem.find_by_id params[:id]
-    return redirect_back_data_invalid new_retur_item_path unless @retur_item.present?
+    return redirect_back_data_error new_retur_item_path, "Data Retur Tidak Ditemukan" unless @retur_item.present?
   end
 
   private

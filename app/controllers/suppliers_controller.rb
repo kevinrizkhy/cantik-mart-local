@@ -12,9 +12,9 @@ class SuppliersController < ApplicationController
   end
 
   def show
-    return redirect_back_data_not_found suppliers_path, "Data Supplier Tidak Ditemukan" unless params[:id].present?
+    return redirect_back_data_error suppliers_path, "Data Supplier Tidak Ditemukan" unless params[:id].present?
     @supplier = Supplier.find_by_id params[:id]
-    return redirect_back_data_not_found suppliers_path, "Data Supplier Tidak Ditemukan" unless @supplier.present?
+    return redirect_back_data_error suppliers_path, "Data Supplier Tidak Ditemukan" unless @supplier.present?
   end
 
   def new
@@ -24,22 +24,22 @@ class SuppliersController < ApplicationController
     supplier = Supplier.new supplier_params
     supplier.name = params[:supplier][:name].camelize
     supplier.address = params[:supplier][:address].camelize
-    return redirect_back_data_not_found new_supplier_path, "Data Supplier Tidak Ditemukan" if supplier.invalid?
+    return redirect_back_data_error new_supplier_path, "Data Supplier Tidak Ditemukan" if supplier.invalid?
     supplier.save!
     supplier.create_activity :create, owner: current_user
     return redirect_success suppliers_path, "Data Supplier - " + supplier.name + " - Berhasil Ditambahkan"
   end
 
   def edit
-    return redirect_back_data_not_found suppliers_path, "Data Supplier Tidak Ditemukan" unless params[:id].present?
+    return redirect_back_data_error suppliers_path, "Data Supplier Tidak Ditemukan" unless params[:id].present?
     @supplier = Supplier.find_by_id params[:id]
-    return redirect_back_data_not_found suppliers_path, "Data Supplier Tidak Ditemukan" unless @supplier.present?
+    return redirect_back_data_error suppliers_path, "Data Supplier Tidak Ditemukan" unless @supplier.present?
   end
 
   def update
-    return redirect_back_data_not_found suppliers_path, "Data Supplier Tidak Ditemukan" unless params[:id].present?
+    return redirect_back_data_error suppliers_path, "Data Supplier Tidak Ditemukan" unless params[:id].present?
     supplier = Supplier.find_by_id params[:id]
-    return redirect_back_data_not_found suppliers_path, "Data Supplier Tidak Ditemukan" unless supplier.present?
+    return redirect_back_data_error suppliers_path, "Data Supplier Tidak Ditemukan" unless supplier.present?
     supplier.assign_attributes supplier_params
     supplier.name = params[:supplier][:name].camelize
     supplier.address = params[:supplier][:address].camelize
@@ -49,11 +49,11 @@ class SuppliersController < ApplicationController
   end
 
   def destroy
-    return redirect_back_data_not_found suppliers_path, "Data Supplier Tidak Ditemukan" unless params[:id].present?
+    return redirect_back_data_error suppliers_path, "Data Supplier Tidak Ditemukan" unless params[:id].present?
     supplier = Supplier.find_by_id params[:id]
-    return redirect_back_data_invalid new_supplier_path, "Data Supplier Tidak Ditemukan" unless supplier.present?
+    return redirect_back_data_error new_supplier_path, "Data Supplier Tidak Ditemukan" unless supplier.present?
     if supplier.supplier_items.present? || supplier.orders.present? 
-      return redirect_back_data_invalid suppliers_path, "Data Supplier Tidak Ditemukan"
+      return redirect_back_data_error suppliers_path, "Data Supplier Tidak Ditemukan"
     else
       supplier.destroy
       return redirect_success suppliers_path, "Data Supplier - " + supplier.name + " - Berhasil Dihapus" 
