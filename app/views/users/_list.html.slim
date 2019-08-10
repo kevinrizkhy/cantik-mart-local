@@ -11,7 +11,7 @@ tr
   	td #{user.sex}
   	td
     	a href='#{edit_user_path(id: user.id)}'
-        button.btn.btn-rounded.btn-warning type="button" 
-          | Edit
+          button.btn.btn-rounded.btn-warning type="button" 
+              | Edit
     td
       = button_to "Hapus", user, :method=>:delete, :class=>"btn btn-rounded btn-danger"

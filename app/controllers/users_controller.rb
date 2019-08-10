@@ -12,9 +12,9 @@ class UsersController < ApplicationController
   end
 
   def show
-    return redirect_back_data_not_found users_path unless params[:id].present?
+    return redirect_back_data_not_found users_path, "Data Pengguna Tidak Ditemukan" unless params[:id].present?
     @user = User.find_by_id params[:id]
-    return redirect_back_data_not_found users_path unless @user.present?
+    return redirect_back_data_not_found users_path, "Data Pengguna Tidak Ditemukan" unless @user.present?
   end
 
   def new
@@ -23,21 +23,21 @@ class UsersController < ApplicationController
 
   def create
     user = User.new user_params
-    return redirect_back_data_not_found new_user_path if user.invalid?
+    return redirect_back_data_not_found new_user_path, "Data Pengguna Tidak Ditemukan" if user.invalid?
     user.save!
     user.create_activity :create, owner: current_user
-    return redirect_success users_path
+    return redirect_success users_path, "Pengguna - " + user.name + " - Berhasil Ditambahkan"
   end
 
   def edit
-    return redirect_back_data_not_found users_path unless params[:id].present?
+    return redirect_back_data_not_found users_path, "Data Pengguna Tidak Ditemukan" unless params[:id].present?
     @user = User.find_by_id params[:id]
     @stores = Store.all
-    return redirect_back_data_not_found users_path unless @user.present?
+    return redirect_back_data_not_found users_path, "Data Pengguna Tidak Ditemukan" unless @user.present?
   end
 
   def update
-    return redirect_back_data_not_found users_path unless params[:id].present?
+    return redirect_back_data_not_found users_path, "Data Pengguna Tidak Ditemukan" unless params[:id].present?
     file = params[:user][:image]
     upload_io = params[:user][:image]
     if file.present?
@@ -51,7 +51,7 @@ class UsersController < ApplicationController
     user.assign_attributes user_params
     user.save! if user.changed?
     user.create_activity :edit, owner: current_user
-    return redirect_success users_path
+    return redirect_success users_path, "Data Pengguna - " + user.name + " - Berhasil Diubah"
   end
 
   def destroy
@@ -62,7 +62,7 @@ class UsersController < ApplicationController
       return redirect_back_no_access_right 
     else 
       user.destroy
-      return redirect_success users_path
+      return redirect_success users_path, "Data Pengguna - " + user.name + " - Berhasil Dihapus"
     end
   end
 

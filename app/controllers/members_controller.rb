@@ -19,32 +19,32 @@ class MembersController < ApplicationController
     member.name = params[:member][:name].camelize
     member.user = current_user
     member.store = current_user.store
-    return redirect_back_data_invalid new_member_path if member.invalid?
+    return redirect_back_data_invalid new_member_path, "Data Member - " + member.name + " - Tidak Valid" if member.invalid?
     member.save!
     member.create_activity :create, owner: current_user
-    return redirect_success members_path
+    return redirect_success members_path, "Member - " + member.name + " - Berhasil Ditambahkan"
   end
 
   def edit
-    return redirect_back_data_not_found members_path unless params[:id].present?
+    return redirect_back_data_not_found members_path, "Data Member Tidak Ditemukan" unless params[:id].present?
     @member = Member.find_by_id params[:id]
-    return redirect_back_data_not_found members_path unless @member.present?
+    return redirect_back_data_not_found members_path, "Data Member Tidak Ditemukan" unless @member.present?
   end
 
   def update
-    return redirect_back_data_not_found unless params[:id].present?
+    return redirect_back_data_not_found members_path, "Data Member Tidak Ditemukan" unless params[:id].present?
     member = Member.find_by_id params[:id]
     member.assign_attributes member_params
     member.name = params[:member][:name].camelize
     member.save! if member.changed?
     member.create_activity :edit, owner: current_user
-    return redirect_success members_path
+    return redirect_success members_path, "Member - " + member.name + " - Berhasil Diubah"
   end
 
   def show
-    return redirect_back_data_not_found members_path unless params[:id].present?
+    return redirect_back_data_not_found members_path, "Data Member Tidak Ditemukan" unless params[:id].present?
     @member = Member.find_by_id params[:id]
-    return redirect_back_data_not_found members_path unless @member.present?
+    return redirect_back_data_not_found members_path, "Data Member Tidak Ditemukan" unless @member.present?
   end
 
   private

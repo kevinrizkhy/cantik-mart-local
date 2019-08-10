@@ -27,9 +27,9 @@ class ItemsController < ApplicationController
   end
 
   def show
-    return redirect_back_data_not_found items_path unless params[:id].present?
+    return redirect_back_data_not_found items_path, "Data Barang Tidak Ditemukan" unless params[:id].present?
     @item = Item.find_by_id params[:id]
-    return redirect_back_data_not_found items_path unless @item.present?
+    return redirect_back_data_not_found items_path, "Data Barang Tidak Ditemukan" unless @item.present?
   end
 
   def new
@@ -38,38 +38,38 @@ class ItemsController < ApplicationController
 
   def create
     item = Item.new item_params
-    return redirect_back_data_invalid new_item_path if item.invalid?
+    return redirect_back_data_invalid new_item_path, "Data Barang Tidak Valid" if item.invalid?
     item.save!
     item.create_activity :create, owner: current_user
-    return redirect_success items_path
+    return redirect_success items_path, "Data Barang Berhasil Ditambahkan"
 
   end
 
   def edit
-    return redirect_back_data_not_found items_path unless params[:id].present?
+    return redirect_back_data_not_found items_path, "Data Barang Tidak Ditemukan" unless params[:id].present?
     @item = Item.find_by_id params[:id]
-    return redirect_back_data_not_found items_path unless @item.present?
+    return redirect_back_data_not_found items_path, "Data Barang Tidak Ditemukan" unless @item.present?
     @item_cats = ItemCat.all
   end
 
   def update
-    return redirect_back_data_not_found items_path unless params[:id].present?
+    return redirect_back_data_not_found items_path, "Data Barang Tidak Ditemukan" unless params[:id].present?
     item = Item.find_by_id params[:id]
     item.assign_attributes item_params
     item.save! if item.changed?
     item.create_activity :edit, owner: current_user
-    return redirect_success items_path
+    return redirect_success items_path, "Data Barang - " + item.name + " - Berhasil Diubah"
   end
 
   def destroy
-    return redirect_back_data_not_found items_path unless params[:id].present?
+    return redirect_back_data_not_found items_path, "Data Barang Tidak Ditemukan" unless params[:id].present?
     item = Item.find_by_id params[:id]
-    return redirect_back_data_not_found items_path unless item.present?
+    return redirect_back_data_not_found items_path, "Data Barang Tidak Ditemukan" unless item.present?
     if item.store_items.present? || item.supplier_items.present?
-      return redirect_back_data_invalid items_path
+      return redirect_back_data_invalid items_path, "Data Barang Tidak Valid"
     else
       item.destroy
-      return redirect_success items_path
+      return redirect_success items_path, "Data Barang - " + item.name + " - Berhasil Dihapus"
     end
   end
 
