@@ -40,9 +40,9 @@ class ActivitiesController < ApplicationController
 	end
 
 	def show
-		return redirect_back_data_error activities_path unless params[:id].present?
-	    @activities = Activity.find_by_id params[:id]
-	    return redirect_back_data_error activities_path unless @activities.present?
+		return redirect_back_data_error activities_path, "Data Aktivitas Tidak Ditemukan" unless params[:id].present?
+	    @activity = PublicActivity::Activity.find params[:id]
+	    return redirect_back_data_error activities_path, "Data Aktivitas Tidak Ditemukan" unless @activity.present?
 	end
 
 	private

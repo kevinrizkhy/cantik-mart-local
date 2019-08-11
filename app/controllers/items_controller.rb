@@ -57,8 +57,9 @@ class ItemsController < ApplicationController
     return redirect_back_data_error items_path, "Data Barang Tidak Ditemukan" unless params[:id].present?
     item = Item.find_by_id params[:id]
     item.assign_attributes item_params
+    changes = item.changes
     item.save! if item.changed?
-    item.create_activity :edit, owner: current_user
+    item.create_activity :edit, owner: current_user, params: changes
     urls = item_path id: item.id
     return redirect_success urls, "Data Barang - " + item.name + " - Berhasil Diubah"
   end

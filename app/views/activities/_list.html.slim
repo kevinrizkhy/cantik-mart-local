@@ -1,12 +1,14 @@
 tr
-  td #{activity.key.split('.')[1]}
-  td #{activity.trackable_type}
+  td #{activity.key.split('.')[1].upcase}
+  td #{activity.trackable_type.upcase}
   td #{activity.created_at}
   td #{User.find_by(id: activity.owner_id.to_i).name}
-  td 
-  	- if activity.trackable.present?
-  		- class_name = activity.trackable.class.name 
-	  	- if class_name == "GrocerItem"
-	  		= link_to activity.trackable.item.name, item_path(id: activity.trackable.item_id)
-	  	- else
-	  		= link_to activity.trackable.name, activity.trackable
+  - if activity.parameters.present?
+    td #{activity.parameters.keys.join(', ').upcase}
+    td
+      a href="#{activity_path(id: activity.id)}"
+        button.btn.btn-rounded.btn-warning type="button" 
+          | Detil
+  - else
+    td -
+    td
