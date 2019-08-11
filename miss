@@ -10,18 +10,13 @@ _____________________________________________________________
 / search how to use 'https://chartkick.com/' --> graph 
 
 
-= check and testing in all method --> if cant access, return redirect_back_no_access_right
-= fixing "col" if page is resizing ==> table + search field
+= check and testing in all method
 = check selecting data is on this current user or all 
 = checking all trx 
 = checking printing receipt cashier
-= log all activity
-= checking if all deleting is ok
-= activity if object doesnt have name field
 
 - debt
 - consumer retur
-- retur to warehouse
 - post API using CSRF token
 - notification
 - add card into home 
@@ -43,8 +38,6 @@ _____________________________________________________________
 	* tax
 	* operational
 	* assets value
-- Message if something happened (Custom Alert)
-- Add Description in Log Activity Edit => Whats changed ? (changes = item.changes)
 
 + activity if data is deleted
 
@@ -74,3 +67,11 @@ _____________________________________________________________
 -K Transfer picked => input field not proper (too many space)
 -K Add 'Keterangan' in Transfer if that transfer was automation canceled by system
 -K transfer 
+-IK Message if something happened (Custom Alert)
+-K Add Description in Log Activity Edit => Whats changed ? (changes = item.changes)
+-K retur to warehouse
+
+=K log all activity
+=K fixing "col" if page is resizing ==> table + search field
+=K checking if all deleting is ok
+=K activity if object doesnt have name field
