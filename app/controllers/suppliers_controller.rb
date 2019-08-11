@@ -43,8 +43,9 @@ class SuppliersController < ApplicationController
     supplier.assign_attributes supplier_params
     supplier.name = params[:supplier][:name].camelize
     supplier.address = params[:supplier][:address].camelize
+    changes = supplier.changes
     supplier.save! if supplier.changed?
-    supplier.create_activity :edit, owner: current_user
+    supplier.create_activity :edit, owner: current_user, parameters: changes
     return redirect_success suppliers_path, "Data Supplier - " + supplier.name + " - Berhasil Diubah"
   end
 

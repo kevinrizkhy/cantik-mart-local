@@ -56,8 +56,9 @@ class ItemCatsController < ApplicationController
     item_cat.assign_attributes item_cat_params
     item_name = params[:item_cat][:name].camelize
     item_cat.name = item_name
+    changes = item_cat.changes
     item_cat.save! if item_cat.changed?
-    item_cat.create_activity :edit, owner: current_user
+    item_cat.create_activity :edit, owner: current_user, parameters: changes
     params = "?" + { :dept_id => item_cat.department_id }.to_param
     return redirect_success item_cats_path + params , "Kategori Item - " + item_cat.name + " Berhasil Diubah"
   end

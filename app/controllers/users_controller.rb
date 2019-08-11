@@ -49,8 +49,9 @@ class UsersController < ApplicationController
     user = User.find_by_id params[:id]
     user.image = filename
     user.assign_attributes user_params
+    changes = user.changes
     user.save! if user.changed?
-    user.create_activity :edit, owner: current_user
+    user.create_activity :edit, owner: current_user, parameters: changes
     return redirect_success users_path, "Data Pengguna - " + user.name + " - Berhasil Diubah"
   end
 

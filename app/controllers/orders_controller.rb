@@ -158,8 +158,12 @@ class OrdersController < ApplicationController
     order.total = new_total
     order.date_change = DateTime.now
     order.editable = false
+    changes = order.changes
     order.save!
     payment = edit_payment new_total, order
+
+    order.create_activity :edit, owner: current_user, parameters: changes
+
     if payment
       order.date_paid_off = DateTime.now 
       order.save!

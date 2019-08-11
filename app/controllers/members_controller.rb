@@ -37,8 +37,9 @@ class MembersController < ApplicationController
     member = Member.find_by_id params[:id]
     member.assign_attributes member_params
     member.name = params[:member][:name].camelize
+    changes = item_cat.changes
     member.save! if member.changed?
-    member.create_activity :edit, owner: current_user
+    member.create_activity :edit, owner: current_user, parameters: changes
     urls = member_path id: member.id
     return redirect_success urls, "Member - " + member.name + " - Berhasil Diubah"
   end

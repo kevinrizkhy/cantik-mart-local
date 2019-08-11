@@ -25,8 +25,9 @@ class StocksController < ApplicationController
     return redirect_back_data_error stocks_path, "Data Stok Barang Tidak Ditemukan" unless params[:id].present?
     item = StoreItem.find_by_id params[:id]
     item.assign_attributes stock_params
+    changes = item.changes
     item.save! if item.changed?
-    item.create_activity :edit, owner: current_user
+    item.create_activity :edit, owner: current_user, parameters: changes
     return redirect_success stocks_path
   end
 

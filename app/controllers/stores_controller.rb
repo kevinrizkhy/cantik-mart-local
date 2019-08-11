@@ -56,8 +56,9 @@ class StoresController < ApplicationController
     store.assign_attributes store_params
     store.name = params[:store][:name].camelize
     store.address = params[:store][:address].camelize
+    changes = store.changes
     store.save! if store.changed?
-    store.create_activity :edit, owner: current_user
+    store.create_activity :edit, owner: current_user, parameters: changes
     return redirect_success stores_path, "Data Toko - " + store.name + " - Berhasil Diubah"
   end
 
