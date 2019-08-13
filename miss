@@ -70,6 +70,7 @@ _____________________________________________________________
 -IK Message if something happened (Custom Alert)
 -K Add Description in Log Activity Edit => Whats changed ? (changes = item.changes)
 -K retur to warehouse
+-K All activities (acc, conf, etc) was recorded => current_user
 
 =K log all activity
 =K fixing "col" if page is resizing ==> table + search field
