@@ -50,6 +50,7 @@ Rails.application.routes.draw do
   resources :grocer_items
   resources :item_cats
   resources :departments
+  resources :notifications, only: %i[index]
 
   resources :stocks
   resources :users

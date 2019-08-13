@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_31_021659) do
+ActiveRecord::Schema.define(version: 2019_08_13_163634) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -208,6 +208,17 @@ ActiveRecord::Schema.define(version: 2019_07_31_021659) do
     t.bigint "user_id"
     t.index ["store_id"], name: "index_members_on_store_id"
     t.index ["user_id"], name: "index_members_on_user_id"
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.datetime "date_created", null: false
+    t.integer "read", default: 0, null: false
+    t.string "link", null: false
+    t.string "message", null: false
+    t.bigint "from_user_id", null: false
+    t.bigint "to_user_id", null: false
+    t.index ["from_user_id"], name: "index_notifications_on_from_user_id"
+    t.index ["to_user_id"], name: "index_notifications_on_to_user_id"
   end
 
   create_table "order_invs", force: :cascade do |t|
@@ -478,6 +489,8 @@ ActiveRecord::Schema.define(version: 2019_07_31_021659) do
   add_foreign_key "items", "item_cats"
   add_foreign_key "members", "stores"
   add_foreign_key "members", "users"
+  add_foreign_key "notifications", "users", column: "from_user_id"
+  add_foreign_key "notifications", "users", column: "to_user_id"
   add_foreign_key "order_invs", "orders"
   add_foreign_key "order_items", "items"
   add_foreign_key "order_items", "orders"

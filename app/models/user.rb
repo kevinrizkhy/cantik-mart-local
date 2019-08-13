@@ -48,4 +48,5 @@ class User < ApplicationRecord
   has_many :absents
   has_many :methods
   has_many :members
+  has_many :notifications
 end
