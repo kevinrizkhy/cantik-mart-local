@@ -3,17 +3,17 @@ tr
   td #{order.supplier.name}
   td #{order.total_items}
   td #{order.total}
-  td #{order.date_created.to_date}
+  td #{order.user.name} (#{order.date_created.to_date})
   td
     - if order.date_receive.nil?
       | - 
     - else
-      | #{order.date_receive.to_date}
+      | #{order.received_by.name} (#{order.date_receive.to_date})
   td
     - if order.date_paid_off.nil?
       | - 
     - else
-      | #{order.date_paid_off.to_date}
+      | LUNAS (#{order.date_paid_off.to_date})
   td
     - if order.total==0 
       = form_for :order, url: "", method: "DELETE" do |form|

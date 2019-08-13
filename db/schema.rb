@@ -210,28 +210,6 @@ ActiveRecord::Schema.define(version: 2019_07_31_021659) do
     t.index ["user_id"], name: "index_members_on_user_id"
   end
 
-  create_table "notifications", force: :cascade do |t|
-    t.string "target_type", null: false
-    t.bigint "target_id", null: false
-    t.string "notifiable_type", null: false
-    t.bigint "notifiable_id", null: false
-    t.string "key", null: false
-    t.string "group_type"
-    t.bigint "group_id"
-    t.integer "group_owner_id"
-    t.string "notifier_type"
-    t.bigint "notifier_id"
-    t.text "parameters"
-    t.datetime "opened_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["group_owner_id"], name: "index_notifications_on_group_owner_id"
-    t.index ["group_type", "group_id"], name: "index_notifications_on_group_type_and_group_id"
-    t.index ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable_type_and_notifiable_id"
-    t.index ["notifier_type", "notifier_id"], name: "index_notifications_on_notifier_type_and_notifier_id"
-    t.index ["target_type", "target_id"], name: "index_notifications_on_target_type_and_target_id"
-  end
-
   create_table "order_invs", force: :cascade do |t|
     t.string "invoice", null: false
     t.integer "nominal", null: false
@@ -264,8 +242,11 @@ ActiveRecord::Schema.define(version: 2019_07_31_021659) do
     t.boolean "editable", default: true, null: false
     t.integer "old_total", default: 0, null: false
     t.datetime "date_change"
+    t.bigint "user_id"
+    t.integer "received_by"
     t.index ["store_id"], name: "index_orders_on_store_id"
     t.index ["supplier_id"], name: "index_orders_on_supplier_id"
+    t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
   create_table "outcomes", force: :cascade do |t|
@@ -328,8 +309,12 @@ ActiveRecord::Schema.define(version: 2019_07_31_021659) do
     t.datetime "date_picked"
     t.datetime "date_approve"
     t.datetime "status"
+    t.bigint "user_id"
+    t.integer "picked_by"
+    t.integer "approved_by"
     t.index ["store_id"], name: "index_returs_on_store_id"
     t.index ["supplier_id"], name: "index_returs_on_supplier_id"
+    t.index ["user_id"], name: "index_returs_on_user_id"
   end
 
   create_table "stock_values", force: :cascade do |t|
@@ -360,24 +345,6 @@ ActiveRecord::Schema.define(version: 2019_07_31_021659) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "store_type", default: 0
-  end
-
-  create_table "subscriptions", force: :cascade do |t|
-    t.string "target_type", null: false
-    t.bigint "target_id", null: false
-    t.string "key", null: false
-    t.boolean "subscribing", default: true, null: false
-    t.boolean "subscribing_to_email", default: true, null: false
-    t.datetime "subscribed_at"
-    t.datetime "unsubscribed_at"
-    t.datetime "subscribed_to_email_at"
-    t.datetime "unsubscribed_to_email_at"
-    t.text "optional_targets"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["key"], name: "index_subscriptions_on_key"
-    t.index ["target_type", "target_id", "key"], name: "index_subscriptions_on_target_type_and_target_id_and_key", unique: true
-    t.index ["target_type", "target_id"], name: "index_subscriptions_on_target_type_and_target_id"
   end
 
   create_table "supplier_items", force: :cascade do |t|
@@ -449,8 +416,13 @@ ActiveRecord::Schema.define(version: 2019_07_31_021659) do
     t.bigint "from_store_id", null: false
     t.bigint "to_store_id", null: false
     t.string "description"
+    t.bigint "user_id"
+    t.integer "approved_by"
+    t.integer "picked_by"
+    t.integer "confirmed_by"
     t.index ["from_store_id"], name: "index_transfers_on_from_store_id"
     t.index ["to_store_id"], name: "index_transfers_on_to_store_id"
+    t.index ["user_id"], name: "index_transfers_on_user_id"
   end
 
   create_table "user_methods", force: :cascade do |t|
@@ -511,6 +483,7 @@ ActiveRecord::Schema.define(version: 2019_07_31_021659) do
   add_foreign_key "order_items", "orders"
   add_foreign_key "orders", "stores"
   add_foreign_key "orders", "suppliers"
+  add_foreign_key "orders", "users"
   add_foreign_key "outcomes", "stores"
   add_foreign_key "outcomes", "users"
   add_foreign_key "profit_losses", "stores"
@@ -521,6 +494,7 @@ ActiveRecord::Schema.define(version: 2019_07_31_021659) do
   add_foreign_key "retur_items", "returs"
   add_foreign_key "returs", "stores"
   add_foreign_key "returs", "suppliers"
+  add_foreign_key "returs", "users"
   add_foreign_key "stock_values", "stores"
   add_foreign_key "stock_values", "users"
   add_foreign_key "store_items", "items"
@@ -535,6 +509,7 @@ ActiveRecord::Schema.define(version: 2019_07_31_021659) do
   add_foreign_key "transfer_items", "transfers"
   add_foreign_key "transfers", "stores", column: "from_store_id"
   add_foreign_key "transfers", "stores", column: "to_store_id"
+  add_foreign_key "transfers", "users"
   add_foreign_key "user_methods", "controller_methods"
   add_foreign_key "users", "stores"
 end

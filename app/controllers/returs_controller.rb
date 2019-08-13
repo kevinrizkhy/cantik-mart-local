@@ -102,7 +102,8 @@ class RetursController < ApplicationController
       total_items: total_item,
       store_id: current_user.store.id,
       date_created: Time.now,
-      supplier_id: address_to
+      supplier_id: address_to,
+      user: current_user.id
 
     items.each do |retur_item|
       item = StoreItem.find_by(item_id:retur_item[0], store: current_user.store)
@@ -144,6 +145,7 @@ class RetursController < ApplicationController
       retur_item.save!
     end
     retur.date_approve = Time.now
+    retur.approved_by = current_user.id
     retur.save!
     return redirect_success retur_items_path(id: params[:id])
   end
@@ -154,6 +156,7 @@ class RetursController < ApplicationController
     return redirect_back_data_error returs_path, "Data Retur Tidak Ditemukan" if retur.nil?
     return redirect_back_data_error returs_path, "Data Retur Tidak Valid" unless retur.date_picked.present? || retur.date_approve.present?
     retur.date_picked = Time.now
+    retur.picked_by = current_user.id
     retur.save!
     decrease_stock params[:id]
     return redirect_success returs_path

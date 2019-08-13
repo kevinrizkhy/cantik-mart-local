@@ -84,7 +84,8 @@ class OrdersController < ApplicationController
       store_id: current_user.store.id,
       date_created: Time.now,
       supplier_id: address_to,
-      total: 0
+      total: 0,
+      user: current_user
 
     total = 0
     ordered_items.each do |item_arr|
@@ -200,6 +201,7 @@ class OrdersController < ApplicationController
     end
     order.total = new_total
     order.date_receive = DateTime.now
+    order.received_by = current_user.id
     order.save!
     
     if order.total == 0

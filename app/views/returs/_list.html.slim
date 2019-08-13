@@ -8,12 +8,12 @@ tr
     - if retur.date_approve.nil?
       | - 
     - else
-      | #{retur.date_approve.to_date}
+      | #{order.approved_by.name} (#{retur.date_approve.to_date})
   td
     - if retur.date_picked.nil?
       | - 
     - else
-      | #{retur.date_picked.to_date}
+      | #{order.picked_by.name} (#{retur.date_picked.to_date})
   td
     - if retur.status.nil?
       | -

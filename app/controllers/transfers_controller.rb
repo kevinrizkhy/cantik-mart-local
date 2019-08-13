@@ -50,7 +50,8 @@ class TransfersController < ApplicationController
       total_items: total_item,
       from_store_id: current_user.store.id,
       date_created: Time.now,
-      to_store_id: to_store
+      to_store_id: to_store,
+      user: current_user
 
     items.each do |item|
       check_item = Item.find item[0]
@@ -83,6 +84,7 @@ class TransfersController < ApplicationController
       transfer.status = "01-01-1999".to_date
     else
       transfer.date_approve = DateTime.now
+      transfer.approved_by = current_user.id
     end
     
     transfer.save!
@@ -106,6 +108,7 @@ class TransfersController < ApplicationController
     return redirect_back_data_error, "Data Transfer Tidak Valid" if transfer.date_picked.present? || transfer.status.present?
     status = sent_items params[:id] 
     transfer.date_picked = DateTime.now
+    transfer.picked_by = current_user.id
     if status==false
       transfer.status = "01-01-1999".to_date
       transfer.description = "Dibatalkan otomatis oleh sistem (tidak ada barang yang dikirim)" 
@@ -135,6 +138,7 @@ class TransfersController < ApplicationController
     return redirect_back_data_error, "Data Transfer Tidak Valid" if transfer.date_picked.nil? || transfer.date_approve.nil? || transfer.status.present?
     receive_items params[:id]
     transfer.status = DateTime.now
+    transfer_item.confirmed_by = current_user.id
     transfer.save!
     return redirect_success transfers_path
   end
