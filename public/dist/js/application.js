@@ -1,20 +1,9 @@
+setInterval(get_notification, 15000);
 
 
 function update_notification()
 {
-  last_check = document.getElementById("last_check").value;
-  $.ajax({ 
-    type: 'GET', 
-    url: '/api/get_notification?t='+last_check, 
-    success: function (data) { 
-      data_length = data.length;
-      if (data_length > 1) {
-        alert(JSON.stringify(data));
-      }else{
-        document.getElementById("last_check").value = data[0];
-      }
-    }
-  });
+  
 }
 
 function get_notification(){
@@ -23,10 +12,11 @@ function get_notification(){
     type: 'GET', 
     url: '/api/get_notification?t='+last_check, 
     success: function (data) { 
-      alert(data);
       data_length = data.length;
-      if (data_length > 0) {
-        alert(JSON.stringify(data));
+      if (data_length > 1) {
+        // alert(JSON.stringify(data));
+      }else{
+        document.getElementById("last_check").value = data[0];
       }
     }
   });
