@@ -215,6 +215,7 @@ ActiveRecord::Schema.define(version: 2019_08_13_163634) do
     t.integer "read", default: 0, null: false
     t.string "link", null: false
     t.string "message", null: false
+    t.integer "m_type", default: 1, null: false
     t.bigint "from_user_id", null: false
     t.bigint "to_user_id", null: false
     t.index ["from_user_id"], name: "index_notifications_on_from_user_id"

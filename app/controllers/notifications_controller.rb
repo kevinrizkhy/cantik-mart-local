@@ -3,7 +3,7 @@ class NotificationsController < ApplicationController
   before_action :require_fingerprint
 
   def index
-    @notifications = Notification.page param_page
+    @notifications = Notification.order("date_created DESC").page param_page
     @notifications = @notifications.where(to_user: current_user)
     if params[:search].present?
       @search = params[:search].downcase

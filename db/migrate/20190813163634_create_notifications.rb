@@ -5,6 +5,7 @@ class CreateNotifications < ActiveRecord::Migration[5.2]
         t.integer :read, default: 0, null: false
         t.string :link, null: false
       	t.string :message, null: false
+        t.integer :m_type, null: false, default: 1
 
   	    t.references :from_user, foreign_key: { to_table: :users}, null: false
   	    t.references :to_user, foreign_key: { to_table: :users }, null: false

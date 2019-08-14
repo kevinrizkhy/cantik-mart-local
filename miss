@@ -18,7 +18,7 @@ _____________________________________________________________
 - debt
 - consumer retur
 - post API using CSRF token
-- notification
+- notification API ==> GET NEWER NOTIFS & UPDATE READ OR NOT
 - add card into home 
 	* profit chart
 	* add graph current user online
@@ -71,6 +71,7 @@ _____________________________________________________________
 -K Add Description in Log Activity Edit => Whats changed ? (changes = item.changes)
 -K retur to warehouse
 -K All activities (acc, conf, etc) was recorded => current_user
+-K Notifications base load on layouts ==> split into render partial
 
 =K log all activity
 =K fixing "col" if page is resizing ==> table + search field
