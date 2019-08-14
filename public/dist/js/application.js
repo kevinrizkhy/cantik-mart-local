@@ -1,6 +1,35 @@
-function printpage()
+
+
+function update_notification()
 {
-   window.print()
+  last_check = document.getElementById("last_check").value;
+  $.ajax({ 
+    type: 'GET', 
+    url: '/api/get_notification?t='+last_check, 
+    success: function (data) { 
+      data_length = data.length;
+      if (data_length > 1) {
+        alert(JSON.stringify(data));
+      }else{
+        document.getElementById("last_check").value = data[0];
+      }
+    }
+  });
+}
+
+function get_notification(){
+  last_check = document.getElementById("last_check").value;
+  $.ajax({ 
+    type: 'GET', 
+    url: '/api/get_notification?t='+last_check, 
+    success: function (data) { 
+      alert(data);
+      data_length = data.length;
+      if (data_length > 0) {
+        alert(JSON.stringify(data));
+      }
+    }
+  });
 }
 
 function removeThisRow(params){
@@ -37,18 +66,18 @@ function addNewRowComplain(){
 	add_counter++;
 }
 
-var ctx = document.getElementById("debt-chart").getContext('2d');
+// var ctx = document.getElementById("debt-chart").getContext('2d');
 
-var debt = new Chart(ctx, {
-  type: 'line',
-  data: {
-    labels: gon.labels,
-    datasets: gon.datasets,
-  },
-  options: {
-    responsive: true
-  }
-});
+// var debt = new Chart(ctx, {
+//   type: 'line',
+//   data: {
+//     labels: gon.labels,
+//     datasets: gon.datasets,
+//   },
+//   options: {
+//     responsive: true
+//   }
+// });
 
     // SideNav Initialization
 $(".button-collapse").sideNav();
@@ -84,48 +113,48 @@ $(function () {
 });
 
     // Main chart
-var ctxL = document.getElementById("lineChart").getContext('2d');
-var myLineChart = new Chart(ctxL, {
-  type: 'line',
-  data: {
-    labels: ["January", "February", "March", "April", "May", "June", "July"],
-    datasets: [{
-      label: "My First dataset",
-      fillColor: "#fff",
-      backgroundColor: 'rgba(255, 255, 255, .3)',
-      borderColor: 'rgba(255, 255, 255)',
-      data: [0, 10, 5, 2, 20, 30, 45],
-    }]
-  },
-  options: {
-    legend: {
-      labels: {
-        fontColor: "#fff",
-      }
-    },
-    scales: {
-      xAxes: [{
-        gridLines: {
-          display: true,
-          color: "rgba(255,255,255,.25)"
-        },
-        ticks: {
-          fontColor: "#fff",
-        },
-      }],
-      yAxes: [{
-        display: true,
-        gridLines: {
-          display: true,
-          color: "rgba(255,255,255,.25)"
-        },
-        ticks: {
-          fontColor: "#fff",
-        },
-      }],
-    }
-  }
-});
+// var ctxL = document.getElementById("lineChart").getContext('2d');
+// var myLineChart = new Chart(ctxL, {
+//   type: 'line',
+//   data: {
+//     labels: ["January", "February", "March", "April", "May", "June", "July"],
+//     datasets: [{
+//       label: "My First dataset",
+//       fillColor: "#fff",
+//       backgroundColor: 'rgba(255, 255, 255, .3)',
+//       borderColor: 'rgba(255, 255, 255)',
+//       data: [0, 10, 5, 2, 20, 30, 45],
+//     }]
+//   },
+//   options: {
+//     legend: {
+//       labels: {
+//         fontColor: "#fff",
+//       }
+//     },
+//     scales: {
+//       xAxes: [{
+//         gridLines: {
+//           display: true,
+//           color: "rgba(255,255,255,.25)"
+//         },
+//         ticks: {
+//           fontColor: "#fff",
+//         },
+//       }],
+//       yAxes: [{
+//         display: true,
+//         gridLines: {
+//           display: true,
+//           color: "rgba(255,255,255,.25)"
+//         },
+//         ticks: {
+//           fontColor: "#fff",
+//         },
+//       }],
+//     }
+//   }
+// });
 
 var timeout = null;
 
