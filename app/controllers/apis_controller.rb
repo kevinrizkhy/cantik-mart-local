@@ -27,7 +27,7 @@ class ApisController < ApplicationController
     last_check = Time.zone.parse(last_check_string)
     notifications = Notification.where(to_user: current_user).where("date_created > ?", last_check).order("date_created DESC")
     notifications.each do|notification|
-      json_result << [notification.from_user, notification.date_created, notification.message, notification.read]
+      json_result << [notification.from_user.name, notification.date_created, notification.message, notification.m_type, notification.link, notification.read]
     end
     render :json => json_result
   end
@@ -53,7 +53,7 @@ class ApisController < ApplicationController
     return render :json => json_result unless search.present?
     search = search.gsub(/\s+/, "")
     items = Item.where('lower(name) like ?', "%"+search.downcase+"%").pluck(:id)
-    item_stores = StoreItem.where(store_id: current_user.store.id, item_id: items)
+    item_stores = StoreItem.where(store_id: current_user.store.id, item: items)
     return render :json => json_result unless item_stores.present?
     item_stores.each do |item_store|
       item = []

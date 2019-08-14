@@ -1,5 +1,6 @@
 - notifications = Notification.where(to_user: current_user).order("date_created DESC")
 - notifications.each do |notification|
+  - from = notification.from_user.name
   - type = notification.m_type
   - message = truncate(notification.message, length: 30)
   - t = Time.now - notification.date_created
@@ -21,8 +22,10 @@
     - time+= pluralize(ss.to_i,'sec')
 
   - if type == 'primary'
-    a.blockquote.bq-primary.dropdown-item href="#{notification.link}" 
+    a.bq-primary.dropdown-item href="#{notification.link}" 
       i.fas.fa-info-circle.mr-2 aria-hidden="true" 
+      span #{from}
+      br
       span #{message}
       br
       p.span.float-right
@@ -30,8 +33,10 @@
           | #{" "+time}
 
   - elsif type == 'warning'
-    a.blockquote.bq-warning.dropdown-item href="#{notification.link}" 
+    a.bq-warning.dropdown-item href="#{notification.link}" 
       i.fas.fa-info-circle.mr-2 aria-hidden="true" 
+      span #{from}
+      br
       span #{message}
       br
       p.span.float-right
@@ -39,8 +44,10 @@
           | #{" "+time}
 
   - elsif type == 'success'
-    a.blockquote.bq-success.dropdown-item href="#{notification.link}" 
+    a.bq-success.dropdown-item href="#{notification.link}" 
       i.fas.fa-info-circle.mr-2 aria-hidden="true" 
+      span #{from}
+      br
       span #{message}
       br
       p.span.float-right
@@ -48,8 +55,10 @@
           | #{" "+time}
 
   - elsif type == 'danger'
-    a.blockquote.bq-danger.dropdown-item href="#{notification.link}" 
+    a.bq-danger.dropdown-item href="#{notification.link}" 
       i.fas.fa-info-circle.mr-2 aria-hidden="true" 
+      span #{from}
+      br
       span #{message}
       br
       p.span.float-right
@@ -57,8 +66,10 @@
           | #{" "+time}
 
   - elsif type == 'info'
-    a.blockquote.bq-info.dropdown-item href="#{notification.link}" 
+    a.bq-info.dropdown-item href="#{notification.link}" 
       i.fas.fa-info-circle.mr-2 aria-hidden="true" 
+      span #{from}
+      br
       span #{message}
       br
       p.span.float-right

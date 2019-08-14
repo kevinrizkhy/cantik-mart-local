@@ -14,7 +14,7 @@ nav.navbar.fixed-top.navbar-expand-lg.scrolling-navbar.double-nav
           span.badge.red #{total_notifications}
           i.fas.fa-bell
           span.d-none.d-md-inline-block Notifications
-        .dropdown-menu.dropdown-primary aria-labelledby="navbarDropdownMenuLink"
+        .dropdown-menu.dropdown-primary aria-labelledby="navbarDropdownMenuLink" id="notification_list"
 
           input type="text" style="display: none;" value="#{DateTime.now}" id="last_check"
           = render "layouts/menu/notif"            
