@@ -18,7 +18,6 @@ _____________________________________________________________
 - debt
 - consumer retur
 - post API using CSRF token
-- notification API ==> List position (newer one was on bottom) & UPDATE READ OR NOT
 - add card into home 
 	* profit chart
 	* add graph current user online
@@ -74,6 +73,7 @@ _____________________________________________________________
 -K Notifications base load on layouts ==> split into render partial
 -K Notification API
 -K notification API ==> UPDATING LIST (RESULT FROM API)
+-K notification API ==> List position (newer one was on bottom) & UPDATE READ OR NOT
 
 =K log all activity
 =K fixing "col" if page is resizing ==> table + search field

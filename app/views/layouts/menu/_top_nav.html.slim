@@ -8,15 +8,18 @@ nav.navbar.fixed-top.navbar-expand-lg.scrolling-navbar.double-nav
     ul.nav.navbar-nav.nav-flex-icons.ml-auto
       li.nav-item.dropdown.notifications-nav
 
-        - total_notifications = Notification.order("date_created DESC").count
+        - total_notifications = Notification.where(to_user: current_user, read: 0).order("date_created DESC").count
       
         a#navbarDropdownMenuLink.nav-link.dropdown-toggle.waves-effect aria-expanded="false" aria-haspopup="true" data-toggle="dropdown" onclick="update_notification()"
-          span.badge.red #{total_notifications}
+          - if total_notifications > 0
+            span.badge.red id="notif_number_badge"
+              | #{total_notifications}
           i.fas.fa-bell
           span.d-none.d-md-inline-block Notifications
+          
+        input type="text" style="display: none;" value="#{DateTime.now}" id="last_check"
         .dropdown-menu.dropdown-primary aria-labelledby="navbarDropdownMenuLink" id="notification_list"
 
-          input type="text" style="display: none;" value="#{DateTime.now}" id="last_check"
           = render "layouts/menu/notif"            
 
       li.nav-item.dropdown

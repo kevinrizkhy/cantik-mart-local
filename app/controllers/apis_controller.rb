@@ -1,7 +1,6 @@
 class ApisController < ApplicationController
   before_action :require_login
 
-
   def index
     api_type = params[:api_type]
   	if api_type == "item"
@@ -21,11 +20,10 @@ class ApisController < ApplicationController
 
   def get_notification params
     json_result = []
-    last_check_string = params[:t]
-    return render :json => json_result unless last_check_string.present?
-    json_result << [DateTime.now]
-    last_check = Time.zone.parse(last_check_string)
-    notifications = Notification.where(to_user: current_user).where("date_created > ?", last_check).order("date_created DESC")
+    unread_notifications = Notification.where(to_user: current_user, read: 0).order("date_created DESC")
+    notifications = Notification.where(to_user: current_user, read: 0).order("date_created DESC").limit(5)
+
+    json_result << [DateTime.now, unread_notifications.count]
     notifications.each do|notification|
       json_result << [notification.from_user.name, notification.date_created, notification.message, notification.m_type, notification.link, notification.read]
     end
@@ -33,6 +31,15 @@ class ApisController < ApplicationController
   end
 
   def update_notification params
+    json_result = []
+    Notification.where(to_user: current_user, read: 0).order("date_created DESC").update_all(read: 1)
+    notifications = Notification.where(to_user: current_user).order("date_created DESC").limit(5)
+
+    json_result << [DateTime.now, 0]
+    notifications.each do|notification|
+      json_result << [notification.from_user.name, notification.date_created, notification.message, notification.m_type, notification.link, notification.read]
+    end
+    render :json => json_result
   end
 
   def get_member params
@@ -59,7 +66,7 @@ class ApisController < ApplicationController
       item = []
       item << item_store.item.code
       item << item_store.item.name
-      item << item_store.item_cat.name
+      item << item_store.item.item_cat.name
       item << item_store.item.sell
       json_result << item
     end
@@ -76,7 +83,7 @@ class ApisController < ApplicationController
     item = []
     item << find_item.code
     item << find_item.name
-    item << find_item.item_cat.name
+    item << find_item.item.item_cat.name
     item << find_item.sell
     item << find_item.id
     json_result << item

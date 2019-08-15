@@ -1,76 +1,99 @@
-// setInterval(get_notification, 5000);
+// setInterval(get_notification, 10000);
 
 
 function update_notification()
 {
-  last_check = document.getElementById("last_check").value;
   $.ajax({ 
     type: 'GET', 
-    url: '/api/get_notification?t='+last_check, 
-    success: function (result) { 
-      data_length = result.length;
-      document.getElementById("last_check").value = result[0];
-      if (data_length > 1) {
-        for(i = 1; i < data_length; i++){
-          data = result[i];
-          from = data[0];
-          date = data[1];
-          message = data[2];
-          m_type = data[3];
-          url = data[4];
-          read = data[5];
-
-          time = ""
-          curr_date = new Date();
-          notif_date = new Date(date);
-          diff_date = (curr_date-notif_date)
-
-          diffMs = (curr_date-notif_date);
-          diffDays = Math.floor(diffMs / 86400000); // days
-          diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
-          diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
-          diffSecs = Math.round(((diffMs % 86400000) % 3600000) / 60000 / 60000); // seconds
-
-          if(diffDays > 0){
-            if (diffDays > 1){
-              time+= diffDays+" day"
-            }else{
-              time+= diffDays+" days"
-            }
-          }else if(diffHrs > 0){
-            if (diffHrs > 1){
-              time+= diffHrs+" hour"
-            }else{
-              time+= diffHrs+" hours"
-            }
-          }else if(diffMins > 0){
-            if (diffMins > 1){
-              time+= diffMins+" minute"
-            }else{
-              time+= diffMins+" minutes"
-            }
-          }else{
-            time+= "just now"
-          }
-
-          // alert(diffDays + " days, " + diffHrs + " hours, " + diffMins + " minutes, " + diffSecs + " seconds");
-
-          element = "<a class='bq-"+m_type+" dropdown-item waves-effect waves-light' href='"+url+"'>"
-          element+=   "<i class='fas fa-info-circle mr-2' aria-hidden='true'></i>"
-          element+=     "<span>"+from+"</span>"
-          element+=     "<br><span>"+message+"</span><br>"
-          element+=     "<p class='span float-right'>"
-          element+=       "<small>"+time+"</small>"
-          element+=     "</p></a>"
-          $("#notification_list").append(element);
-        }
-      }
+    url: '/api/update_notification', 
+    success: function (result) {
+      refresh_notification_list(result);
     }
   });
 }
 
 function get_notification(){
-  
+  $.ajax({ 
+    type: 'GET', 
+    url: '/api/get_notification', 
+    success: function (result) { 
+      refresh_notification_list(result);
+    }
+  });
+}
+
+function refresh_notification_list(result){
+  data_length = result.length;
+    types = ["primary", "warning", "danger", "success", "info"];
+    icons = ["star", "exclamation-triangle", "times", "success", "info"];
+    number_new_notif = result[0][1];
+    if (number_new_notif > 0){
+      document.getElementById("notif_number_badge").innerHTML = number_new_notif;
+      document.getElementById("notif_number_badge").style.display = "inline";
+    }else{
+      document.getElementById("notif_number_badge").style.display = "none";
+    }
+    if (data_length > 1) {
+      document.getElementById("notification_list").innerHTML = "";
+      for(i = 1; i < data_length; i++){
+        data = result[i];
+        from = data[0];
+        date = data[1];
+        message = data[2];
+        m_type = data[3];
+        url = data[4];
+        read = data[5];
+        icon = icons[types.indexOf(m_type)];
+
+        time = ""
+        curr_date = new Date();
+        notif_date = new Date(date);
+        diff_date = (curr_date-notif_date)
+        diffMs = (curr_date-notif_date);
+        diffDays = Math.floor(diffMs / 86400000); // days
+        diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
+        diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
+        diffSecs = Math.round(((diffMs % 86400000) % 3600000) / 60000 / 60000); // seconds
+
+        if(diffDays > 0){
+          if (diffDays > 1){
+            time+= diffDays+" day"
+          }else{
+            time+= diffDays+" days"
+          }
+        }else if(diffHrs > 0){
+          if (diffHrs > 1){
+            time+= diffHrs+" hour"
+          }else{
+            time+= diffHrs+" hours"
+          }
+        }else if(diffMins > 0){
+          if (diffMins > 1){
+            time+= diffMins+" minute"
+          }else{
+            time+= diffMins+" minutes"
+          }
+        }else{
+          time+= "just now"
+        }
+
+        // alert(diffDays + " days, " + diffHrs + " hours, " + diffMins + " minutes, " + diffSecs + " seconds");
+
+        element = "<a class='bq-"+m_type+" dropdown-item waves-effect waves-light' href='"+url+"'>"
+        element+=   "<i class='fas fa-"+icon+" mr-2' aria-hidden='true'></i>"
+        element+=     "<span>"+from+"</span>"
+        element+=     "<br><span>"+message+"</span><br>"
+        element+=     "<p class='span float-right'>"
+        element+=       "<small>"+time+"</small>"
+        element+=     "</p></a>"
+        $("#notification_list").append(element);
+      }
+      element = "<a class='dropdown-item' href='/notifications'>"
+      element+=  "<p class='span text-center'>"
+      element+=    "Semua Notifikasi"
+      element+=  "</p></a>"
+      $("#notification_list").append(element);
+    }
 }
 
 function removeThisRow(params){

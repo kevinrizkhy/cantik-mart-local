@@ -12,7 +12,7 @@
 
 section.mb-5
   .card.card-cascade.narrower
-    section
+    .section
       .row
         .col-xl-5.col-lg-12.mr-0.pb-2
           .view.view-cascade.gradient-card-header.light-blue.lighten-1
@@ -40,8 +40,9 @@ section.mb-5
                   label for="date-picker-example"  To
               .col-md-6.text-center.pl-xl-2.my-md-0.my-3
                 p
-                  | Total sales:
-                  strong 2000$
+                  | Total Penjualan Bulan ini:
+                  - sum_grand_total = Transaction.sum(:grand_total)
+                  strong  #{number_to_currency(sum_grand_total, unit: "Rp. ")}
                   button.btn.btn-info.btn-sm.p-2 data-placement="top" data-toggle="tooltip" title=("Total sales in the given period") type="button" 
                     i.fas.fa-question
                 p
