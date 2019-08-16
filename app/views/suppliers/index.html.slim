@@ -18,9 +18,9 @@ br
       .card-body
         = form_for :supplier, url: suppliers_path, method: 'GET' do |form|
           .row.align-middle
-            .col-md-10
+            .col-md-12
               input type="text" class="form-control md-form" id="search" name="search"
-            .col-md-2.text-center
+            .col-md-12.text-center
               button class="btn btn-rounded btn-primary"
                 | Cari
 
@@ -30,8 +30,7 @@ br
         h5.font-weight-500.my-1
           | Data Supplier
     .card.mb-4 
-      
-      .card-body
+      .card-body.table-responsive.text-nowrap
         table class="table"
           thead
             th Nama

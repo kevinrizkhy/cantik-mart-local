@@ -9,10 +9,10 @@ tr
       | - 
     - elsif transfer.date_approve.to_date == "01-01-1999".to_date
       .text-danger
-        | #{order.approved_by.name} (#{transfer.date_approve.to_date})
+        | #{transfer.approved_by.name} (#{transfer.date_approve.to_date})
     - else
       .text-success
-        | #{order.approved_by.name} (#{transfer.date_approve.to_date})
+        | #{transfer.approved_by.name} (#{transfer.date_approve.to_date})
   td
     - if transfer.date_picked.nil?
       | - 
@@ -24,11 +24,11 @@ tr
         - if transfer.status.present?
           - if transfer.status.to_date == "01-01-1999".to_date
             .text-danger
-              | #{order.picked_by.name} (#{transfer.date_picked.to_date})
+              | #{transfer.picked_by.name} (#{transfer.date_picked.to_date})
           - else
-            | #{order.picked_by.name} (#{transfer.date_picked.to_date})
+            | #{transfer.picked_by.name} (#{transfer.date_picked.to_date})
         - else
-          | #{order.picked_by.name} (#{transfer.date_picked.to_date})
+          | #{transfer.picked_by.name} (#{transfer.date_picked.to_date})
   td
     - if transfer.status.nil?
       | -
@@ -36,7 +36,7 @@ tr
       .text-danger
         | x
     - else
-      | #{order.confirmed_by.name} (#{transfer.status.to_date})
+      | #{transfer.confirmed_by.name} (#{transfer.status.to_date})
   td #{transfer.description}
   td
     a href='#{transfer_items_path(id: transfer.id)}'

@@ -1,5 +1,5 @@
 .row
-  .col
+  .col.text-left
     h5
       | Biaya Pasti #{@search}
   .col.text-right
@@ -7,45 +7,57 @@
       button.btn.btn-rounded.btn-primary type="button" 
         i.fas.fa-plus 
         |   Tambah 
-= form_for :finances, url: taxs_path, method: 'GET' do |form|
-  .row
-    .col
-      | 
-    .col
-      select[class="form-control md-form" id="months" name="months"]
-        option[value=3]
-          | 3 bulan
-        option[value=6]
-          | 6 bulan
-        option[value=9]
-          | 9 bulan
-        option[value=12]
-          | 1 tahun
-    .col
-      select[class="form-control md-form" id="order_by" name="order_by"]
-        option[value="asc"]
-          | secara A - Z
-        option[value="desc"]
-          | secara Z - A
-    .col
-      | 
-  .row
-    .col.text-center
-      button class="btn btn-rounded btn-primary"
-        | Cari
-    br
-  hr
-.row
-  .col
-    = paginate @finances
-    table class="table"
-      thead
-        th Dibuat Oleh
-        th Tipe
-        th Nominal
-        th Tanggal
-        th Keterangan
-      tbody
-        = render partial: 'list', collection: @finances, as: :finance
-  .col
-    canvas#debt-chart 
+br
+.container-fluid
+  .col-lg-12.col-md-12
+    .card-header.white-text.info-color
+      h5.font-weight-500.my-1
+        - if @search_text.present?
+          | #{@search_text}
+        - else
+          | Pencarian
+    .card.mb-4
+      .card-body
+        = form_for :finances, url: taxs_path, method: 'GET' do |form|
+          .row
+            .col
+              | 
+            .col
+              select[class="form-control md-form" id="months" name="months"]
+                option[value=3]
+                  | 3 bulan
+                option[value=6]
+                  | 6 bulan
+                option[value=9]
+                  | 9 bulan
+                option[value=12]
+                  | 1 tahun
+            .col
+              select[class="form-control md-form" id="order_by" name="order_by"]
+                option[value="asc"]
+                  | secara A - Z
+                option[value="desc"]
+                  | secara Z - A
+            .col-12.text-center
+              button class="btn btn-rounded btn-primary"
+                | Cari
+            br
+.container-fluid
+  .col-lg-12.col-md-12
+    .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Data
+    .card.mb-4
+      .card-body.table-responsive.text-nowrap
+        = paginate @finances
+        table class="table"
+          thead
+            th Dibuat Oleh
+            th Tipe
+            th Nominal
+            th Tanggal
+            th Keterangan
+          tbody
+            = render partial: 'list', collection: @finances, as: :finance
+
+  

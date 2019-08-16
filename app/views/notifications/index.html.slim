@@ -3,17 +3,6 @@
     h5
       | Notifikasi - #{current_user.name}
 br
-.container-fluid
-  .col-lg-12.col-md-12
-    .card-header.white-text.info-color
-      h5.font-weight-500.my-1
-        - if @search_text.present?
-          | #{@search_text}
-        - else
-          | Pencarian
-    .card.mb-4
-      .card-body
-        
                 
 .container-fluid
   .col-lg-12.col-md-12
@@ -21,7 +10,7 @@ br
         h5.font-weight-500.my-1
           | Data
     .card.mb-4
-      .card-body
+      .card-body.table-responsive.text-nowrap
         table class="table"
           thead
             th Dari

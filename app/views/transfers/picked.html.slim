@@ -4,7 +4,7 @@
       h5.font-weight-500.my-1
        | Konfirmasi Transfer
     .card.mb-4
-      .card-body
+      .card-body.table-responsive.text-nowrap
         = form_for :transfer, url: transfer_sent_path, method: "POST" do |form|
           .row
             .col-12

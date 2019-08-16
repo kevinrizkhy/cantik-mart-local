@@ -12,9 +12,9 @@ br
       .card-body
         = form_for :inventory, url: item_suppliers_path, method: 'GET' do |form|
           .row
-            .col-10
+            .col-12
               input type="text" class="form-control md-form" id="search" name="search"
-            .col
+            .col-12.text-center
               button class="btn btn-rounded btn-primary"
                 | Cari
 .container-fluid
@@ -23,7 +23,7 @@ br
       .card-header.white-text.info-color
         h5.font-weight-500.my-1
           | Data
-      .card-body
+      .card-body.table-responsive.text-nowrap
         table class="table"
           thead
             th Nama

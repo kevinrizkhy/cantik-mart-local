@@ -157,9 +157,7 @@ var ps = new PerfectScrollbar(container, {
 $('.datepicker').pickadate();
 
 // Material Select Initialization
-$(document).ready(function () {
-  $('.mdb-select').material_select();
-});
+
 
 // Tooltips Initialization
 $(function () {
@@ -371,4 +369,42 @@ $(function () {
 
 
 
-var add_counter = gon.inv_count;
+// var ctxP = document.getElementById("higher_sales").getContext('2d');
+// var myPieChart = new Chart(ctxP, {
+//   type: 'doughnut',
+//   data: {
+//     labels: gon.higher_item_cats_label,
+//     datasets: [{
+//       data: gon.higher_item_cats_data,
+//       backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
+//       hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
+//     }]
+//   },
+//   options: {
+//     responsive: true
+//   }
+// });
+
+// var ctxP = document.getElementById("lower_sales").getContext('2d');
+// var myPieChart = new Chart(ctxP, {
+//   type: 'doughnut',
+//   data: {
+//     labels: gon.lower_item_cats_label,
+//     datasets: [{
+//       data: gon.lower_item_cats_data,
+//       backgroundColor: ["rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)",
+//         "rgba(255, 205, 86, 0.2)", "rgba(75, 192, 192, 0.2)", "rgba(54, 162, 235, 0.2)",
+//         "rgba(153, 102, 255, 0.2)", "rgba(201, 203, 207, 0.2)"
+//       ],
+//       hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
+//     }]
+//   },
+//   options: {
+//     responsive: true
+//   }
+// });
+
+
+
+var add_counter = 0
+// var add_counter = gon.inv_count;

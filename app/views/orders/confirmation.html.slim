@@ -27,7 +27,7 @@ container-fluid
       .card-header.white-text.info-color
         h5.font-weight-500.my-1
           | Data Barang
-      .card-body
+      .card-body.table-responsive.text-nowrap
         = form_for :order, url: order_receive_path, method: "POST" do |form|
           table class="table"
             thead

@@ -83,7 +83,7 @@ class ApisController < ApplicationController
     item = []
     item << find_item.code
     item << find_item.name
-    item << find_item.item.item_cat.name
+    item << find_item.item_cat.name
     item << find_item.sell
     item << find_item.id
     json_result << item

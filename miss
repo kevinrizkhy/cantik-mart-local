@@ -7,8 +7,6 @@ _____________________________________________________________
 TO DO: 
 _____________________________________________________________
 
-/ search how to use 'https://chartkick.com/' --> graph 
-
 
 = check and testing in all method
 = check selecting data is on this current user or all 
@@ -57,6 +55,7 @@ _____________________________________________________________
 +IK check before delete, that object is used by another model or not
 +K Restruct item_cat and department
 
+
 -K Update & Delete in Grocer
 -K Change Supplier.pic into Supplier.name (--> cant trackable on Activiities)
 -K Price based on QTY (Grocier - item)
@@ -74,8 +73,11 @@ _____________________________________________________________
 -K Notification API
 -K notification API ==> UPDATING LIST (RESULT FROM API)
 -K notification API ==> List position (newer one was on bottom) & UPDATE READ OR NOT
+-K order -> L.257 ==> css select
 
+
+= fixing "col" if page is resizing ==> table
 =K log all activity
-=K fixing "col" if page is resizing ==> table + search field
+=K fixing "col" if page is resizing ==> search field
 =K checking if all deleting is ok
 =K activity if object doesnt have name field

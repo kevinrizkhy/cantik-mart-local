@@ -49,4 +49,5 @@ class User < ApplicationRecord
   has_many :methods
   has_many :members
   has_many :notifications
+  has_many :transfers
 end

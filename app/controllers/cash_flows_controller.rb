@@ -7,19 +7,19 @@ class CashFlowsController < ApplicationController
   	numbers = 3
   	end_date = DateTime.now.to_date+1.day
   	start_date = DateTime.now.to_date - 2.weeks
-    check_prev
+    # check_prev
   	@finances = CashFlow.where("date_created > ? AND date_created < ?", start_date, end_date)
-  	labels = generate_label label_type, numbers, start_date, end_date
-    gon.labels = labels
-    datasets = []
-    datasets << debt_chart(labels, @finances,label_type)
-    datasets << cash_chart(labels, @finances,label_type)
-    datasets << receivable_chart(labels, @finances,label_type)
-    datasets << tax_chart(labels, @finances,label_type)
-    datasets << operational_chart(labels, @finances,label_type)
-    # datasets << stock_value_chart(labels, @finances,label_type)
-    datasets << fix_cost_chart(labels, @finances,label_type)
-    gon.datasets = datasets
+  	# labels = generate_label label_type, numbers, start_date, end_date
+   #  gon.labels = labels
+   #  datasets = []
+   #  datasets << debt_chart(labels, @finances,label_type)
+   #  datasets << cash_chart(labels, @finances,label_type)
+   #  datasets << receivable_chart(labels, @finances,label_type)
+   #  datasets << tax_chart(labels, @finances,label_type)
+   #  datasets << operational_chart(labels, @finances,label_type)
+   #  # datasets << stock_value_chart(labels, @finances,label_type)
+   #  datasets << fix_cost_chart(labels, @finances,label_type)
+   #  gon.datasets = datasets
     @finances = @finances.order("date_created DESC")
     @finances = @finances.page param_page
   end

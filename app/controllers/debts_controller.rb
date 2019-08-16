@@ -9,13 +9,13 @@ class DebtsController < ApplicationController
   	start_date = DateTime.now.to_date - 2.weeks
   	finances = Debt.all
 
-  	labels = generate_label label_type, numbers, start_date, end_date
-    gon.labels = labels
+  	# labels = generate_label label_type, numbers, start_date, end_date
+   #  gon.labels = labels
 
-    datasets = []
-    datasets << debt_chart(labels, finances,label_type)
-    gon.datasets = datasets
-    @finances = finances.page param_page
+   #  datasets = []
+   #  datasets << debt_chart(labels, finances,label_type)
+   #  gon.datasets = datasets
+    @finances = finances.order("date_created DESC").page param_page
   end
 
   def generate_label label_type, numbers, start_date, end_date

@@ -17,9 +17,9 @@ br
       .card-body
         = form_for :store, url: stores_path, method: 'GET' do |form|
           .row
-            .col-10
+            .col-12
               input type="text" class="form-control md-form" id="search" name="search"
-            .col  
+            .col-12.text-center
               button class="btn btn-rounded btn-primary"
                 | Cari
 .container-fluid
@@ -28,7 +28,7 @@ br
         h5.font-weight-500.my-1
           | Data
     .card.mb-4 
-      .card-body
+      .card-body.table-responsive.text-nowrap
         table class="table"
           thead
             th Name

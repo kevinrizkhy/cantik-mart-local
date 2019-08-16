@@ -8,13 +8,13 @@ class StockValuesController < ApplicationController
     end_date = DateTime.now.to_date
     start_date = DateTime.now.to_date - 3.months
     finances = StockValue.all
-    check_prev_stock_value
-    labels = generate_label label_type, numbers, start_date, end_date
-    gon.labels = labels
+    # check_prev_stock_value
+    # labels = generate_label label_type, numbers, start_date, end_date
+    # gon.labels = labels
 
-    datasets = []
-    datasets << stock_chart(labels, finances,label_type)
-    gon.datasets = datasets
+    # datasets = []
+    # datasets << stock_chart(labels, finances,label_type)
+    # gon.datasets = datasets
     @finances = finances.page param_page
   end
 
