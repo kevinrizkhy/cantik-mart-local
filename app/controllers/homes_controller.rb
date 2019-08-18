@@ -21,7 +21,8 @@ class HomesController < ApplicationController
     @higher_item = higher_item
     @lower_item = lower_item
 
-    
+    @debt = Debt.where("deficiency > ?",0)
+    @receivable = Receivable.where("deficiency > ?",0)
   end
 
   private

@@ -201,7 +201,7 @@ class OrdersController < ApplicationController
     end
     order.total = new_total
     order.date_receive = DateTime.now
-    order.received_by = current_user.id
+    order.received_by = current_user
     order.save!
     
     if order.total == 0
@@ -214,6 +214,7 @@ class OrdersController < ApplicationController
     Debt.create user: current_user, store: current_user.store, nominal: new_total, 
                 deficiency: new_total, date_created: DateTime.now, ref_id: order.id,
                 description: order.invoice, finance_type: Debt::ORDER
+    
     description = order.invoice + " (" + new_total.to_s + ")"
     urls = order_items_path(id: params[:id])
     return redirect_success urls, "Order " + order.invoice + " Telah Diterima"

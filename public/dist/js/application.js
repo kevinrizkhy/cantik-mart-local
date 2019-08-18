@@ -130,19 +130,6 @@ function addNewRowComplain(){
 	add_counter++;
 }
 
-// var ctx = document.getElementById("debt-chart").getContext('2d');
-
-// var debt = new Chart(ctx, {
-//   type: 'line',
-//   data: {
-//     labels: gon.labels,
-//     datasets: gon.datasets,
-//   },
-//   options: {
-//     responsive: true
-//   }
-// });
-
     // SideNav Initialization
 $(".button-collapse").sideNav();
 
@@ -155,8 +142,6 @@ var ps = new PerfectScrollbar(container, {
 
 // Data Picker Initialization
 $('.datepicker').pickadate();
-
-// Material Select Initialization
 
 
 // Tooltips Initialization
@@ -174,49 +159,6 @@ $(function () {
   });
 });
 
-    // Main chart
-// var ctxL = document.getElementById("lineChart").getContext('2d');
-// var myLineChart = new Chart(ctxL, {
-//   type: 'line',
-//   data: {
-//     labels: ["January", "February", "March", "April", "May", "June", "July"],
-//     datasets: [{
-//       label: "My First dataset",
-//       fillColor: "#fff",
-//       backgroundColor: 'rgba(255, 255, 255, .3)',
-//       borderColor: 'rgba(255, 255, 255)',
-//       data: [0, 10, 5, 2, 20, 30, 45],
-//     }]
-//   },
-//   options: {
-//     legend: {
-//       labels: {
-//         fontColor: "#fff",
-//       }
-//     },
-//     scales: {
-//       xAxes: [{
-//         gridLines: {
-//           display: true,
-//           color: "rgba(255,255,255,.25)"
-//         },
-//         ticks: {
-//           fontColor: "#fff",
-//         },
-//       }],
-//       yAxes: [{
-//         display: true,
-//         gridLines: {
-//           display: true,
-//           color: "rgba(255,255,255,.25)"
-//         },
-//         ticks: {
-//           fontColor: "#fff",
-//         },
-//       }],
-//     }
-//   }
-// });
 
 var timeout = null;
 
@@ -368,43 +310,42 @@ $(function () {
 });
 
 
-
-// var ctxP = document.getElementById("higher_sales").getContext('2d');
-// var myPieChart = new Chart(ctxP, {
-//   type: 'doughnut',
-//   data: {
-//     labels: gon.higher_item_cats_label,
-//     datasets: [{
-//       data: gon.higher_item_cats_data,
-//       backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
-//       hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
-//     }]
-//   },
-//   options: {
-//     responsive: true
-//   }
-// });
-
-// var ctxP = document.getElementById("lower_sales").getContext('2d');
-// var myPieChart = new Chart(ctxP, {
-//   type: 'doughnut',
-//   data: {
-//     labels: gon.lower_item_cats_label,
-//     datasets: [{
-//       data: gon.lower_item_cats_data,
-//       backgroundColor: ["rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)",
-//         "rgba(255, 205, 86, 0.2)", "rgba(75, 192, 192, 0.2)", "rgba(54, 162, 235, 0.2)",
-//         "rgba(153, 102, 255, 0.2)", "rgba(201, 203, 207, 0.2)"
-//       ],
-//       hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
-//     }]
-//   },
-//   options: {
-//     responsive: true
-//   }
-// });
-
-
-
-var add_counter = 0
 // var add_counter = gon.inv_count;
+var add_counter = 0
+
+var ctxP = document.getElementById("higher_sales").getContext('2d');
+var myPieChart = new Chart(ctxP, {
+  type: 'doughnut',
+  data: {
+    labels: gon.higher_item_cats_label,
+    datasets: [{
+      data: gon.higher_item_cats_data,
+      backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
+      hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
+    }]
+  },
+  options: {
+    responsive: true
+  }
+});
+
+var ctxP = document.getElementById("lower_sales").getContext('2d');
+var myPieChart = new Chart(ctxP, {
+  type: 'doughnut',
+  data: {
+    labels: gon.lower_item_cats_label,
+    datasets: [{
+      data: gon.lower_item_cats_data,
+      backgroundColor: ["rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)",
+        "rgba(255, 205, 86, 0.2)", "rgba(75, 192, 192, 0.2)", "rgba(54, 162, 235, 0.2)",
+        "rgba(153, 102, 255, 0.2)", "rgba(201, 203, 207, 0.2)"
+      ],
+      hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
+    }]
+  },
+  options: {
+    responsive: true
+  }
+});
+
+

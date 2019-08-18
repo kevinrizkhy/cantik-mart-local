@@ -63,9 +63,31 @@
                     i.fas.fa-question
                 
 
-              .col-md-6.text-center-pl-xl-2.my-md-0.my-3
+              .col-md-12
                 p.lead.pt-3.pb-4
                   span.badge.info-color.p-2 Keuangan
+
+              .col-md-6
+                p.lead.pt-3.pb-4
+                  | HUTANG
+                  br
+                  span.badge.danger-color.p-2.strong  #{number_to_currency(@debt.sum(:deficiency), unit: "Rp. ")}
+
+                  button.btn.btn-danger.btn-sm.p-2.mr-0 data-placement="top" data-toggle="tooltip" title=("#{@debt.count} belum lunas.") type="button" 
+                    i.fas.fa-minus &nbsp
+                    i.fas.fa-donate
+
+              .col-md-6
+                p.lead.pt-3.pb-4
+                  | PIUTANG
+                  br
+                  span.badge.warning-color.p-2.strong  #{number_to_currency(@receivable.sum(:deficiency), unit: "Rp. ")}
+
+                  button.btn.btn-warning.btn-sm.p-2.mr-0 data-placement="top" data-toggle="tooltip" title=("#{@receivable.count} belum lunas.") type="button" 
+                    i.fas.fa-plus &nbsp
+                    i.fas.fa-donate
+
+
 
                 
                 
