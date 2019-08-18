@@ -1,7 +1,7 @@
 .row
   .col
     h5
-      | Pajak #{@search}
+      | Pajak
   .col.text-right
     a href="#{new_cash_flow_path}"
       button.btn.btn-rounded.btn-primary type="button" 
@@ -12,18 +12,13 @@
   .col-lg-12.col-md-12
     .card-header.white-text.info-color
       h5.font-weight-500.my-1
-        - if @search_text.present?
-          | #{@search_text}
-        - else
-          | Pencarian
+        | Pencarian
     .card.mb-4
       .card-body
         = form_for :finances, url: taxs_path, method: 'GET' do |form|
           .row
             .col
-              | 
-            .col
-              select[class="form-control md-form" id="months" name="months"]
+              select class="mdb-select md-form" id="months" name="months"
                 option[value=3]
                   | 3 bulan
                 option[value=6]
@@ -33,19 +28,19 @@
                 option[value=12]
                   | 1 tahun
             .col
-              select[class="form-control md-form" id="order_by" name="order_by"]
+              select class="mdb-select md-form" id="order_by" name="order_by"
                 option[value="asc"]
                   | secara A - Z
                 option[value="desc"]
                   | secara Z - A
-            .col
-              | 
-          
             .col-12.text-center
               button class="btn btn-rounded btn-primary"
                 | Cari
-            br
-
+        - if @search.present?
+          .col-md-12.text-center.grey-text
+            b
+              | #{@search}
+          
 .container-fluid
   .col-lg-12.col-md-12
     .card-header.white-text.info-color
@@ -57,9 +52,7 @@
         table class="table"
           thead
             th Dibuat Oleh
-            th Tipe
             th Nominal
-            th Kekurangan
             th Tanggal
             th Keterangan
           tbody

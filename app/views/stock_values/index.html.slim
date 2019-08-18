@@ -1,7 +1,7 @@
 .row
   .col
     h5
-      | Pajak #{@search}
+      | Nilai Stok
   .col.text-right
     a href="#{new_cash_flow_path}"
       button.btn.btn-rounded.btn-primary type="button" 
@@ -21,9 +21,7 @@
         = form_for :finances, url: taxs_path, method: 'GET' do |form|
           .row
             .col
-              | 
-            .col
-              select[class="form-control md-form" id="months" name="months"]
+              select class="mdb-select md-form" id="months" name="months"
                 option[value=3]
                   | 3 bulan
                 option[value=6]
@@ -33,19 +31,21 @@
                 option[value=12]
                   | 1 tahun
             .col
-              select[class="form-control md-form" id="order_by" name="order_by"]
+              select class="mdb-select md-form" id="order_by" name="order_by"
                 option[value="asc"]
                   | secara A - Z
                 option[value="desc"]
                   | secara Z - A
-            .col
-              | 
           .row
             .col.text-center
               button class="btn btn-rounded btn-primary"
                 | Cari
-            br
+        - if @search.present?
+          .col-md-12.text-center.grey-text
+            b
+              | #{@search}
 
+              
 .container-fluid
   .col-lg-12.col-md-12
     .card-header.white-text.info-color
@@ -57,9 +57,9 @@
         table class="table"
           thead
             th Toko
-            th Tanggal
+            th Bulan
             th Nominal
-            th Keterangan
+            / th Keterangan
           tbody
             = render partial: 'list', collection: @finances, as: :finance
 

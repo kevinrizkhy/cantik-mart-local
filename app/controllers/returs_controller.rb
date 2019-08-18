@@ -104,7 +104,8 @@ class RetursController < ApplicationController
       date_created: Time.now,
       supplier_id: address_to,
       user: current_user.id
-
+    
+    retur.create_activity :create, owner: current_user
     items.each do |retur_item|
       item = StoreItem.find_by(item_id:retur_item[0], store: current_user.store)
       if item.nil? 

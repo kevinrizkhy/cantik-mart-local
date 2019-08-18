@@ -3,11 +3,7 @@ class CashFlowsController < ApplicationController
   before_action :require_fingerprint
 
   def index
-  	label_type = "day"
-  	numbers = 3
-  	end_date = DateTime.now.to_date+1.day
-  	start_date = DateTime.now.to_date - 2.weeks
-    filter = filter_search
+  	filter = filter_search
     @search = filter[0]
   	@finances = filter[1]
   end
@@ -49,48 +45,58 @@ class CashFlowsController < ApplicationController
   end
 
   def new
+    @users = User.all
   end
 
   def create
     finance_type = params[:finance][:finance_type]
-    nominal = params[:finance][:nominal].to_f
+    nominal = params[:finance][:nominal].to_f.abs
     description = params[:finance][:description]
     date_created = DateTime.now
     user = current_user
     store = current_user.store
     finance_types = []
+    to_user = params[:finance][:to_user]
     inv_number = Time.now.to_i.to_s
     if finance_type == "Loan" 
       invoice = " EL-"+inv_number
       # to_user==> di view blm ada, diisi employee
-      Receivable.create user: user, store: store, nominal: nominal, date_created: date_created, description: description, 
-                    finance_type: Receivable::EMPLOYEE, deficiency:nominal, to_user: 1
-      CashFlow.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description, 
+      receivable = Receivable.create user: user, store: store, nominal: nominal, date_created: date_created, description: description, 
+                    finance_type: Receivable::EMPLOYEE, deficiency:nominal, to_user: to_user
+      cash_flow = CashFlow.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description, 
                       finance_type: CashFlow::EMPLOYEE_LOAN, invoice: invoice
+      cash_flow.create_activity :create, owner: current_user
+      receivable.create_activity :create, owner: current_user         
     elsif finance_type == "BankLoan"
       invoice = " BL-"+inv_number
-      Debt.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description,
+      debt = Debt.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description,
                     finance_type: Debt::BANK, deficiency:nominal
-      CashFlow.create user: user, store: store, nominal: nominal, date_created: date_created, description: description, 
+      cash_flow = CashFlow.create user: user, store: store, nominal: nominal, date_created: date_created, description: description, 
                       finance_type: CashFlow::BANK_LOAN, invoice: invoice
+      cash_flow.create_activity :create, owner: current_user       
+      debt.create_activity :create, owner: current_user           
     elsif finance_type == "Outcome"
       invoice = " OUT-"+inv_number
-      CashFlow.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description, 
+      cash_flow = CashFlow.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description, 
                       finance_type: CashFlow::OUTCOME, invoice: invoice
+      cash_flow.create_activity :create, owner: current_user         
     elsif finance_type == "Income"
       invoice = " IN-"+inv_number
-      CashFlow.create user: user, store: store, nominal: nominal, date_created: date_created, description: description, 
+      cash_flow = CashFlow.create user: user, store: store, nominal: nominal, date_created: date_created, description: description, 
                       finance_type: CashFlow::INCOME, invoice: invoice
+      cash_flow.create_activity :create, owner: current_user         
     elsif finance_type == "Asset"
       invoice = " AST-"+inv_number
-      CashFlow.create user: user, store: store, nominal: nominal, date_created: date_created, description: description, 
+      cash_flow = CashFlow.create user: user, store: store, nominal: nominal, date_created: date_created, description: description, 
                       finance_type: CashFlow::ASSET, invoice: invoice
+      cash_flow.create_activity :create, owner: current_user         
     elsif finance_type == "Operational"
       invoice = " OPR-"+inv_number
-      CashFlow.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description, 
+      cash_flow = CashFlow.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description, 
                       finance_type: CashFlow::OPERATIONAL, invoice: invoice
+      cash_flow.create_activity :create, owner: current_user         
     elsif finance_type == "Tax"
-      description = "TAX "+(DateTime.now.month).strftime("%B")+"/"+Date.today.year.to_s + " ("+description+")"
+      description = "TAX "+Date::MONTHNAMES[Date.today.month]+"/"+Date.today.year.to_s + " ("+description+")"
       invoice = " TAX-"+inv_number
       date_created = Date.today.beginning_of_month
       tax_current_month = CashFlow.find_by("date_created > ? AND date_created < ? AND finance_type = ?", Time.now.beginning_of_month, Time.now.end_of_month, CashFlow::TAX)
@@ -98,16 +104,19 @@ class CashFlowsController < ApplicationController
         tax_current_month.nominal = nominal
         tax_current_month.date_created = DateTime.now
         tax_current_month.save!
+        tax_current_month.create_activity :edit, owner: current_user         
       else
-        CashFlow.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description, 
+        cash_flow = CashFlow.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description, 
                         finance_type: CashFlow::TAX, invoice: invoice
+        cash_flow.create_activity :create, owner: current_user         
       end
     elsif finance_type == "Fix_Cost"
       invoice = " FIX-"+inv_number
-      CashFlow.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description, 
+      cash_flow = CashFlow.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description, 
                       finance_type: CashFlow::FIX_COST, invoice: invoice
+      cash_flow.create_activity :create, owner: current_user                
     end
-    return redirect_success cash_flows_path
+    return redirect_success cash_flows_path, "Data Berhasil Disimpan"
   end
 
   private
@@ -120,22 +129,25 @@ class CashFlowsController < ApplicationController
       search_text = "Pencarian "
       filters = CashFlow.page param_page
 
-      finance_types = params[:finance_type].map(&:to_i)
-      if finance_types.size > 0
-        if !finance_types.include? 0
-          filters = filters.where(finance_type: finance_types)
-          search_text+= "[" if finance_types.size > 1
-          finance_types.each do |f_type|
-            type = CashFlow.finance_types.key(f_type)
-            if finance_types.last == f_type
-              search_text+= type.upcase + "] " if finance_types.size > 1
-              search_text+= type.upcase + " " if finance_types.size == 1
-            else
-              search_text+= type.upcase + ", "
+      finance_types = params[:finance_type]
+      if finance_types.present?
+        finance_types = finance_types.map(&:to_i)
+        if finance_types.size > 0
+          if !finance_types.include? 0
+            filters = filters.where(finance_type: finance_types)
+            search_text+= "[" if finance_types.size > 1
+            finance_types.each do |f_type|
+              type = CashFlow.finance_types.key(f_type)
+              if finance_types.last == f_type
+                search_text+= type.upcase + "] " if finance_types.size > 1
+                search_text+= type.upcase + " " if finance_types.size == 1
+              else
+                search_text+= type.upcase + ", "
+              end
             end
+          else
+            search_text+= "SEMUA DATA "
           end
-        else
-          search_text+= "SEMUA DATA "
         end
       end
 
@@ -146,7 +158,7 @@ class CashFlowsController < ApplicationController
         start_months = (DateTime.now - before_months.months).beginning_of_month 
         filters = filters.where("date_created >= ?", start_months)
       else
-        end_date = DateTime.now.to_date
+        end_date = DateTime.now.to_date + 1.day
         start_date = DateTime.now.to_date - 1.weeks
         end_date = params[:end_date] if params[:end_date].present?
         start_date = params[:date_from] if params[:date_from].present?

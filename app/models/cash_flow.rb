@@ -35,4 +35,5 @@ class CashFlow < ApplicationRecord
   EMPLOYEE_LOAN = 12
   BANK_LOAN = 13
   SUPPLIER_LOAN = 14
+
 end

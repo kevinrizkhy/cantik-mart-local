@@ -37,7 +37,6 @@ br
                   | 9 bulan
                 option[value=12]
                   | 1 tahun
-
             .col-3
               select class="mdb-select md-form" searchable="Cari ..." id="finance_type" name="finance_type[]" size="8" multiple=true
                 option[value=0 selected]
@@ -60,13 +59,13 @@ br
                   | HPP
                 option[value=9]
                   | Profit
-                
-            .col-12.text-center
+            .col-3
+            .col-6.text-center
               select class="mdb-select md-form" id="order_by" name="order_by"
+                option[value="desc"]
+                  | urutkan dari terakhir
                 option[value="asc"]
                   | secara A - Z
-                option[value="desc"]
-                  | secara Z - A
             .col-12.text-center
               button class="btn btn-rounded btn-primary"
                 | Cari

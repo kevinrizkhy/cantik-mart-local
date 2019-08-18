@@ -60,6 +60,8 @@ class TransfersController < ApplicationController
       next if qty < 1
       TransferItem.create item_id: item[0], transfer_id: transfer.id, request_quantity: qty, description: item[2]
     end
+    
+    transfer.create_activity :create, owner: current_user
     urls = transfer_items_path id: transfer.id
     return redirect_success urls, "Data Transfer - " + transfer.invoice + " - Berhasil Disimpan"
   end

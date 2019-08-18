@@ -3,83 +3,46 @@ class OperationalsController < ApplicationController
   before_action :require_fingerprint
 
   def index
-  	label_type = "day"
-  	numbers = 3
-  	end_date = DateTime.now.to_date
-  	start_date = DateTime.now.to_date - 2.weeks
-  	finances = CashFlow.where(finance_type: CashFlow::OPERATIONAL)
-
-  	labels = generate_label label_type, numbers, start_date, end_date
-    gon.labels = labels
-
-    datasets = []
-    datasets << operational_chart(labels, finances,label_type)
-    gon.datasets = datasets
-    @finances = finances.page param_page
+  	filter = filter_search
+    @search = filter[0]
+    @finances = filter[1]
   end
 
-  def generate_label label_type, numbers, start_date, end_date
-    labels = []
-    if label_type == "month"
-      start_date = start_date + 1.month
-      numbers.times do |index|
-        m = start_date + index.months
-        labels << m.strftime("%B %Y") 
-      end
-    elsif label_type == "day"
-      days = (start_date..end_date)
-      days.each do |date|
-        labels << date.to_date
-      end
-    else
-      start_week = start_date.strftime("%U").to_i+1
-      end_week = end_date.strftime("%U").to_i+1
-      if start_date.year == end_date.year
-        weeks = (start_week..end_week)
-        weeks.each do |week|
-          labels << week
-        end
-      else
-        last_year_end_week = ("31-12-"+end_date.year.to_s).to_date.strftime("%U").to_i+1
-        new_year_start_week = 1
-        weeks = (start_week..last_year_end_week)
-        weeks.each do |week|
-          labels << week
-        end
-        weeks = (1..end_week)
-        weeks.each do |week|
-          labels << week
-        end
-      end
-    end
-    labels
-  end
-
-  def operational_chart labels, finances, label_type
-    operational_datas = Array.new(labels.size) {|i| 0 }
-    operationals = finances.group("DATE(date_created)").sum(:nominal) if label_type == "day" || label_type == "week"
-    operationals = finances.group("date_trunc('month', date_created)").sum(:nominal) if label_type == "month"
-    operationals.each_with_index do |debt, index|
-      index_month = labels.index(debt[0].to_date.strftime("%B %Y")) if label_type == "month"
-      index_month = labels.index(debt[0].to_date) if label_type == "day"
-      index_month = labels.index(debt[0].at_beginning_of_week.strftime("%U").to_i+1) if label_type == "week"
-      operational_datas[index_month] += debt[1].to_i.abs
-    end
-    data = {
-      label: 'Operasional',
-      data: operational_datas,
-      backgroundColor: [
-          'rgba(255, 159, 64, 0.2)',
-        ],
-      borderColor: [
-          'rgba(255, 159, 64, 1)',
-        ],
-      borderWidth: 2
-    }
-  end
 
   private
     def param_page
       params[:page]
+    end
+
+    def filter_search
+      results = []
+      search_text = "Pencarian "
+      filters = CashFlow.where(finance_type: CashFlow::OPERATIONAL).page param_page
+
+      switch_data_month_param = params[:switch_date_month]
+      if switch_data_month_param == "month" 
+        before_months = params[:months].to_i
+        search_text += before_months.to_s + " bulan terakhir "
+        start_months = (DateTime.now - before_months.months).beginning_of_month 
+        filters = filters.where("date_created >= ?", start_months)
+      else
+        end_date = DateTime.now.to_date + 1.day
+        start_date = DateTime.now.to_date - 1.weeks
+        end_date = params[:end_date] if params[:end_date].present?
+        start_date = params[:date_from] if params[:date_from].present?
+        search_text += "dari " + start_date.to_s + " hingga " + end_date.to_s + " "
+        filters = filters.where("date_created >= ? AND date_created <= ?", start_date, end_date)
+      end
+
+      if params[:order_by] == "asc"
+        search_text+= "secara menaik"
+        filters = filters.order("date_created ASC")
+      else
+        filters = filters.order("date_created DESC")
+        search_text+= "secara menurun"
+      end
+      results << search_text
+      results << filters
+      return results
     end
 end

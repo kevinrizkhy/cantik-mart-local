@@ -101,6 +101,7 @@ class OrdersController < ApplicationController
     end
 
     order.total = total
+    order.create_activity :create, owner: current_user
     order.save!
     urls = order_items_path id: order.id
     return redirect_success urls, "Order Berhasil Disimpan"

@@ -3,62 +3,45 @@ class FixCostsController < ApplicationController
   before_action :require_fingerprint
 
   def index
-    label_type = "month"
-    numbers = 3
-    end_date = DateTime.now.to_date
-    start_date = DateTime.now.to_date - 3.months
-    finances = CashFlow.where(finance_type: CashFlow::FIX_COST)
-
-    # labels = generate_label label_type, numbers, start_date, end_date
-    # gon.labels = labels
-
-    # datasets = []
-    # datasets << fix_cost_chart(labels, finances,label_type)
-    # gon.datasets = datasets
-    @finances = finances.page param_page
-  end
-
-  def generate_label label_type, numbers, start_date, end_date
-    labels = []
-    if label_type == "month"
-      start_date = start_date + 1.month
-      numbers.times do |index|
-        m = start_date + index.months
-        labels << m.strftime("%B %Y") 
-      end
-    end
-    labels
-  end
-
-  def fix_cost_chart labels, finances, label_type
-    fix_costs = Array.new(labels.size) {|i| 0 }
-    if label_type == "month"
-      taxes = finances.group("date_trunc('month', date_created)").sum(:nominal) if label_type == "month"
-      taxes.each_with_index do |debt, index|
-        index_month = labels.index(debt[0].to_date.strftime("%B %Y")) if label_type == "month"
-        index_month = labels.index(debt[0].to_date) if label_type == "day"
-        index_month = labels.index(debt[0].at_beginning_of_week.strftime("%U").to_i+1) if label_type == "week"
-        fix_costs[index_month] += debt[1].to_i.abs if index_month.present?
-        fix_costs[0] += debt[1].to_i.abs if debt[1].nil?
-      end
-    else
-      taxes = finances.where(finance_type: CashFlow::FIX_COST).group("date_trunc('month', date_created)").sum(:nominal) if label_type == "day" || label_type == "week"
-    end
-    data = {
-        label: 'Biaya Pasti',
-        data: fix_costs,
-        backgroundColor: [
-          'rgba(153, 102, 255, 0.2)',
-        ],
-        borderColor: [
-          'rgba(153, 102, 255, 1)',
-        ],
-        borderWidth: 2
-      }
+    filter = filter_search
+    @search = filter[0]
+    @finances = filter[1]
   end
 
   private
     def param_page
       params[:page]
+    end
+
+    def filter_search
+      results = []
+      search_text = "Pencarian "
+      filters = CashFlow.where(finance_type: CashFlow::FIX_COST).page param_page
+
+      switch_data_month_param = params[:switch_date_month]
+      if switch_data_month_param == "month" 
+        before_months = params[:months].to_i
+        search_text += before_months.to_s + " bulan terakhir "
+        start_months = (DateTime.now - before_months.months).beginning_of_month 
+        filters = filters.where("date_created >= ?", start_months)
+      else
+        end_date = DateTime.now.to_date + 1.day
+        start_date = DateTime.now.to_date - 1.weeks
+        end_date = params[:end_date] if params[:end_date].present?
+        start_date = params[:date_from] if params[:date_from].present?
+        search_text += "dari " + start_date.to_s + " hingga " + end_date.to_s + " "
+        filters = filters.where("date_created >= ? AND date_created <= ?", start_date, end_date)
+      end
+
+      if params[:order_by] == "asc"
+        search_text+= "secara menaik"
+        filters = filters.order("date_created ASC")
+      else
+        filters = filters.order("date_created DESC")
+        search_text+= "secara menurun"
+      end
+      results << search_text
+      results << filters
+      return results
     end
 end
