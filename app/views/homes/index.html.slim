@@ -71,7 +71,7 @@
                 p.lead.pt-3.pb-4
                   | HUTANG
                   br
-                  a href="#{debts_path}"
+                  a href="#{debts_path(due_date: 1)}"
                     span.badge.danger-color.p-2.strong  #{number_to_currency(@debt.sum(:deficiency), unit: "Rp. ")}
 
                     - due_date = @debt.where("due_date <= ?", Date.today.end_of_week).count
@@ -85,7 +85,7 @@
                 p.lead.pt-3.pb-4
                   | PIUTANG
                   br
-                  a href="#{debts_path}"
+                  a href="#{debts_path(due_date: 1)}"
                     span.badge.warning-color.p-2.strong  #{number_to_currency(@receivable.sum(:deficiency), unit: "Rp. ")}
 
                     - due_date = @receivable.where("due_date <= ?", Date.today.end_of_week).count
