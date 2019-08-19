@@ -13,14 +13,10 @@ _____________________________________________________________
 = checking all trx 
 = checking printing receipt cashier
 
-- debt
 - consumer retur
 - post API using CSRF token
-- add card into home 
-	* profit chart
-	* add graph current user online
 - fingerprint ==> fix_cost
-- print report
+- print 
 	* order
 	* retur
 		# consument
@@ -74,6 +70,10 @@ _____________________________________________________________
 -K notification API ==> UPDATING LIST (RESULT FROM API)
 -K notification API ==> List position (newer one was on bottom) & UPDATE READ OR NOT
 -K order -> L.257 ==> css select
+-K due_date in debts and receivable, homes count
+-K add card into home 
+	* profit chart
+-K debt
 
 
 = fixing "col" if page is resizing ==> table

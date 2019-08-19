@@ -57,20 +57,25 @@ class CashFlowsController < ApplicationController
     store = current_user.store
     finance_types = []
     to_user = params[:finance][:to_user]
+    due_date = params[:finance][:due_date]
     inv_number = Time.now.to_i.to_s
     if finance_type == "Loan" 
       invoice = " EL-"+inv_number
-      # to_user==> di view blm ada, diisi employee
+      return redirect_back_data_error new_cash_flow_path, "Tanggal jatuh tempo harus diisi." if due_date.nil?
+      return redirect_back_data_error new_cash_flow_path, "Yang berkenaan harus diisi." if to_user.nil?
+      return redirect_back_data_error new_cash_flow_path, "Tanggal yang dimasukkan harus lebih dari tanggal hari ini." if due_date.to_date <= Date.today
       receivable = Receivable.create user: user, store: store, nominal: nominal, date_created: date_created, description: description, 
-                    finance_type: Receivable::EMPLOYEE, deficiency:nominal, to_user: to_user
+                    finance_type: Receivable::EMPLOYEE, deficiency:nominal, to_user: to_user, due_date: due_date
       cash_flow = CashFlow.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description, 
                       finance_type: CashFlow::EMPLOYEE_LOAN, invoice: invoice
       cash_flow.create_activity :create, owner: current_user
       receivable.create_activity :create, owner: current_user         
     elsif finance_type == "BankLoan"
+      return redirect_back_data_error new_cash_flow_path, "Tanggal jatuh tempo harus diisi." if due_date.nil?
+      return redirect_back_data_error new_cash_flow_path, "Tanggal yang dimasukkan harus lebih dari tanggal hari ini." if due_date.to_date <= Date.today
       invoice = " BL-"+inv_number
       debt = Debt.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description,
-                    finance_type: Debt::BANK, deficiency:nominal
+                    finance_type: Debt::BANK, deficiency:nominal, due_date: due_date
       cash_flow = CashFlow.create user: user, store: store, nominal: nominal, date_created: date_created, description: description, 
                       finance_type: CashFlow::BANK_LOAN, invoice: invoice
       cash_flow.create_activity :create, owner: current_user       

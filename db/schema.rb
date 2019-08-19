@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_13_163634) do
+ActiveRecord::Schema.define(version: 2019_08_19_061119) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -129,6 +129,7 @@ ActiveRecord::Schema.define(version: 2019_08_13_163634) do
     t.string "description", null: false
     t.integer "ref_id"
     t.integer "finance_type", null: false
+    t.date "due_date"
     t.index ["store_id"], name: "index_debts_on_store_id"
     t.index ["user_id"], name: "index_debts_on_user_id"
   end
@@ -293,6 +294,7 @@ ActiveRecord::Schema.define(version: 2019_08_13_163634) do
     t.integer "ref_id"
     t.integer "finance_type", null: false
     t.integer "to_user", default: 1, null: false
+    t.date "due_date"
     t.index ["store_id"], name: "index_receivables_on_store_id"
     t.index ["user_id"], name: "index_receivables_on_user_id"
   end

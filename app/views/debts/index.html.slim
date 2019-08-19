@@ -64,11 +64,11 @@
         = paginate @finances
         table class="table"
           thead
-            th Dibuat Oleh
+            th Dibuat
             th Tipe
             th Nominal
             th Kekurangan
-            th Tanggal
+            th Jatuh Tempo
             th Keterangan
           tbody
             = render partial: 'list', collection: @finances, as: :finance

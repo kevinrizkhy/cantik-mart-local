@@ -71,25 +71,30 @@
                 p.lead.pt-3.pb-4
                   | HUTANG
                   br
-                  span.badge.danger-color.p-2.strong  #{number_to_currency(@debt.sum(:deficiency), unit: "Rp. ")}
+                  a href="#{debts_path}"
+                    span.badge.danger-color.p-2.strong  #{number_to_currency(@debt.sum(:deficiency), unit: "Rp. ")}
 
-                  button.btn.btn-danger.btn-sm.p-2.mr-0 data-placement="top" data-toggle="tooltip" title=("#{@debt.count} belum lunas.") type="button" 
-                    i.fas.fa-minus &nbsp
-                    i.fas.fa-donate
+                    - due_date = @debt.where("due_date <= ?", Date.today.end_of_week).count
+                    - due_date_text = ""
+                    - due_date_text += " -"+ due_date.to_s + " jatuh tempo." if due_date > 0
+                    button.btn.btn-danger.btn-sm.p-2.mr-0 data-placement="top" data-toggle="tooltip" title=("#{@debt.count} belum lunas #{due_date_text}") type="button" 
+                      i.fas.fa-minus &nbsp
+                      i.fas.fa-donate
 
               .col-md-6
                 p.lead.pt-3.pb-4
                   | PIUTANG
                   br
-                  span.badge.warning-color.p-2.strong  #{number_to_currency(@receivable.sum(:deficiency), unit: "Rp. ")}
+                  a href="#{debts_path}"
+                    span.badge.warning-color.p-2.strong  #{number_to_currency(@receivable.sum(:deficiency), unit: "Rp. ")}
 
-                  button.btn.btn-warning.btn-sm.p-2.mr-0 data-placement="top" data-toggle="tooltip" title=("#{@receivable.count} belum lunas.") type="button" 
-                    i.fas.fa-plus &nbsp
-                    i.fas.fa-donate
+                    - due_date = @receivable.where("due_date <= ?", Date.today.end_of_week).count
+                    - due_date_text = ""
+                    - due_date_text += " -"+ due_date.to_s + " jatuh tempo." if due_date > 0
+                    button.btn.btn-warning.btn-sm.p-2.mr-0 data-placement="top" data-toggle="tooltip" title=("#{@receivable.count} belum lunas #{due_date_text}") type="button" 
+                      i.fas.fa-plus &nbsp
+                      i.fas.fa-donate
 
-
-
-                
                 
 
         .col-xl-7.col-lg-6.mb-4.pb-2
