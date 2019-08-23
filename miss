@@ -13,6 +13,10 @@ _____________________________________________________________
 = checking all trx 
 = checking printing receipt cashier
 
+- set all controller where that using notification 
+	* payment
+	* due date
+	* confirm order / transfer
 - consumer retur
 - post API using CSRF token
 - fingerprint ==> fix_cost
@@ -31,6 +35,14 @@ _____________________________________________________________
 	* tax
 	* operational
 	* assets value
+- finance => activa passiva
+	* stock value
+	* assets
+	* profit loss
+	* pengeluaran
+	=> button to generate excel
+- report (CRUD)
+- absent
 
 + activity if data is deleted
 
@@ -74,8 +86,9 @@ _____________________________________________________________
 -K add card into home 
 	* profit chart
 -K debt
-
-
+-K set_notification method
+-K notification view box over
+-K order due date
 = fixing "col" if page is resizing ==> table
 =K log all activity
 =K fixing "col" if page is resizing ==> search field

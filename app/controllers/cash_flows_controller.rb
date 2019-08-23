@@ -68,6 +68,10 @@ class CashFlowsController < ApplicationController
                     finance_type: Receivable::EMPLOYEE, deficiency:nominal, to_user: to_user, due_date: due_date
       cash_flow = CashFlow.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description, 
                       finance_type: CashFlow::EMPLOYEE_LOAN, invoice: invoice
+      curr_store = current_user.store
+      curr_store.cash = curr_store.cash - nominal
+      curr_store.receivable = curr_store.receivable + nominal
+      curr_store.save!
       cash_flow.create_activity :create, owner: current_user
       receivable.create_activity :create, owner: current_user         
     elsif finance_type == "BankLoan"
@@ -78,27 +82,43 @@ class CashFlowsController < ApplicationController
                     finance_type: Debt::BANK, deficiency:nominal, due_date: due_date
       cash_flow = CashFlow.create user: user, store: store, nominal: nominal, date_created: date_created, description: description, 
                       finance_type: CashFlow::BANK_LOAN, invoice: invoice
+      curr_store = current_user.store
+      curr_store.cash = curr_store.cash + nominal
+      curr_store.debt = curr_store.debt + nominal
+      curr_store.save!
       cash_flow.create_activity :create, owner: current_user       
       debt.create_activity :create, owner: current_user           
     elsif finance_type == "Outcome"
       invoice = " OUT-"+inv_number
       cash_flow = CashFlow.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description, 
                       finance_type: CashFlow::OUTCOME, invoice: invoice
+      curr_store = current_user.store
+      curr_store.cash = curr_store.cash - nominal
+      curr_store.save!
       cash_flow.create_activity :create, owner: current_user         
     elsif finance_type == "Income"
       invoice = " IN-"+inv_number
       cash_flow = CashFlow.create user: user, store: store, nominal: nominal, date_created: date_created, description: description, 
                       finance_type: CashFlow::INCOME, invoice: invoice
+      curr_store = current_user.store
+      curr_store.cash = curr_store.cash + nominal
+      curr_store.save!
       cash_flow.create_activity :create, owner: current_user         
     elsif finance_type == "Asset"
       invoice = " AST-"+inv_number
       cash_flow = CashFlow.create user: user, store: store, nominal: nominal, date_created: date_created, description: description, 
                       finance_type: CashFlow::ASSET, invoice: invoice
+      curr_store = current_user.store
+      curr_store.cash = curr_store.cash - nominal
+      curr_store.save!
       cash_flow.create_activity :create, owner: current_user         
     elsif finance_type == "Operational"
       invoice = " OPR-"+inv_number
       cash_flow = CashFlow.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description, 
                       finance_type: CashFlow::OPERATIONAL, invoice: invoice
+      curr_store = current_user.store
+      curr_store.cash = curr_store.cash - nominal
+      curr_store.save!
       cash_flow.create_activity :create, owner: current_user         
     elsif finance_type == "Tax"
       description = "TAX "+Date::MONTHNAMES[Date.today.month]+"/"+Date.today.year.to_s + " ("+description+")"
@@ -113,12 +133,18 @@ class CashFlowsController < ApplicationController
       else
         cash_flow = CashFlow.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description, 
                         finance_type: CashFlow::TAX, invoice: invoice
-        cash_flow.create_activity :create, owner: current_user         
+        cash_flow.create_activity :create, owner: current_user
+        curr_store = current_user.store
+        curr_store.cash = curr_store.cash - nominal
+        curr_store.save!         
       end
     elsif finance_type == "Fix_Cost"
       invoice = " FIX-"+inv_number
       cash_flow = CashFlow.create user: user, store: store, nominal: nominal*-1, date_created: date_created, description: description, 
                       finance_type: CashFlow::FIX_COST, invoice: invoice
+      curr_store = current_user.store
+      curr_store.cash = curr_store.cash - nominal
+      curr_store.save!
       cash_flow.create_activity :create, owner: current_user                
     end
     return redirect_success cash_flows_path, "Data Berhasil Disimpan"

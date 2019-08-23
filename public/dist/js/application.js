@@ -1,5 +1,11 @@
 // setInterval(get_notification, 10000);
 
+$(document).keypress(
+  function(event){
+    if (event.which == '13') {
+      event.preventDefault();
+    }
+});
 
 function update_notification()
 {
@@ -99,7 +105,7 @@ function refresh_notification_list(result){
 function removeThisRow(params){
 	var row_idx = params.parentNode.parentNode.rowIndex;
 	var table = document.getElementById("myTable");
-	if(table.rows.length > 2){
+	if(table.rows.length > 1){
 		table.deleteRow(row_idx);
 	}
 }
@@ -171,13 +177,19 @@ function getData(table_types) {
        cache: false,
        url: "/api/order?search=" + item_id,
        success: function(result_arr) {
-           if (table_types == "order"){
-            addNewRowOrder(result_arr);
-           }
-           else if(table_types == "retur"){
-            addNewRowRetur(result_arr);
-           }else if (table_types == "transfer"){
-            addNewRowTransfer(result_arr);
+          if(result_arr == ""){
+            document.getElementById("itemId").value = "";
+            alert("Data Barang Tidak Ditemukan")
+            return
+          }else{
+             if (table_types == "order"){
+              addNewRowOrder(result_arr);
+             }
+             else if(table_types == "retur"){
+              addNewRowRetur(result_arr);
+             }else if (table_types == "transfer"){
+              addNewRowTransfer(result_arr);
+             }
            }
        },
        error: function(error) {
@@ -239,12 +251,12 @@ function addNewRowRetur(result_arr){
    var cell6 = row.insertCell(5);
 
 
-   let id = "<input style='display: none;' type='text' class='md-form form-control' value='"+result[4]+"' readonly name='order[order_items]["+add_counter+"][item_id]'/>";
-   let code = id+"<input type='text' class='md-form form-control' value='"+result[0]+"' readonly name='order[order_items]["+add_counter+"][code]'/>";
-   let name = "<input type='text' class='md-form form-control' value='"+result[1]+"' readonly name='order[order_items]["+add_counter+"][name]'/>";
-   let cat = "<input type='text' class='md-form form-control' value='"+result[2]+"' readonly name='order[order_items]["+add_counter+"][item_cat]'/>";
-   let quantity = "<input type='number' min=1 class='md-form form-control' value='1' name='order[order_items]["+add_counter+"][quantity]'/>";
-   let desc = "<input type='text' class='md-form form-control' value=''  name='order[order_items]["+add_counter+"][description]'/>";
+   let id = "<input style='display: none;' type='text' class='md-form form-control' value='"+result[4]+"' readonly name='retur[retur_items]["+add_counter+"][item_id]'/>";
+   let code = id+"<input type='text' class='md-form form-control' value='"+result[0]+"' readonly name='retur[retur_items]["+add_counter+"][code]'/>";
+   let name = "<input type='text' class='md-form form-control' value='"+result[1]+"' readonly name='retur[retur_items]["+add_counter+"][name]'/>";
+   let cat = "<input type='text' class='md-form form-control' value='"+result[2]+"' readonly name='retur[retur_items]["+add_counter+"][item_cat]'/>";
+   let quantity = "<input type='number' min=1 class='md-form form-control' value='1' name='retur[retur_items]["+add_counter+"][quantity]'/>";
+   let desc = "<input type='text' class='md-form form-control' value=''  name='retur[retur_items]["+add_counter+"][description]'/>";
    let remove = "<i class='fa fa-trash text-danger' onclick='removeThisRow(this)'></i>"; 
    cell1.innerHTML = code;
    cell2.innerHTML = name;

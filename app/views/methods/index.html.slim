@@ -1,14 +1,7 @@
 .row
   .col.text-left
     h5
-      - if @search_id.nil?
-        | Daftar Menu Sistem 
-        - if !@bool_status
-          .text-danger
-            | #{@status}
-      - else
-        - user = User.find @search_id
-        | Absensi #{user.name}
+      | Sub-Sistem - #{@methods.first.controller.name.gsub("_", " ").upcase}
 br
 .container-fluid
   .col-lg-12.col-md-12

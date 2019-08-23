@@ -51,4 +51,8 @@ class ApplicationController < ActionController::Base
       return false
     end
 
+    def set_notification from_user, to_user, m_type, message, link
+      Notification.create from_user: from_user, to_user: to_user, m_type: m_type,
+        message: message, link: link, date_created: DateTime.now
+    end
 end

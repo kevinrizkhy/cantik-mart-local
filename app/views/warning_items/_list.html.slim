@@ -25,7 +25,7 @@ tr
             - total += order_item.quantity
         | #{total}
   td
-    a href='#{new_order_path(item_id: inventory.id)}'
+    a href='#{new_order_path(item_id: inventory.item.id)}'
       button.btn.btn-rounded.btn-primary type="button" 
             | Order
 

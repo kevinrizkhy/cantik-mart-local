@@ -1,63 +1,53 @@
+include ActionView::Helpers::NumberHelper
 class OrdersController < ApplicationController
   before_action :require_login
   before_action :require_fingerprint
   def index
     @orders = Order.order("date_created DESC").page param_page
-    @orders_new = Order.where("date_receive is null").order("date_created DESC").page param_page
-    @orders_debt = Order.where("date_receive is not null AND date_paid_off is null").order("date_created DESC").page param_page
-    @orders_complete = Order.where("date_paid_off  is not null").order("date_created DESC").page param_page
-    if params[:type].present?
-      @type = params[:type]
-      if @type == "ongoing" 
-        @type = "sedang dalam proses"
-        @orders = @orders.where(store_id: current_user.store.id).where('date_receive is null')
-        @orders_debt = nil
-        @orders_complete = nil
-      elsif @type == "payment"
-        @type = "belum lunas"
-        @orders = @orders.where(store_id: current_user.store.id).where('date_receive is not null and date_paid_off is null')
-        @orders_new = nil
-        @orders_complete = nil
-       elsif @type == "complete"
-        @type = "lunas"
-        @orders_new = nil
-        @orders_debt = nil
-      end
-    end
+    @search_text = ""
 
 
     if params[:search].present?
       search = params[:search].downcase
-      @search = search
       search_arr = search.split(":")
       if search_arr.size > 2
         return redirect_back_data_error orders_path, "Data Tidak Valid"
       elsif search_arr.size == 2
         supplier = Supplier.where('lower(pic) like ?', "%"+search_arr[1].downcase+"%").pluck(:id)
-          if search_arr[0]== "supplier" && supplier.present?
-            @orders = @orders.where(supplier_id: supplier)
-            @orders_new = @orders_new.where(supplier_id: supplier)
-            @orders_debt = @orders_debt.where(supplier_id: supplier)
-            @orders_complete = @orders_complete.where(supplier_id: supplier)
-          else
-            @orders = @orders.where("invoice like ?", "%"+ search_arr[1]+"%")
-            @orders_new = @orders_new.where("invoice like ?", "%"+ search_arr[1]+"%")
-            @orders_debt = @orders_debt.where("invoice like ?", "%"+ search_arr[1]+"%")
-            @orders_complete = @orders_complete.where("invoice like ?", "%"+ search_arr[1]+"%")
-          end
+        if search_arr[0]== "supplier" && supplier.present?
+          @orders = @orders.where(supplier_id: supplier)
+        else
+          @orders = @orders.where("lower(invoice) like ?", "%"+ search_arr[1]+"%")
+          @search_text += "Pencarian " + search_arr[1].upcase + " "
+        end
       else
-        @orders = @orders.where("invoice like ?", "%"+ search+"%")
-        @orders_new = @orders_new.where("invoice like ?", "%"+ search+"%")
-        @orders_debt = @orders_debt.where("invoice like ?", "%"+ search+"%")
-        @orders_complete = @orders_complete.where("invoice like ?", "%"+ search+"%")
+        @orders = @orders.where("lower(invoice) like ?", "%"+ search+"%")
+        @search_text += "Pencarian " + search.upcase + " "
       end
     end
+
+
+    if params[:type].present?
+      type = params[:type]
+      if type == "ongoing" 
+        @search_text += "dengan status sedang dalam proses"
+        @orders = @orders.where(store_id: current_user.store.id).where('date_receive is null')
+      elsif type == "payment"
+        @search_text += "dengan status belum lunas"
+        @orders = @orders.where(store_id: current_user.store.id).where('date_receive is not null and date_paid_off is null')
+       elsif type == "complete"
+        @search_text += "dengan status lunas"
+        @orders = @orders.where("date_paid_off  is not null").order("date_created DESC")
+      end
+    end
+
+    
   end
 
   def new
     @suppliers = Supplier.select(:id, :name, :address).order("supplier_type DESC").all
     if params[:item_id].present?
-      @add_item = Item.find params[:item_id]
+      @add_item = Item.find_by(id: params[:item_id])
       # return redirect_back_data_error new_order_path if @add_items.nil?
     end
     if params[:supplier_id].present?
@@ -179,7 +169,10 @@ class OrdersController < ApplicationController
     return redirect_back_data_error orders_path, "Data Order Tidak Ditemukan" unless params[:id].present?
     order = Order.find params[:id]
     return redirect_back_data_error orders_path unless order.present?
-    return redirect_back_data_error orders_path, "Data Order Tidak Ditemukan" if order.date_receive.present? || order.date_paid_off.present?
+    return redirect_back_data_error orders_path, "Order Tidak Dapat Diubah" if order.date_receive.present? || order.date_paid_off.present?
+    due_date = params[:order][:due_date]
+    urls = order_items_path(id: params[:id])
+    return redirect_back_data_error order_confirmation_path(id: order.id), "Tanggal Jatuh Tempo Harus Diisi" if due_date.nil?
     items = order_items
     new_total = 0
     items.each do |item|
@@ -208,13 +201,15 @@ class OrdersController < ApplicationController
     if order.total == 0
       order.date_paid_off = DateTime.now
       order.save!
-      urls = order_items_path(id: params[:id])
       return redirect_success urls, "Order " + order.invoice + " Telah Diterima"
     end
 
     Debt.create user: current_user, store: current_user.store, nominal: new_total, 
                 deficiency: new_total, date_created: DateTime.now, ref_id: order.id,
-                description: order.invoice, finance_type: Debt::ORDER
+                description: order.invoice, finance_type: Debt::ORDER, due_date: due_date
+
+    set_notification(current_user, User.find_by(store: current_user.store, level: User::FINANCE), 
+      Notification::INFO, "Pembayaran "+order.invoice+" sebesar "+number_to_currency(new_total, unit: "Rp. "), urls)
     
     description = order.invoice + " (" + new_total.to_s + ")"
     urls = order_items_path(id: params[:id])
@@ -236,16 +231,19 @@ class OrdersController < ApplicationController
     return redirect_back_data_error orders_path, "Data Order Tidak Ditemukan" if order.nil?
     return redirect_back_data_error orders_path, "Data Order Tidak Valid" if order.date_receive.nil? || order.date_paid_off.present?
     order_invs = InvoiceTransaction.where(invoice: order.invoice)
-    paid = order.total.to_f - order_invs.sum(:nominal) 
+    totals = order.total.to_f 
+    paid = totals- order_invs.sum(:nominal) 
     nominal = params[:order_pay][:nominal].to_i 
     nominal = params[:order_pay][:receivable_nominal].to_i if params[:order_pay][:user_receivable] == "on"
-    return redirect_back_data_error orders_path, "Data Order Tidak Valid (Pembayaran > Jumlah / Pembayaran < 100 )" if (nominal.to_i > paid) || (nominal < 100)
+    return redirect_back_data_error orders_path, 
+      "Data Order Tidak Valid (Pembayaran > Jumlah / Pembayaran < 100 )" if (totals-paid+nominal) > totals || nominal < 100 || ( ((totals - nominal) < 100) && ((totals - nominal) > 1))
     order_inv = InvoiceTransaction.new 
     order_inv.invoice = order.invoice
     order_inv.transaction_type = 0
     order_inv.transaction_invoice = "PAID-" + Time.now.to_i.to_s
     order_inv.date_created = params[:order_pay][:date_paid]
     order_inv.nominal = nominal.to_f
+    order_inv.user_id = current_user.id
     order_inv.save!
     deficiency = paid - nominal
     debt = Debt.find_by(finance_type: Debt::ORDER, ref_id: order.id)

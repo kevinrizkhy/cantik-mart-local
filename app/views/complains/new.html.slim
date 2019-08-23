@@ -1,4 +1,4 @@
-- member = "XXXXXX"
+- member = "NO MEMBER"
 - member = @transaction.member.name if @transaction.member.present?
 .row
   .col.text-left
@@ -30,11 +30,11 @@ br
                 th
                   | Harga
                 th
-                  | Diskon
+                  | Beli
                 th
-                  | Jumlah Lama
+                  | Komplain
                 th
-                  | Jumlah Baru
+                  | Diganti
                 th
                   | Keterangan
                 th
@@ -47,13 +47,15 @@ br
                   td 
                     input type="number" required=true class="form-control md-form" id="price" name="complain[complain_items][#{index}][price]" value="#{trx_item.price}" readonly=true
                   td 
-                    input type="textarea" required=true class="form-control md-form" id="discount" name="complain[complain_items][#{index}][discount]" value="#{trx_item.discount}" readonly=true
-                  td 
                     input type="number" required=true class="form-control md-form" id="quantity" name="complain[complain_items][#{index}][quantity]" value="#{trx_item.quantity}" readonly=true 
+                  td 
+                    input type="number" required=true class="form-control md-form" id="quantity" name="complain[complain_items][#{index}][retur_qty]" value=0
                   td 
                     input type="number" required=true class="form-control md-form" id="newquantity" name="complain[complain_items][#{index}][new_quantity]" value=0
                   td 
-                    input type="text" required=true class="form-control md-form" id="description" name="complain[complain_items][#{index}][decription]" value="#{@transaction.invoice}" readonly=true
+                    input type="text" required=true class="form-control md-form" id="description" name="complain[complain_items][#{index}][reason]" value=""
+                  td 
+                    input type="text" required=true class="form-control md-form" id="description" name="complain[complain_items][#{index}][decription]" value="#{@transaction.invoice}" readonly=true style="display: none;"
           .col-md-12.text-center
             .form-group.text-center
               = form.submit "Buat Retur", class: "btn btn-rounded btn-primary"

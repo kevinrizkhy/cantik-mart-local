@@ -31,3 +31,66 @@
         .text-center
           - if !@store.users.present? && !@store.store_items.present?
             = button_to "Hapus Toko", @store, :method=>:delete, :class=>"btn btn-rounded btn-danger"
+
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Keuangan
+      .row
+        .card-body.col-6.text-left
+          .card-header.white-text.primary-color
+            | AKTIVA
+          .card-body
+            label for="phone" Kas
+            input type="number" class="form-control md-form" value='#{@store.cash}'
+
+            label for="phone" Piutang
+            input type="number" class="form-control md-form" value='#{@store.receivable}'
+
+            label for="phone" Nilai Stok
+            input type="number" class="form-control md-form" value='#{@store.receivable}'
+
+            label for="phone" Nilai Aset
+            input type="number" class="form-control md-form" value='#{@store.receivable}'
+
+        .card-body.col-6.text-right
+          .card-header.white-text.primary-color
+            | PASSIVA
+          .card-body
+            label for="phone" Modal
+            input type="number" class="form-control md-form" value='#{@store.cash}'
+
+            label for="phone" Hutang
+            input type="number" class="form-control md-form" value='#{@store.debt}'
+
+            label for="phone" Penjualan (Profit & Loss)
+            input type="number" class="form-control md-form" value='#{@store.debt}'
+
+            label for="phone" Pengeluaran
+            input type="number" class="form-control md-form" value='#{@store.debt}'
+
+        .col-12
+          hr.primary-color-dark
+
+        .col-5.text-center
+          - activa = @store.cash + @store.receivable
+          | #{number_to_currency(activa, unit: "Rp. ")}
+
+        .col-2.text-center
+          | :
+
+        .col-5.text-center
+          - passiva = @store.equity + @store.debt
+          | #{number_to_currency(passiva, unit: "Rp. ")}
+
+        h5.col-12.text-center
+          hr.primary-color-dark
+          - if activa == passiva
+            .text-success
+              | BALANCE
+          - else
+            .text-danger
+              | NOT BALANCE (#{number_to_currency((activa-passiva).abs, unit: "Rp. ")})
+
+          br

@@ -52,6 +52,7 @@ class DepartmentsController < ApplicationController
     department.save! if department.changed?
     department.create_activity :edit, owner: current_user
     urls = item_cats_path dept_id: department.id
+    set_notification(User.last, current_user, Notification::PRIMARY, "Data Dapartemen - " + department.name + " - Berhasil Diubah", urls)
     return redirect_success urls, "Data Dapartemen - " + department.name + " - Berhasil Diubah"
   end
 

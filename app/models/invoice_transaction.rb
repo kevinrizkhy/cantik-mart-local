@@ -5,5 +5,7 @@ class InvoiceTransaction < ApplicationRecord
     PAID: 0,
     MINUS: 1
   }
+  
+  belongs_to :user
 end
 

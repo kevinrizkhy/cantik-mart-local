@@ -59,7 +59,7 @@ class RetursController < ApplicationController
   end
 
   def new
-    @suppliers = Supplier.select(:id, :pic, :address).order("supplier_type DESC").all
+    @suppliers = Supplier.order("supplier_type DESC").all
     if params[:item_id].present?
       @supplier_items = SupplierItem.where(item_id: params[:item_id])
       if @supplier_items.count > 1
@@ -103,7 +103,7 @@ class RetursController < ApplicationController
       store_id: current_user.store.id,
       date_created: Time.now,
       supplier_id: address_to,
-      user: current_user.id
+      user_id: current_user.id
     
     retur.create_activity :create, owner: current_user
     items.each do |retur_item|
@@ -120,7 +120,7 @@ class RetursController < ApplicationController
 
       ReturItem.create item_id: retur_item[0], retur_id: retur.id, quantity: retur_item[1], description: retur_item[2]
     end
-    urls = retur_path id: retur.id
+    urls = retur_items_path id: retur.id
     return redirect_success urls, "Data Retur Telah Disimpan"
   end
 

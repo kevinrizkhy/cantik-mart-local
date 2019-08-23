@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_19_061119) do
+ActiveRecord::Schema.define(version: 2019_08_23_081123) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -173,6 +173,8 @@ ActiveRecord::Schema.define(version: 2019_08_19_061119) do
     t.string "transaction_invoice", null: false
     t.integer "nominal", default: 0, null: false
     t.datetime "date_created"
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_invoice_transactions_on_user_id"
   end
 
   create_table "item_cats", force: :cascade do |t|
@@ -299,6 +301,19 @@ ActiveRecord::Schema.define(version: 2019_08_19_061119) do
     t.index ["user_id"], name: "index_receivables_on_user_id"
   end
 
+  create_table "reports", force: :cascade do |t|
+    t.bigint "store_id", null: false
+    t.float "cash", default: 0.0, null: false
+    t.float "stock_value", default: 0.0, null: false
+    t.float "receivable", default: 0.0, null: false
+    t.float "asset", default: 0.0, null: false
+    t.float "capital", default: 0.0, null: false
+    t.float "debt", default: 0.0, null: false
+    t.float "outcome", default: 0.0, null: false
+    t.float "sales", default: 0.0, null: false
+    t.index ["store_id"], name: "index_reports_on_store_id"
+  end
+
   create_table "retur_items", force: :cascade do |t|
     t.bigint "item_id", null: false
     t.bigint "retur_id", null: false
@@ -359,6 +374,10 @@ ActiveRecord::Schema.define(version: 2019_08_19_061119) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "store_type", default: 0
+    t.float "cash", default: 1000000000.0, null: false
+    t.float "equity", default: 1000000000.0, null: false
+    t.float "debt", default: 0.0, null: false
+    t.float "receivable", default: 0.0, null: false
   end
 
   create_table "supplier_items", force: :cascade do |t|
@@ -488,6 +507,7 @@ ActiveRecord::Schema.define(version: 2019_08_19_061119) do
   add_foreign_key "grocer_items", "items"
   add_foreign_key "incomes", "stores"
   add_foreign_key "incomes", "users"
+  add_foreign_key "invoice_transactions", "users"
   add_foreign_key "item_cats", "departments"
   add_foreign_key "items", "item_cats"
   add_foreign_key "members", "stores"
@@ -506,6 +526,7 @@ ActiveRecord::Schema.define(version: 2019_08_19_061119) do
   add_foreign_key "profit_losses", "users"
   add_foreign_key "receivables", "stores"
   add_foreign_key "receivables", "users"
+  add_foreign_key "reports", "stores"
   add_foreign_key "retur_items", "items"
   add_foreign_key "retur_items", "returs"
   add_foreign_key "returs", "stores"

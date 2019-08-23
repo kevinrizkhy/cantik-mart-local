@@ -9,12 +9,14 @@ class AbsentsController < ApplicationController
     end
     @search_text = "Pencarian  "
     @absents = Absent.page param_page
-    @absents = @absents.where(user: current_user) if current_user.level != "owner" || current_user.level != "super_admin"
+    @absents = @absents.where(user: current_user)
     if params[:id].present?
       @search_id = params[:id]
-      return redirect_back_no_access_right if current_user.level != "owner" || current_user.level != "super_admin"
       if params[:id].to_i == current_user.id
         @absents = @absents.where(user: current_user)
+      else
+        # return redirect_back_no_access_right if current_user.level != "owner" || current_user.level != "super_admin"
+        @absents = @absents.where(user_id: params[:id])
       end
     end
 

@@ -24,7 +24,7 @@ br
           - if @search_id.nil?
             input type="number" class="form-control md-form" name="id" value="#{@search_id}" style="display: none"
           .row.align-middle
-            - if @search_id.nil? && ([1,2].include? User.levels[current_user.level])
+            - if User::OWNER == current_user.level || User::SUPER_ADMIN == current_user.level 
               .col-md-6.text-center
                 input type="text" class="form-control md-form" id="search" name="search" placeholder="Cari nama..."
               .col-md-6.text-center

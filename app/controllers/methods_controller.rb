@@ -36,10 +36,10 @@ class MethodsController < ApplicationController
       next if level.nil?
       index_id = @method.controller.controller_methods.find_by(name: 'index')
       having_index_access = UserMethod.find_by(user_level: level, controller_method: index_id)
-      next if @method.name != 'index' && !having_index_access
+      # next if @method.name != 'index' && !having_index_access
       UserMethod.create controller_method: @method, user_level: level
     end
-    urls = redirect_success methods_path(id: @method.controller.id)
+    urls = methods_path(id: @method.controller.id)
     return redirect_success urls, "Perubahan Hak Akses - (" + controller.name + " | " + @method.name + ") - Berhasil Disimpan"
   end
 

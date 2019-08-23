@@ -18,7 +18,7 @@ br
         = form_for :order, url: orders_path, method: 'GET' do |form|
           .row  
             .col-6
-              input type="text" class="form-control md-form" id="search" name="search"
+              input type="text" class="form-control md-form" id="search" name="search" placeholder="Nomor Invoice (12345678)" value="#{@seacrh}"
             .col-6
               select[class="mdb-select md-form md-outline colorful-select dropdown-primary" id="order_type" name="type"]
                 option[value=""]
@@ -32,76 +32,28 @@ br
             .col-12.text-center
               button class="btn btn-rounded btn-primary"
                 | Cari
-        - if @type != "" && @type.present?
-          .row
-            .col.text-center
-              p
-                | Pencarian order yang #{@type}.
+        .row
+          .col.text-center
+            p
+              | #{@search_text}
+.container-fluid
+  .col-lg-12.col-md-12
+    .card-header.white-text.primary-color
+        h5.font-weight-500.my-1
+          | Dalam Proses
+    .card.mb-4
+      .card-body.table-responsive.text-nowrap
+        table class="table table-hover"
+          thead
+            th Invoice
+            th Supplier
+            th Total Item
+            th Total
+            th Tgl. Buat
+            th Tgl. Terima
+            th Tgl. Lunas
+            th Aksi
+          tbody
+            = render partial: 'list', collection: @orders, as: :order
+        = paginate @orders
 
-- if @orders_new.present?
-  .container-fluid
-    .col-lg-12.col-md-12
-      .card-header.white-text.primary-color
-          h5.font-weight-500.my-1
-            | Dalam Proses
-      .card.mb-4
-        .card-body.table-responsive.text-nowrap
-          table class="table table-hover"
-            thead
-              th Invoice
-              th Supplier
-              th Total Item
-              th Total
-              th Tgl. Buat
-              th Tgl. Terima
-              th Tgl. Lunas
-              th Aksi
-            tbody
-              = render partial: 'list', collection: @orders_new, as: :order
-          = paginate @orders_new
-
-
-- if @orders_debt.present?
-  .container-fluid
-    .col-lg-12.col-md-12
-      .card-header.white-text.warning-color
-          h5.font-weight-500.my-1
-            | Telah Diterima & Belum Lunas
-      .card.mb-4
-        .card-body.table-responsive.text-nowrap
-          table class="table"
-            thead
-              th Invoice
-              th Supplier
-              th Total Item
-              th Total
-              th Tgl. Buat
-              th Tgl. Terima
-              th Tgl. Lunas
-              th Aksi
-            tbody
-              = render partial: 'list', collection: @orders_debt, as: :order
-          = paginate @orders_debt
- 
-
-- if @orders_complete.present?
-  .container-fluid
-    .col-lg-12.col-md-12
-      .card-header.white-text.success-color
-          h5.font-weight-500.my-1
-            | Lunas
-      .card.mb-4
-        .card-body
-          table class="table"
-            thead
-              th Invoice
-              th Supplier
-              th Total Item
-              th Total
-              th Tgl. Buat
-              th Tgl. Terima
-              th Tgl. Lunas
-              th Aksi
-            tbody
-              = render partial: 'list', collection: @orders_complete, as: :order
-          = paginate @orders_complete

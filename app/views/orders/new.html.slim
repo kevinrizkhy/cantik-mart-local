@@ -56,7 +56,7 @@
                     td style="display: none;"
                       input type="number" required=true class="form-control md-form" id="quantity" name="order[order_items][1][item_id]" value="#{@add_item.id}" readonly="readonly"
                     td
-                      input type="number" required=true class="form-control md-form" id="quantity" name="order[order_items][1][code]" value="#{@add_item.code}" readonly="readonly"
+                      input type="text" required=true class="form-control md-form" id="quantity" name="order[order_items][1][code]" value="#{@add_item.code}" readonly="readonly"
                     td
                       input type="text" required=true class="form-control md-form" id="quantity" name="order[order_items][1][name]" value="#{@add_item.name}"  readonly="readonly"
                     td
@@ -77,7 +77,7 @@
                     - if order_item.item.id == stock.id
                       - total_order+= order_item.quantity
                   - new_order = store_item.min_stock - store_item.stock - total_order
-                  - if new_order > 0
+                  / - if new_order > 0
                     tr
                       td style="display: none;"
                         input type="number" required=true class="form-control md-form" id="quantity" name="order[order_items][#{index+idx}][item_id]" value="#{stock.id}" readonly="readonly"

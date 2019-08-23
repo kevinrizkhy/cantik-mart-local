@@ -7,7 +7,13 @@ tr
       =image_tag("/images/default_item.jpg", height: '70', width: '70')
   td #{item.name}
   td #{item.brand}
-  td #{item.item_cat.name}
+  td 
+    - department = item.item_cat.department.name
+    - item_cat = item.item_cat.name
+    - if department == item_cat
+      | #{item_cat}
+    - else
+      | #{department} - #{item_cat}
   td #{item.buy}
   td #{item.sell}
   td 
