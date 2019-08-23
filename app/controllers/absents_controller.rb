@@ -15,13 +15,13 @@ class AbsentsController < ApplicationController
       if params[:id].to_i == current_user.id
         @absents = @absents.where(user: current_user)
       else
-        # return redirect_back_no_access_right if current_user.level != "owner" || current_user.level != "super_admin"
+        return redirect_back_data_error absents_path(id: current_user.id), "Tidak Memiliki Hak Akses" unless ["owner", "super_admin"].include? current_user.level 
         @absents = @absents.where(user_id: params[:id])
       end
     end
 
     if params[:search].present?
-      return redirect_back_no_access_right if current_user.level != "owner" || current_user.level != "super_admin"
+      return redirect_back_data_error absents_path(id: current_user.id), "Tidak Memiliki Hak Akses" unless ["owner", "super_admin"].include? current_user.level 
       @search = params[:search].downcase
       search = "%"+@search+"%"
       @search_text+= " '"+@search+"' "

@@ -134,9 +134,9 @@ class OrdersController < ApplicationController
     items.each do |item|
       order_item = OrderItem.find item[0]
       break if order_item.nil?
-      new_receive_number = item[1]
-      next if new_receive <= order_item.receive
-      order_item.new_receive = item[1]
+      new_receive_number = item[1].to_i.abs
+      next if new_receive_number <= order_item.receive
+      order_item.new_receive = new_receive_number
       order_item.save!
       this_item = Item.find order_item.item.id
       store_stock = StoreItem.find_by(item_id: order_item.item.id, store_id: current_user.store)

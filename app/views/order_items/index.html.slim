@@ -3,7 +3,7 @@
 .row
   .col
     h5
-      | Daftar Item #{@order_items.first.order.invoice}
+      | Data #{@order_items.first.order.invoice}
   - if @order_items.first.order.date_receive.nil? && @order_items.first.order.date_paid_off.nil?
     .col.text-right
       a href="#{order_confirmation_path(id: order_id)}"
@@ -14,6 +14,29 @@
         a href="#{edit_order_confirmation_path(id: order_id)}"
           button.btn.btn-rounded.btn-warning type="button" 
             | Ubah
+br
+.container-fluid
+    .col-lg-12.col-md-12
+      .card.mb-4
+        .card-header.white-text.info-color
+          h5.font-weight-500.my-1
+            | Informasi Pesanan
+        .card-body
+          .row
+            .col-md-12
+              label for="form" INVOICE
+              input type="text" class="form-control md-form" disabled=true value="#{order.invoice}"
+            .col-md-4
+              label for="form" Total
+              input type="number" class="form-control md-form" disabled=true value="#{order.total_items}"
+            .col-md-4
+              .form-group
+                label for="from" Dari
+                input type="text" class="form-control md-form" disabled=true value="#{order.store.name}"
+            .col-md-4
+              .form-group
+                label for="from" Kepada
+                input type="text" class="form-control md-form" disabled=true value="#{order.supplier.name}"
 br
 .container-fluid
   .col-lg-12.col-md-12
@@ -30,13 +53,10 @@ br
             th Jumlah
             th Harga / Item
             th Terima
-            - if !order.editable
-              th Terima Baru
             th.text-center Bayar
           tbody
             = render partial: 'list', collection: @order_items, as: :order_item
           tfoot.text-xl-right
-            td
             td
             td
             td
@@ -56,8 +76,6 @@ br
   .row
     .col
       h5
-        .text-left
-          | Pembayaran Order #{@order_items.first.order.invoice} 
         - if @pay > 0
           .text-danger
             | KEKURANGAN : #{number_to_currency(@pay, unit: "Rp. ")}
@@ -70,21 +88,21 @@ br
           button.btn.btn-rounded.btn-success type="button" 
             | Bayar
   br
-  .container-fluid
-    .col-lg-12.col-md-12
-      .card.mb-4
-        .card-header.white-text.info-color
-          h5.font-weight-500.my-1
-            | Data Pembayaran
-        .card-body.table-responsive.text-nowrap
-          table class="table"
-            thead
-              th Invoice
-              th Dibayar
-              th Tanggal
-              th Total
-            tbody
-              = render partial: 'list_payment', collection: @order_invs, as: :order_inv
+.container-fluid
+  .col-lg-12.col-md-12
+    .card.mb-4
+      .card-header.white-text.info-color
+        h5.font-weight-500.my-1
+          | Data Pembayaran
+      .card-body.table-responsive.text-nowrap
+        table class="table"
+          thead
+            th Invoice
+            th Dibayar
+            th Tanggal
+            th Total
+          tbody
+            = render partial: 'list_payment', collection: @order_invs, as: :order_inv
 
-          = paginate @order_items
+        = paginate @order_items
 

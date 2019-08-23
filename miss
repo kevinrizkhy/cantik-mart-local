@@ -41,8 +41,9 @@ _____________________________________________________________
 	* profit loss
 	* pengeluaran
 	=> button to generate excel
-- report (CRUD)
-- absent
+- report (CRUD) ==> OK (DB ROUTES), NOK(MODEL CONTROLLERS URLinNAV)
+- log activity link
+- check all params is required ==> minimize error params not found
 
 + activity if data is deleted
 
@@ -64,6 +65,7 @@ _____________________________________________________________
 +K Restruct item_cat and department
 
 
+-K absent
 -K Update & Delete in Grocer
 -K Change Supplier.pic into Supplier.name (--> cant trackable on Activiities)
 -K Price based on QTY (Grocier - item)

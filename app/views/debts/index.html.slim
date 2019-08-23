@@ -28,7 +28,7 @@
         | Pencarian
     .card.mb-4
       .card-body
-        = form_for :finances, url: debts_path, method: 'POST' do |form|
+        = form_for :finances, url: debts_path, method: 'GET' do |form|
           .row
             .col-md-12.text-center
               input#materialGroupExample1.form-check-input.form-control[type="radio" name="switch_date_month" checked="checked" value="date"]

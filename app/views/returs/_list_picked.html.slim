@@ -3,12 +3,11 @@ tr
   td #{retur.store.name}
   td #{retur.supplier.name}
   td #{retur.total_items}
-  td #{retur.date_created.to_date}
   td
-    - if retur.date_approve.nil?
+    - if retur.date_picked.nil?
       | - 
     - else
-      | #{retur.date_approve.to_date}
+      | #{retur.date_picked.to_date} 
   td
     a href='#{retur_items_path(id: retur.id)}'
       button class="btn btn-rounded btn-primary"

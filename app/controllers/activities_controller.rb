@@ -3,7 +3,7 @@ class ActivitiesController < ApplicationController
 	def index
 		@models = PublicActivity::Activity.pluck(:trackable_type)
 	  	@activities = PublicActivity::Activity.order("created_at desc").page param_page
-		@search_text = "Pencarian "
+		@search_text = ""
 		@date_search = nil
 		if params[:activity].present?
 			@date_search = params[:activity][:date_search] 
@@ -33,9 +33,10 @@ class ActivitiesController < ApplicationController
 		end
 
 		if @date_search.present?
-			@activities = @activities.where(created_at: @date_search)
+			@activities.where("created_at >= ? AND created_at <= ? ", @date_search.to_date.beginning_of_day, @date_search.to_date.end_of_day)
 			@search_text+= "pada tanggal " + @date_search.to_s
 		end
+		@search_text = "Pencarian "+@search_text if @search_text.size > 0
 		# @activities.delete_all
 	end
 

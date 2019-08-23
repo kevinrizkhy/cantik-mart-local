@@ -9,17 +9,16 @@ tr
   td #{order_item.item.name}
   td #{order_item.quantity}
   td #{order_item.price}
-  td #{order_item.receive}
   - if !order.editable
   	td
-  		| #{order_item.new_receive.to_i}
+      |#{order_item.receive} &nbsp
+      span 
+        i.fas.fa-arrow-right
+      | &nbsp #{order_item.new_receive.to_i}
     td.text-danger.text-right
 		  | #{number_to_currency(order_item.new_receive.to_i * order_item.price.to_i, unit: "Rp. ")}
   - else
-    - if order_item.receive.present?
-  	  td.text-danger.text-right
-  		  | #{number_to_currency(order_item.receive.to_i * order_item.price.to_i, unit: "Rp. ")}
-    - else
-      td.text-warning.text-right
-        | #{number_to_currency(order_item.quantity.to_i * order_item.price.to_i, unit: "Rp. ")}
+    td #{order_item.receive}
+	  td.text-danger.text-right
+		  | #{number_to_currency(order_item.receive.to_i * order_item.price.to_i, unit: "Rp. ")}
 

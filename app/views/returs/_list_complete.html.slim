@@ -4,8 +4,9 @@ tr
   td #{retur.supplier.name}
   td #{retur.total_items}
   td
-    - if retur.status.nil?
-      | -
+    - if retur.status < ("01-01-2000".to_date)
+      .text-danger
+        | #{retur.date_approve.to_date} (DIBATALKAN OTOMATIS)
     - else
       | #{retur.status.to_date}
   td

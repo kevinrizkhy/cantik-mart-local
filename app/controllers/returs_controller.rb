@@ -117,18 +117,19 @@ class RetursController < ApplicationController
         retur.delete
         return redirect_back_data_error new_retur_path, "Data Jumlah Barang Retur Melebihi Jumlah Stok Toko"
       end
-
-      ReturItem.create item_id: retur_item[0], retur_id: retur.id, quantity: retur_item[1], description: retur_item[2]
+      description = "-"
+      description = retur_item[5] if retur_item[5].size > 0
+      ReturItem.create item_id: retur_item[0], retur_id: retur.id, quantity: retur_item[4], description: description
     end
     urls = retur_items_path id: retur.id
     return redirect_success urls, "Data Retur Telah Disimpan"
   end
 
   def confirmation
-    return redirect_back_data_error returs_path unless params[:id].present?
+    return redirect_back_data_error returs_path, "Data Retur Tidak Ditemukan" unless params[:id].present?
     @retur = Retur.find params[:id]
-    return redirect_back_data_error returs_path if @retur.nil?
-    return redirect_back_data_error returs_path if @retur.date_picked.present? || @retur.date_approve.present?
+    return redirect_back_data_error returs_path, "Data Retur Tidak Ditemukan" if @retur.nil?
+    return redirect_back_data_error returs_path, "Data Retur Tidak Ditemukan" if @retur.date_picked.present? || @retur.date_approve.present?
     @retur_items = ReturItem.where(retur_id: @retur.id)
   end
 
@@ -138,17 +139,26 @@ class RetursController < ApplicationController
     return redirect_back_data_error returs_path, "Data Retur Tidak Ditemukan" if retur.nil?
     return redirect_back_data_error returs_path, "Data Retur Tidak Valid" if retur.date_picked.present? || retur.date_approve.present?
     items = retur_items
+    any_item_to_retur = false
     items.each do |item|
       retur_item = ReturItem.find item[0]
       break if retur_item.nil?
       break if retur_item.quantity < item[1].to_i
       retur_item.accept_item = item[1]
+      any_item_to_retur = true
       retur_item.save!
     end
     retur.date_approve = Time.now
-    retur.approved_by = current_user.id
+    retur.approved_by = current_user
+
+    if any_item_to_retur
+      retur.date_picked = Time.now - 50.years
+      retur.picked_by = current_user
+      retur.status = Time.now - 50.years
+    end
+
     retur.save!
-    return redirect_success retur_items_path(id: params[:id])
+    return redirect_success retur_items_path(id: params[:id]), "Retur Telah Dikonfirmasi"
   end
 
   def picked
@@ -157,10 +167,10 @@ class RetursController < ApplicationController
     return redirect_back_data_error returs_path, "Data Retur Tidak Ditemukan" if retur.nil?
     return redirect_back_data_error returs_path, "Data Retur Tidak Valid" unless retur.date_picked.present? || retur.date_approve.present?
     retur.date_picked = Time.now
-    retur.picked_by = current_user.id
+    retur.picked_by = current_user
     retur.save!
     decrease_stock params[:id]
-    return redirect_success returs_path
+    return redirect_success returs_path, "Retur Telah Diambil Suplier"
   end
 
   def destroy
@@ -170,7 +180,7 @@ class RetursController < ApplicationController
     return redirect_back_data_error returs_path, "Data Retur Tidak Valid" if retur.date_approve.present?
     ReturItem.where(retur_id: params[:id]).destroy_all
     retur.destroy
-    return redirect_success returs_path
+    return redirect_success returs_path, "Date Retur Berhasil Dihapus"
   end
 
   def show
