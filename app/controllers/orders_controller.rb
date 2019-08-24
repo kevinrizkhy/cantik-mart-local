@@ -93,7 +93,7 @@ class OrdersController < ApplicationController
     order.total = total
     order.create_activity :create, owner: current_user
     order.save!
-    urls = order_items_path id: order.id
+    urls = order_path id: order.id
     return redirect_success urls, "Order Berhasil Disimpan"
   end
 
@@ -163,6 +163,8 @@ class OrdersController < ApplicationController
       debt.deficiency = 0
       debt.save!
     end
+    urls = order_path(id: params[:id])
+    return redirect_success urls, "Order " + order.invoice + " Telah Diterima"
   end
 
   def receive
@@ -171,7 +173,7 @@ class OrdersController < ApplicationController
     return redirect_back_data_error orders_path unless order.present?
     return redirect_back_data_error orders_path, "Order Tidak Dapat Diubah" if order.date_receive.present? || order.date_paid_off.present?
     due_date = params[:order][:due_date]
-    urls = order_items_path(id: params[:id])
+    urls = order_path(id: params[:id])
     return redirect_back_data_error order_confirmation_path(id: order.id), "Tanggal Jatuh Tempo Harus Diisi" if due_date.nil?
     items = order_items
     new_total = 0
@@ -212,7 +214,7 @@ class OrdersController < ApplicationController
       Notification::INFO, "Pembayaran "+order.invoice+" sebesar "+number_to_currency(new_total, unit: "Rp. "), urls)
     
     description = order.invoice + " (" + new_total.to_s + ")"
-    urls = order_items_path(id: params[:id])
+    urls = order_path(id: params[:id])
     return redirect_success urls, "Order " + order.invoice + " Telah Diterima"
   end
 
@@ -261,14 +263,18 @@ class OrdersController < ApplicationController
       debt.deficiency = 0
     end
     debt.save!
-    urls = order_items_path(id: params[:id])
+    urls = order_path(id: params[:id])
     return redirect_success urls, "Pembayaran Order " + order.invoice + " Sebesar " + nominal.to_s + " Telah Dikonfirmasi"
   end
 
   def show
     return redirect_back_data_error orders_path, "Data Order Tidak Ditemukan" unless params[:id].present?
-    @order = Order.find_by_id params[:id]
-    return redirect_back_data_error orders_path, "Data Order Tidak Ditemukan" unless @order.present?
+    order = Order.find_by(id: params[:id])
+    return redirect_back_data_error orders_path, "Data Order Tidak Ditemukan" unless order.present?
+    @order_items = OrderItem.page param_page
+    @order_items = @order_items.where(order_id: params[:id])
+    @order_invs = InvoiceTransaction.where(invoice: order.invoice)
+    @pay = order.total.to_i - @order_invs.sum(:nominal) 
   end
 
   private

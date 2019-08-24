@@ -42,8 +42,9 @@ _____________________________________________________________
 	* pengeluaran
 	=> button to generate excel
 - report (CRUD) ==> OK (DB ROUTES), NOK(MODEL CONTROLLERS URLinNAV)
-- log activity link
+- log activity link (show: order, retur)
 - check all params is required ==> minimize error params not found
+
 
 + activity if data is deleted
 

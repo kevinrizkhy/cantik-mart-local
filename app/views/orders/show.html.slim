@@ -53,23 +53,18 @@ br
             th Jumlah
             th Harga / Item
             th Terima
-            th.text-center Bayar
+            th.text-right Total
           tbody
-            = render partial: 'list', collection: @order_items, as: :order_item
+            = render partial: 'list_show', collection: @order_items, as: :order_item
           tfoot.text-xl-right
             td
             td
             td
             td
             td
-            - if !order.editable
-              td
-            - if order.date_receive.present?
-              td.font-weight-bold.text-danger
-                | #{number_to_currency(order.total, unit: "Rp. ")}
-            - else
-              td.font-weight-bold.text-warning
-                | #{number_to_currency(order.total, unit: "Rp. ")}
+            td
+            td.font-weight-bold.text-danger
+              | #{number_to_currency(order.total, unit: "Rp. ")}
 
 - if order.date_receive.present?
   br

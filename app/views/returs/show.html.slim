@@ -60,6 +60,6 @@ br
             th Alasan Retur
             th Jumlah Tukar
           tbody
-            = render partial: 'list', collection: @retur_items, as: :ret_item
+            = render partial: 'show_list', collection: @retur_items, as: :ret_item
         = paginate @retur_items
 

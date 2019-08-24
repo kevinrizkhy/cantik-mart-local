@@ -121,7 +121,7 @@ class RetursController < ApplicationController
       description = retur_item[5] if retur_item[5].size > 0
       ReturItem.create item_id: retur_item[0], retur_id: retur.id, quantity: retur_item[4], description: description
     end
-    urls = retur_items_path id: retur.id
+    urls = retur_path id: retur.id
     return redirect_success urls, "Data Retur Telah Disimpan"
   end
 
@@ -158,7 +158,7 @@ class RetursController < ApplicationController
     end
 
     retur.save!
-    return redirect_success retur_items_path(id: params[:id]), "Retur Telah Dikonfirmasi"
+    return redirect_success retur_path(id: params[:id]), "Retur Telah Dikonfirmasi"
   end
 
   def picked
@@ -185,8 +185,8 @@ class RetursController < ApplicationController
 
   def show
     return redirect_back_data_error returs_path, "Data Retur Tidak Ditemukan" unless params[:id].present?
-    @retur = Retur.find_by_id params[:id]
-    return redirect_back_data_error returs_path, "Data Retur Tidak Ditemukan" unless @retur.present?
+    @retur_items = ReturItem.page param_page
+    @retur_items = @retur_items.where(retur_id: params[:id])
   end
 
   private
