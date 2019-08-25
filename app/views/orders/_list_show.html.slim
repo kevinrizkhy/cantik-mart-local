@@ -23,7 +23,9 @@ tr
   	  td.text-danger.text-right
   		  | #{number_to_currency(order_item.receive.to_i * order_item.price.to_i, unit: "Rp. ")}
     - else
-      td -
+      td 
+        span 
+          i.fas.fa-times
       td.text-danger.text-right
         | #{number_to_currency(order_item.quantity.to_i * order_item.price.to_i, unit: "Rp. ")}
 

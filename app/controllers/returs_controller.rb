@@ -2,15 +2,15 @@ class RetursController < ApplicationController
   before_action :require_login
   before_action :require_fingerprint
   def index
-    @returs = Retur.order("date_created DESC").page param_page
+    @returs = Retur.order("date_created DESC").page(param_page).per(5)
     @returs_new = Retur.where('date_approve is null')
       .order("date_created DESC").page(param_page).per(5)
     @returs_complete = Retur.where('status is not null')
-      .order("date_created DESC").page param_page
+      .order("date_created DESC").page(param_page).per(5)
     @returs_picked = Retur.where('date_picked is not null AND status is null')
-      .order("date_created DESC").page param_page
+      .order("date_created DESC").page(param_page).per(5)
     @returs_waiting = Retur.where('date_approve is not null AND date_picked is null')
-      .order("date_created DESC").page param_page
+      .order("date_created DESC").page(param_page).per(5)
 
     if (current_user.level != User::OWNER) || (current_user.level != User::SUPER_ADMIN)
       @returs = @returs.where(store: current_user.store)
@@ -145,13 +145,13 @@ class RetursController < ApplicationController
       break if retur_item.nil?
       break if retur_item.quantity < item[1].to_i
       retur_item.accept_item = item[1]
-      any_item_to_retur = true
+      any_item_to_retur = true if item[1].to_i > 0
       retur_item.save!
     end
     retur.date_approve = Time.now
     retur.approved_by = current_user
 
-    if any_item_to_retur
+    if !any_item_to_retur
       retur.date_picked = Time.now - 50.years
       retur.picked_by = current_user
       retur.status = Time.now - 50.years

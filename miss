@@ -45,6 +45,8 @@ _____________________________________________________________
 - check all params is required ==> minimize error params not found
 - all controllers  have show
 - if no chnger, dont save into activity
+- if order from retur and that items isnt same qty, what you will do ?
+- checking in retur, if feedback is receivable
 
 + activity if data is deleted
 

@@ -24,59 +24,66 @@ class ReturItemsController < ApplicationController
     order = nil
     receivable = nil
     cash_flow = nil
+    total_items = 0
     feed_value.each do |value|
-      retur_item = ReturItem.find value[1]
+      retur_item = ReturItem.find_by(id: value[1])
       if retur_item.nil?
           receivable.delete
           OrderItem.where(order: order).delete_all
           order.delete
           break
       end
+      next if retur_item.accept_item <= 0
       if value[0] == "retur_item"
         if order.nil?
           order = Order.create supplier_id: retur.supplier_id, 
             store: current_user.store, 
-            total_items: 1,
+            total_items: total_items,
             total: 0,
             date_created: DateTime.now,
-            invoice: "ORDR-" + Time.now.to_i.to_s, 
-            editable: false
+            invoice: "ORD-" + Time.now.to_i.to_s, 
+            editable: true,
+            user: current_user
         end
-        if retur_item.nil?
-          OrderItem.where(order: order).delete_all
-          order.delete
-          break
-        else
-          OrderItem.create quantity: retur_item.quantity, 
-          price: 0,
-          item_id: value[1],
-          order: order,
-          description: "RETUR #"+retur.invoice
-          retur_item.ref_id = order.id
-        end
+        order_qty = value[2].to_i
+        order_qty = retur_item.accept_item if order_qty > retur_item.accept_item 
+        ord_item = Item.find_by(id: retur_item.item.id)
+        a = OrderItem.create quantity: order_qty, 
+        price: 0,
+        item: ord_item,
+        order: order,
+        description: "RETUR #"+retur.invoice
+
+        retur_item.ref_id = order.id
+        retur_item.nominal = order_qty
+        total_items+=1
+        order.update(total_items: total_items)
+
       elsif value[0] == "cash"
+        nominal_value = value[2].to_i
+        return redirect_back_data_error if nominal_value < 100
         if receivable.nil?
           receivable = Receivable.create user: current_user, store: current_user.store, nominal: value[2], date_created: DateTime.now, 
                         description: "RECEIVABLE FROM RETUR #"+retur.invoice, finance_type: Receivable::RETUR, deficiency:value[2], to_user: retur.supplier_id
         else
-          receivable.nominal += receivable.nominal+value[2]
-          receivable.deficiency += receivable.deficiency+value[2]
+          receivable.nominal += receivable.nominal+nominal_value
+          receivable.deficiency += receivable.deficiency+nominal_value
           receivable.save!
         end
         retur_item.ref_id = receivable.id
-        retur_item.nominal = receivable.nominal
+        retur_item.nominal = nominal_value
       end
       retur_item.feedback = value[0]
       retur_item.save!
     end
     retur.status = Time.now
     retur.save
-    urls = retur_items_path(id: retur.id)
+    urls = retur_path(id: retur.id)
     return redirect_success urls, "Data Retur " + retur.invoice + " Telah Dikonfirmasi"
   end
 
   def show
-    return redirect_back_data_error retur_items_path, "Data Retur Tidak Ditemukan" unless params[:id].present?
+    return redirect_back_data_error returs_path, "Data Retur Tidak Ditemukan" unless params[:id].present?
     @retur_item = ReturItem.find_by_id params[:id]
     return redirect_back_data_error new_retur_item_path, "Data Retur Tidak Ditemukan" unless @retur_item.present?
   end
