@@ -1,10 +1,12 @@
 tr
-  	td #{inventory.supplier.name}
-  	td #{inventory.supplier.address}
-  	td #{inventory.supplier.phone}
-  	td
-		a href='#{new_order_path(supplier_id: inventory.supplier.id)}'
-	    	button.btn.btn-rounded.btn-primary type="button"
+	td #{supplier.supplier.name}
+	td #{supplier.supplier.address}
+	td #{supplier.supplier.phone}
+	td
+		a href='#{supplier_path(id: supplier.supplier.id)}'
+			button.btn.btn-rounded.btn-info type="button"
+		        | Detil
+		a href='#{new_order_path(supplier_id: supplier.supplier.id)}'
+			button.btn.btn-rounded.btn-success type="button"
 		        | Order
-
 

@@ -21,8 +21,10 @@ tr
       - else
         .text-danger
           i.fas.fa-times
-  	td
-    	a href='' 
-    		button.btn.btn-rounded.btn-info type="button" 
-	       		| Detil
-
+    td
+      - if absent.overtime_out.present?
+        - time_split = absent.overtime_hour.split(":")
+        | #{time_split[0]} Jam #{time_split[1]} Menit #{time_split[2]} Detik
+      - else
+        .text-danger
+          i.fas.fa-times

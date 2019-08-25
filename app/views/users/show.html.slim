@@ -27,14 +27,10 @@
                 = form.number_field :phone, required: true, class: "form-control md-form", id: "phone", disabled: "disabled"
               .form-group
                 label for="sex" Jenis Kelamin
-                select name="user[sex]" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" searchable="Cari..." disabled="disabled"
-                  option value='laki_laki'
-                    | #{@user.sex}
+                input class="form-control md-form" value="#{@user.sex}" disabled="disabled"
               .form-group
                 label for="level" Peran 
-                select name="user[level]" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" id="level" searchable="Cari..." disabled="disabled"
-                  option value='owner'
-                    | #{@user.level}
+                input class="form-control md-form" value="#{@user.level}" disabled="disabled"
               .form-group
                 label for="id-card" KTP
                 = form.text_field :id_card, required: true, class: "form-control md-form", id: "id-card", disabled: "disabled"

@@ -1,5 +1,8 @@
+- item = Item.find_by_id(order_item[0])
+- order_qty = order_item[1]
 tr
-  td #{inventory.item.code}
-  td #{inventory.item.name}
-  td #{inventory.item.brand}
-  td #{inventory.item.item_cat.name}
+  td #{item.code}
+  td #{item.name}
+  td #{item.brand}
+  td #{item.item_cat.name}
+  td.text-center #{order_qty}

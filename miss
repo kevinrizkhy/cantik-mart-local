@@ -42,9 +42,9 @@ _____________________________________________________________
 	* pengeluaran
 	=> button to generate excel
 - report (CRUD) ==> OK (DB ROUTES), NOK(MODEL CONTROLLERS URLinNAV)
-- log activity link (show: order, retur)
 - check all params is required ==> minimize error params not found
-
+- all controllers  have show
+- if no chnger, dont save into activity
 
 + activity if data is deleted
 
@@ -66,6 +66,7 @@ _____________________________________________________________
 +K Restruct item_cat and department
 
 
+-K log activity link (show: order, retur)
 -K absent
 -K Update & Delete in Grocer
 -K Change Supplier.pic into Supplier.name (--> cant trackable on Activiities)

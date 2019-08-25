@@ -16,23 +16,8 @@ tr
       | #{department} - #{item_cat}
   td #{item.buy}
   td #{item.sell}
-  td 
-    - supplier_items = SupplierItem.where(item_id: item.id)
-    - supplier_items.each do |sup_item|
-        - if supplier_items.last == sup_item
-          | #{sup_item.supplier.name}
-        - else
-          |  #{sup_item.supplier.name}, 
   td
     a href='#{item_path(id: item.id)}'
       button.btn.btn-rounded.btn-info type="button" 
         | Detil
-    | &nbsp &nbsp
-    a href='#{edit_item_path(id: item.id)}'
-      button.btn.btn-rounded.btn-warning type="button" 
-        | Edit
-    | &nbsp &nbsp
-    a href='#{item_suppliers_path(id: item.id)}'
-      button.btn.btn-rounded.btn-primary type="button" 
-        | Supplier
 

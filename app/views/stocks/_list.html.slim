@@ -10,9 +10,9 @@ tr
 	td #{inventory.min_stock}
 	td #{inventory.item.sell}
 	td
-	  	a href='#{edit_stock_path(id: inventory.id)}'
+	  	a href='#{stock_path(id: inventory.id)}'
 	  		button.btn.btn-rounded.btn-primary type="button" 
-        		| Edit
+        		| Detil
        	| &nbsp &nbsp
        	- if inventory.min_stock > inventory.stock
        		a href='#{new_order_path(item_id: inventory.item.id)}'

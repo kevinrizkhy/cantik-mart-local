@@ -48,6 +48,7 @@ class ItemCatsController < ApplicationController
     return redirect_back_data_error departments_path, "Data Kategori Item Tidak Ditemukan" unless params[:id].present?
     @item_cat = ItemCat.find_by_id params[:id]
     return redirect_back_data_error item_cats_path, "Data Kategori Item Tidak Ditemukan" unless @item_cat.present?
+    @department = Department.all
   end
 
   def update
@@ -57,8 +58,10 @@ class ItemCatsController < ApplicationController
     item_name = params[:item_cat][:name].camelize
     item_cat.name = item_name
     changes = item_cat.changes
-    item_cat.save! if item_cat.changed?
-    item_cat.create_activity :edit, owner: current_user, parameters: changes
+    if item_cat.changed?
+      item_cat.save!
+      item_cat.create_activity :edit, owner: current_user, parameters: changes
+    end
     params = "?" + { :dept_id => item_cat.department_id }.to_param
     return redirect_success item_cats_path + params , "Kategori Item - " + item_cat.name + " Berhasil Diubah"
   end

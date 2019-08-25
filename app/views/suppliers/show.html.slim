@@ -15,6 +15,18 @@
           .form-group
             label for="phone" Nomor Telepon
             = form.number_field :phone, required: true, class: "form-control md-form", id: "phone"
-        .text-center
-          - if !@supplier.supplier_items.present?
-              = button_to "Hapus Supplier", @supplier, :method=>:delete, :class=>"btn btn-rounded btn-danger"
+          
+      .col-12.text-center
+        a href='#{edit_supplier_path(id: @supplier.id)}'
+          button.btn.btn-rounded.btn-warning type="button" 
+              | Edit
+        a href='#{supplier_items_path(id: @supplier.id)}'
+          button.btn.btn-rounded.btn-primary type="button" 
+            | Item
+        a href='#{new_order_path(supplier_id: @supplier.id)}'
+          button.btn.btn-rounded.btn-success type="button" 
+              | Order
+        - if !@supplier.supplier_items.present?
+          = button_to "Hapus Supplier", @supplier, :method=>:delete, :class=>"btn btn-rounded btn-danger"
+      p
+        | 

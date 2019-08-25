@@ -3,11 +3,6 @@
     h5
       | Daftar Barang #{@supplier.name}
   .col.text-right
-    a href="#{new_supplier_item_path(id: @supplier.id)}"
-      button.btn.btn-rounded.btn-primary type="button" 
-        i.fas.fa-plus 
-        |   Tambah Item
-    | &nbsp &nbsp
     a href='#{new_order_path(supplier_id: @supplier.id)}'
         button.btn.btn-rounded.btn-success type="button" 
             | Order
@@ -39,6 +34,7 @@ br
             th Nama
             th Merek
             th Kategori
+            th Total Pesan
           tbody
-            = render partial: 'list', collection: @inventories, as: :inventory
-        = paginate @inventories
+            = render partial: 'list', collection: @inventories, as: :order_item
+        = paginate @order_items

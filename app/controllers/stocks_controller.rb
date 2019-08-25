@@ -28,7 +28,7 @@ class StocksController < ApplicationController
     changes = item.changes
     item.save! if item.changed?
     item.create_activity :edit, owner: current_user, parameters: changes
-    return redirect_success stocks_path
+    return redirect_success stocks_path, "Data Stok Barang Berhasil Diubah"
   end
 
   def show

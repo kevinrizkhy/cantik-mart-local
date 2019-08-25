@@ -71,13 +71,13 @@ class AbsentsController < ApplicationController
       elsif check_type == "4"
         next if absent.overtime_in.present?
         absent.overtime_in = date_time
-        work_hours = calculate_work_hour absent.check_in, absent.check_out
+        work_hours = calculate_work_hour absent.overtime_in, absent.overtime_out
         absent.work_hour = work_hours
       elsif check_type == "5"
         next if absent.overtime_out.present?
         absent.overtime_out = date_time
-        work_hours = calculate_work_hour absent.check_in, absent.check_out
-        absent.work_hour = work_hours
+        work_hours = calculate_work_hour absent.overtime_in, absent.overtime_out
+        absent.overtime_work = work_hours
       end
       absent.save!
     end

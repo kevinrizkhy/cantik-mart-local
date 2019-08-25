@@ -23,6 +23,23 @@
             = form.number_field :min_stock, required: true, class: "form-control md-form", id: "stock", value:"#{@stock.min_stock}"
           .form-group
             label for="sell" Harga Jual
-            = form.number_field :sell, required: true, class: "form-control md-form", id: "sell", disabled: true
-          .form-group.text-center
-            = form.submit "Ubah Stok Item - #{@item.name}", class: "btn btn-rounded btn-primary"
+            table class="table"
+              thead
+                th Min
+                th Max
+                th Harga
+              tbody
+                tr
+                  td 0
+                  td 1
+                  td #{@item.sell}
+                - item_grocers = @item.grocer_items
+                - if item_grocers.present?
+                  -item_grocers.each do |item|
+                    tr 
+                      td #{item.min}
+                      td #{item.max}
+                      td #{item.price}
+        .col-12.text-center
+          a href='#{edit_stock_path(id: @stock.id)}' class="btn btn-rounded btn-warning" type="button" 
+                | Edit
