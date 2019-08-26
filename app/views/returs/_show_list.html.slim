@@ -6,9 +6,19 @@ tr
     - else
       =image_tag("/images/default_item.jpg", height: '70', width: '70')
   td #{ret_item.item.name}
-  td #{ret_item.quantity}
-  td #{ret_item.accept_item}
+  td.text-center #{ret_item.quantity}
+  - if ret_item.accept_item > 0
+    td.text-center #{ret_item.accept_item}
+  - else
+    td.text-center
+      i.fas.fa-times
   td #{ret_item.description}
-  td
-    | #{ret_item.nominal}
+  - if ret_item.feedback.present?
+    td #{ret_item.feedback}
+    td.text-right #{ret_item.nominal}
+  - else
+    td.text-right
+      i.fas.fa-times
+    td.text-right
+      i.fas.fa-times
 

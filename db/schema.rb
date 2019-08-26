@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_23_081123) do
+ActiveRecord::Schema.define(version: 2019_08_26_143234) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -293,7 +293,7 @@ ActiveRecord::Schema.define(version: 2019_08_23_081123) do
     t.float "deficiency", null: false
     t.datetime "date_created", null: false
     t.string "description", null: false
-    t.integer "ref_id"
+    t.string "ref_id"
     t.integer "finance_type", null: false
     t.integer "to_user", default: 1, null: false
     t.date "due_date"

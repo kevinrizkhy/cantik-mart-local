@@ -37,7 +37,7 @@ class MembersController < ApplicationController
     member = Member.find_by_id params[:id]
     member.assign_attributes member_params
     member.name = params[:member][:name].camelize
-    changes = item_cat.changes
+    changes = member.changes
     member.save! if member.changed?
     member.create_activity :edit, owner: current_user, parameters: changes
     urls = member_path id: member.id

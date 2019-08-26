@@ -21,6 +21,7 @@ class ReturItemsController < ApplicationController
     return redirect_back_data_error returs_path, "Data Retur Tidak Ditemukan" unless retur.present?
     return redirect_back_data_error returs_path, "Data Retur Tidak Valid" if retur.status.present?
     feed_value = feedback_value
+    urls = retur_path(id: retur.id)
     order = nil
     receivable = nil
     cash_flow = nil
@@ -61,10 +62,11 @@ class ReturItemsController < ApplicationController
 
       elsif value[0] == "cash"
         nominal_value = value[2].to_i
-        return redirect_back_data_error if nominal_value < 100
+        return redirect_back_data_error urls, "Nominal Potong Nota > 100" if nominal_value < 100
         if receivable.nil?
-          receivable = Receivable.create user: current_user, store: current_user.store, nominal: value[2], date_created: DateTime.now, 
-                        description: "RECEIVABLE FROM RETUR #"+retur.invoice, finance_type: Receivable::RETUR, deficiency:value[2], to_user: retur.supplier_id
+          receivable = Receivable.create user: current_user, store: current_user.store, nominal: nominal_value, date_created: DateTime.now, 
+                        description: "RECEIVABLE FROM RETUR #"+retur.invoice, finance_type: Receivable::RETUR, deficiency:value[2], to_user: retur.supplier_id,
+                        ref_id: urls
         else
           receivable.nominal += receivable.nominal+nominal_value
           receivable.deficiency += receivable.deficiency+nominal_value
@@ -78,7 +80,6 @@ class ReturItemsController < ApplicationController
     end
     retur.status = Time.now
     retur.save
-    urls = retur_path(id: retur.id)
     return redirect_success urls, "Data Retur " + retur.invoice + " Telah Dikonfirmasi"
   end
 

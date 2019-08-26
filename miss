@@ -46,7 +46,6 @@ _____________________________________________________________
 - all controllers  have show
 - if no chnger, dont save into activity
 - if order from retur and that items isnt same qty, what you will do ?
-- checking in retur, if feedback is receivable
 
 + activity if data is deleted
 
@@ -68,6 +67,7 @@ _____________________________________________________________
 +K Restruct item_cat and department
 
 
+-K checking in retur, if feedback is receivable
 -K log activity link (show: order, retur)
 -K absent
 -K Update & Delete in Grocer

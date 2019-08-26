@@ -318,6 +318,7 @@ class OrdersController < ApplicationController
         over = paid - nominal
         Receivable.create user: current_user, store: current_user.store, nominal: over, date_created: DateTime.now, 
                         description: "OVER PAYMENT #"+order.invoice, finance_type: Receivable::OVER, deficiency:over, to_user: order.supplier_id
+                        ref_id: order_path(id: order.id)
         return true
       end
       return false

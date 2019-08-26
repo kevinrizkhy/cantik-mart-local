@@ -46,7 +46,7 @@ class SuppliersController < ApplicationController
     changes = supplier.changes
     supplier.save! if supplier.changed?
     supplier.create_activity :edit, owner: current_user, parameters: changes
-    return redirect_success suppliers_path, "Data Supplier - " + supplier.name + " - Berhasil Diubah"
+    return redirect_success supplier_path(id: supplier.id), "Data Supplier - " + supplier.name + " - Berhasil Diubah"
   end
 
   def destroy

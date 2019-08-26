@@ -41,7 +41,7 @@
                 | Kasir
           .form-group
             label for="id-card" KTP
-            = form.text_field :id_card, required: true, class: "form-control md-form", id: "id-card"
+            = form.text_field :id_card, required: true, class: "form-control md-form", id: "id-card", maxlength="18", minlength="16"
           .form-group
             label for="store" Toko
             select name="user[store_id]" required=true class="mdb-select md-form md-outline colorful-select dropdown-primary" id="store" searchable="Cari..."
@@ -49,7 +49,7 @@
                 option value="#{store.id}"
                   | #{store.name}
           .form-group
-            label for="id-card" KTP
+            label for="id-card" ID Fingerprint
             = form.text_field :fingerprint, required: true, class: "form-control md-form", id: "id-card"
           .form-group.text-center
             = form.submit "Tambah User", class: "btn btn-rounded btn-primary"
