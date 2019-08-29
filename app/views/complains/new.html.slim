@@ -5,57 +5,79 @@
     h5
       | Buat Retur Member - #{member}
   .col.text-right.text-danger
-    h5
+    h5 id="total" 
       | TOTAL : #{number_to_currency(@transaction.grand_total, unit: "Rp. ")}
 br
-.container-fluid
-  .col-lg-12.col-md-12
-    .card.mb-4
-      .card-header.white-text.info-color
-        h5.font-weight-500.my-1
-          | Data Pembeliaan (#{@transaction.invoice}) 
-      .card-body
-        .row
-          .col-md-12.text-right
-            button type="button" class="btn btn-rounded btn-deep-orange" onclick="addNewRowComplain()"
-              | + Item
-            br
-            br
-        = form_for :complain, url: complains_path(id: @transaction.id), method: "POST" do |form|
-          .col-12
-            table.table id="myTable"
-              tr
-                th
-                  | Item - Kategori
-                th
-                  | Harga
-                th
-                  | Beli
-                th
-                  | Komplain
-                th
-                  | Diganti
-                th
-                  | Keterangan
-                th
-              - @transaction_items.each_with_index do |trx_item, index|
+= form_for :complain, url: complains_path(id: @transaction.id), method: "POST" do |form|
+  .container-fluid
+    .col-lg-12.col-md-12
+      .card.mb-4
+        .card-header.white-text.info-color
+          h5.font-weight-500.my-1
+            | Data Pembelian (#{@transaction.invoice}) 
+        .card-body
+            .col-12
+              table.table id="myTable2"
                 tr
-                  td hidden=true
-                    input type="text" required=true class="form-control md-form" id="description" name="complain[complain_items][#{index}][item_id]" value="#{trx_item.item.id}" 
-                  td
-                    | #{trx_item.item.name}
-                  td 
-                    input type="number" required=true class="form-control md-form" id="price" name="complain[complain_items][#{index}][price]" value="#{trx_item.price}" readonly=true
-                  td 
-                    input type="number" required=true class="form-control md-form" id="quantity" name="complain[complain_items][#{index}][quantity]" value="#{trx_item.quantity}" readonly=true 
-                  td 
-                    input type="number" required=true class="form-control md-form" id="quantity" name="complain[complain_items][#{index}][retur_qty]" value=0
-                  td 
-                    input type="number" required=true class="form-control md-form" id="newquantity" name="complain[complain_items][#{index}][new_quantity]" value=0
-                  td 
-                    input type="text" required=true class="form-control md-form" id="description" name="complain[complain_items][#{index}][reason]" value=""
-                  td 
-                    input type="text" required=true class="form-control md-form" id="description" name="complain[complain_items][#{index}][decription]" value="#{@transaction.invoice}" readonly=true style="display: none;"
-          .col-md-12.text-center
-            .form-group.text-center
-              = form.submit "Buat Retur", class: "btn btn-rounded btn-primary"
+                  th
+                    | Barang
+                  th
+                    | Harga
+                  th
+                    | Beli
+                  th
+                    | Komplain
+                  th
+                    | Diganti
+                  th
+                    | Keterangan
+                  th
+                - @transaction_items.each_with_index do |trx_item, index|
+                  tr
+                    td hidden=true
+                      input type="text" required=true class="form-control md-form" id="description" name="complain[complain_items][#{index}][item_id]" value="#{trx_item.item.id}" 
+                    td
+                      | #{trx_item.item.name}
+                    td 
+                      input type="number" required=true class="form-control md-form" id="price" name="complain[complain_items][#{index}][price]" value="#{trx_item.price}" readonly=true
+                    td 
+                      input type="number" required=true class="form-control md-form" id="quantity" name="complain[complain_items][#{index}][quantity]" value="#{trx_item.quantity}" readonly=true 
+                    td 
+                      input type="number" required=true class="form-control md-form" id="quantity" name="complain[complain_items][#{index}][retur_qty]" value=0
+                    td 
+                      input type="number" required=true class="form-control md-form" id="newquantity" name="complain[complain_items][#{index}][new_quantity]" value=0
+                    td 
+                      input type="text" required=true class="form-control md-form" id="description" name="complain[complain_items][#{index}][reason]" value="" require="true"
+                    td 
+                      input type="text" required=true class="form-control md-form" id="description" name="complain[complain_items][#{index}][decription]" value="#{@transaction.invoice}" readonly=true style="display: none;"
+
+
+  .container-fluid
+    .col-lg-12.col-md-12
+      .card.mb-4
+        .card-header.white-text.info-color
+          h5.font-weight-500.my-1
+            | Tambah Pembelian
+        .card-body
+          .row
+            .col-12
+                label for="from" Kode Barang
+                input class="md-form form-control" placeholder="Barcode Barang..." id="itemId" onkeyup="getData('complain')"
+            .col-12
+              table.table id="myTable"
+                tr
+                  th
+                    | Kode
+                  th
+                    | Nama
+                  th
+                    | Kategori
+                  th
+                    | Jumlah
+                  th
+                    | Harga
+
+
+            .col-md-12.text-center
+              .form-group.text-center
+                = form.submit "Buat Retur", class: "btn btn-rounded btn-primary"

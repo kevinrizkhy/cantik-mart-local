@@ -110,32 +110,6 @@ function removeThisRow(params){
 	}
 }
 
-
-function addNewRowComplain(){
-	var table = document.getElementById("myTable");
-	var row = table.insertRow(table.rows.length);
-
-	var cell1 = row.insertCell(0);
-	var cell2 = row.insertCell(1);
-	var cell3 = row.insertCell(2);
-	var cell4 = row.insertCell(3);
-	var cell5 = row.insertCell(4);
-	var cell6 = row.insertCell(5);	
-	var cell7 = row.insertCell(6);
-
-	cell1.innerHTML = '<select id="selectpicker'+add_counter+'" class="mdb-select md-outline colorful-select dropdown-primary" searchable="Cari..." name="complain[complain_items]['+add_counter+'][item_id]">'+
-	gon.select_options+'</select>';
-	cell2.innerHTML = '<input type="number" required=true class="form-control" id="quantity" name="complain[complain_items]['+add_counter+'][price]">';
-	cell3.innerHTML = '<input type="number" required=true class="form-control" id="quantity" name="complain[complain_items]['+add_counter+'][discount]">';  
-	cell4.innerHTML = '<input type="number" required=true class="form-control" id="quantity" name="complain[complain_items]['+add_counter+'][quantity]" readonly value=0>'; 
-	cell5.innerHTML = '<input type="number" required=true class="form-control" id="quantity" name="complain[complain_items]['+add_counter+'][new_quantity]">'; 
-	cell6.innerHTML = '<input type="textarea" required=true class="form-control" id="description" name="complain[complain_items]['+add_counter+'][description]">'; 
-	cell7.innerHTML = "<i class='fa fa-trash text-danger' onclick='removeThisRow(this)'></i>"; 
-
-	$('#selectpicker'+add_counter).material_select();
-	add_counter++;
-}
-
     // SideNav Initialization
 $(".button-collapse").sideNav();
 
@@ -189,6 +163,8 @@ function getData(table_types) {
               addNewRowRetur(result_arr);
              }else if (table_types == "transfer"){
               addNewRowTransfer(result_arr);
+             }else if (table_types == "complain"){
+              addNewRowComplain(result_arr);
              }
            }
        },
@@ -200,6 +176,37 @@ function getData(table_types) {
      });
    }, 300);
 };
+
+function addNewRowComplain(result_arr){
+   var table = document.getElementById("myTable");
+   var result = result_arr[0];
+   var qty = 1;
+   var total = parseFloat(qty) * (parseFloat(result[3]) - parseFloat("100"));
+   
+   var row = table.insertRow(-1);
+   var cell1 = row.insertCell(0);
+   var cell2 = row.insertCell(1);
+   var cell3 = row.insertCell(2);
+   var cell4 = row.insertCell(3);
+   var cell5 = row.insertCell(4);
+   var cell6 = row.insertCell(5);
+
+   let id = "<input style='display: none;' type='text' class='md-form form-control' value='"+result[4]+"' readonly name='complain[complain_items]["+add_counter+"][item_id]'/>";
+   let code = id+"<input type='text' class='md-form form-control' value='"+result[0]+"' readonly />";
+   let name = "<input type='text' class='md-form form-control' value='"+result[1]+"' readonly />";
+   let cat = "<input type='text' class='md-form form-control' value='"+result[2]+"' readonly />";
+   let price = "<input type='number' class='md-form form-control' value="+result[5]+"  name='complain[complain_items]["+add_counter+"][description]'/>";
+   let quantity = "<input type='number' min=1 class='md-form form-control' value='1' name='complain[complain_items]["+add_counter+"][quantity]'/>"
+   let remove = "<i class='fa fa-trash text-danger' onclick='removeThisRow(this)'></i>"; 
+   cell1.innerHTML = code;
+   cell2.innerHTML = name;
+   cell3.innerHTML = cat;
+   cell5.innerHTML = price;
+   cell4.innerHTML = quantity;
+   cell6.innerHTML = remove;
+   add_counter++;
+   document.getElementById("itemId").value = "";
+}
 
 function addNewRowOrder(result_arr){
    var table = document.getElementById("myTable");
@@ -222,7 +229,7 @@ function addNewRowOrder(result_arr){
    let name = "<input type='text' class='md-form form-control' value='"+result[1]+"' readonly name='order[order_items]["+add_counter+"][name]'/>";
    let cat = "<input type='text' class='md-form form-control' value='"+result[2]+"' readonly name='order[order_items]["+add_counter+"][item_cat]'/>";
    let quantity = "<input type='number' min=1 class='md-form form-control' value='1' name='order[order_items]["+add_counter+"][quantity]'/>";
-   let price = "<input type='number' class='md-form form-control' value='100' min=100 name='order[order_items]["+add_counter+"][price]'/>";
+   let price = "<input type='number' class='md-form form-control' value='"+result[3]+"' min=100 name='order[order_items]["+add_counter+"][price]'/>";
    let desc = "<input type='text' class='md-form form-control' value=''  name='order[order_items]["+add_counter+"][description]'/>";
    let remove = "<i class='fa fa-trash text-danger' onclick='removeThisRow(this)'></i>"; 
    cell1.innerHTML = code;
