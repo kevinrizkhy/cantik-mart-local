@@ -14,6 +14,9 @@ nav.navbar.fixed-top.navbar-expand-lg.scrolling-navbar.double-nav
           - if total_notifications > 0
             span.badge.red id="notif_number_badge"
               | #{total_notifications}
+          - else
+            span.badge.red id="notif_number_badge" style="display: none;"
+              | #{total_notifications}
           i.fas.fa-bell
           span.d-none.d-md-inline-block Notifications
           

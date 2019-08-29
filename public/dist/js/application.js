@@ -1,5 +1,76 @@
 // setInterval(get_notification, 10000);
 
+function complain_check(index){
+  var qty = $("#quantity"+index).val();
+  var complain = $("#complain"+index).val();
+  var replace = $("#replace"+index).val();
+  if(complain > qty){
+    $("#complain"+index).val($("#quantity"+index).val());
+    complain = qty;
+  }
+  if(replace > complain){
+    $("#replace"+index).val($("#complain"+index).val());
+    replace = complain;
+  }
+
+  
+
+  total_complain();
+}
+
+function total_complain(){
+  var item_total = $("#item_total").val();
+  var new_total = 0;
+
+  for (var i = 0; i < item_total; i++) {
+    var complain = $("#complain"+i).val();
+    var replace = $("#replace"+i).val();
+    var price = $("#price"+i).val();
+
+    new_total-= (complain - replace) * price
+  }
+
+  $("#total").val(new_total);
+  document.getElementById("total_text").innerHTML = new_total;
+}
+
+function addNewRowComplain(result_arr){
+   var table = document.getElementById("myTable");
+   var result = result_arr[0];
+   var qty = 1;
+   var total = parseFloat(qty) * (parseFloat(result[3]) - parseFloat("100"));
+   
+   var row = table.insertRow(-1);
+   var cell1 = row.insertCell(0);
+   var cell2 = row.insertCell(1);
+   var cell3 = row.insertCell(2);
+   var cell4 = row.insertCell(3);
+   var cell5 = row.insertCell(4);
+   var cell6 = row.insertCell(5);
+
+   let id = "<input style='display: none;' type='text' class='md-form form-control' value='"+result[4]+"' readonly name='complain[complain_items]["+add_counter+"][item_id]'/>";
+   let code = id+"<input type='text' class='md-form form-control' value='"+result[0]+"' readonly />";
+   let name = "<input type='text' class='md-form form-control' value='"+result[1]+"' readonly />";
+   let cat = "<input type='text' class='md-form form-control' value='"+result[2]+"' readonly />";
+   let price = "<input type='number' class='md-form form-control' value="+result[5]+"  name='complain[complain_items]["+add_counter+"][description]'/>";
+   let quantity = "<input type='number' min=1 class='md-form form-control' value='1' name='complain[complain_items]["+add_counter+"][quantity]'/>"
+   let remove = "<i class='fa fa-trash text-danger' onclick='removeThisRow(this)'></i>"; 
+   cell1.innerHTML = code;
+   cell2.innerHTML = name;
+   cell3.innerHTML = cat;
+   cell4.innerHTML = quantity;
+   cell5.innerHTML = price;
+   cell6.innerHTML = remove;
+   add_counter++;
+   document.getElementById("itemId").value = "";
+
+   var item_qty = 1
+   var item_price = parseInt(result[5]);
+   var total = parseInt($("#total").val()) + (item_qty * item_price);
+   $("#total").val(total);
+   document.getElementById("total_text").innerHTML = total;
+}
+
 $(document).keypress(
   function(event){
     if (event.which == '13') {
@@ -176,37 +247,6 @@ function getData(table_types) {
      });
    }, 300);
 };
-
-function addNewRowComplain(result_arr){
-   var table = document.getElementById("myTable");
-   var result = result_arr[0];
-   var qty = 1;
-   var total = parseFloat(qty) * (parseFloat(result[3]) - parseFloat("100"));
-   
-   var row = table.insertRow(-1);
-   var cell1 = row.insertCell(0);
-   var cell2 = row.insertCell(1);
-   var cell3 = row.insertCell(2);
-   var cell4 = row.insertCell(3);
-   var cell5 = row.insertCell(4);
-   var cell6 = row.insertCell(5);
-
-   let id = "<input style='display: none;' type='text' class='md-form form-control' value='"+result[4]+"' readonly name='complain[complain_items]["+add_counter+"][item_id]'/>";
-   let code = id+"<input type='text' class='md-form form-control' value='"+result[0]+"' readonly />";
-   let name = "<input type='text' class='md-form form-control' value='"+result[1]+"' readonly />";
-   let cat = "<input type='text' class='md-form form-control' value='"+result[2]+"' readonly />";
-   let price = "<input type='number' class='md-form form-control' value="+result[5]+"  name='complain[complain_items]["+add_counter+"][description]'/>";
-   let quantity = "<input type='number' min=1 class='md-form form-control' value='1' name='complain[complain_items]["+add_counter+"][quantity]'/>"
-   let remove = "<i class='fa fa-trash text-danger' onclick='removeThisRow(this)'></i>"; 
-   cell1.innerHTML = code;
-   cell2.innerHTML = name;
-   cell3.innerHTML = cat;
-   cell5.innerHTML = price;
-   cell4.innerHTML = quantity;
-   cell6.innerHTML = remove;
-   add_counter++;
-   document.getElementById("itemId").value = "";
-}
 
 function addNewRowOrder(result_arr){
    var table = document.getElementById("myTable");
