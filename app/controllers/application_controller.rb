@@ -23,7 +23,8 @@ class ApplicationController < ActionController::Base
     end
 
     def redirect_back_no_access_right arg:nil
-      redirect_back fallback_location: root_path, flash: { error: 'Tidak memiliki hak akses' }
+      redirect_to no_access_right_path
+      # redirect_back fallback_location: root_path, flash: { error: 'Tidak memiliki hak akses' }
     end
 
     def redirect_back_data_error current_path, message

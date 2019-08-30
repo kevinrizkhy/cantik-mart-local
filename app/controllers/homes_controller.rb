@@ -23,6 +23,7 @@ class HomesController < ApplicationController
 
     @debt = Debt.where("deficiency > ?",0)
     @receivable = Receivable.where("deficiency > ?",0)
+
   end
 
   private

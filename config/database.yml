@@ -17,6 +17,6 @@ test:
 
 production:
   <<: *default
-  host: localhost
-  database: app-dev
-  username: user
+  database: cantik_mart
+  username: postgres
+  password: postgres

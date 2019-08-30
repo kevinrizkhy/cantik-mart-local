@@ -1,0 +1,37 @@
+--> komplain 
+	- JS
+		- if komplain & diganti change
+	- Diganti
+		- sama
+			=> (do nothing) 
+		- beda
+			=> 0 -> JS 
+			=> Beli > x > 0  
+			==> Total diupdate ----> (komplain - ganti)*harga 
+			===> di DB ----> ((item.stock * buy) + ((kompalin - ganti) * harga)) / (item.stock + kompalin - ganti)
+	- Tambah Pembelian
+		=> update TOTAL
+	- payment
+		- if total 
+			=> + ___ harus dibuat ke minus
+			=> - ___ lakukan pembayaran
+
+
+- if 
+	diganti semua == 0 ==> declined
+	diganti > 0 ==> reason must be available
+	diganti > komplain ==> declined
+	diganti > beli ==> declined
+
+	komplain > beli ==> declined
+	komplain < 0 ==> declined
+
+
+--> absent
+	- check in / overtime in ==> lupa check out / overtime out
+		==> checkin ulang ==> ada ga checkout sebelumnya -> checkout sebelumnya = checkin + 8jam
+		==> overtime out = overtime in + 2jam
+
+--> 404, 400, 500, 505
+
+8dda7b5b80d9eff0630be17308b14580
