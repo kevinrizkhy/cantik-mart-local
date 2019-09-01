@@ -13,8 +13,6 @@ function complain_check(index){
     replace = complain;
   }
 
-  
-
   total_complain();
 }
 
@@ -30,9 +28,50 @@ function total_complain(){
     new_total-= (complain - replace) * price
   }
 
+  var table = document.getElementById("myTable");
+  var table_length = table.rows.length;
+  for (var i = 1; i < table_length; i++) {
+    var price = table.rows[i].cells[4].childNodes[0].value;
+    var qty = table.rows[i].cells[3].childNodes[0].value;
+    new_total+= price * qty;
+  } 
+
+  var total_text = document.getElementById("total_text");
   $("#total").val(new_total);
-  document.getElementById("total_text").innerHTML = new_total;
+  if(new_total > 0){
+    total_text.style.color = "green";
+    total_text.innerHTML = "BAYAR : Rp. "+formatangka_titik(new_total);
+  }else if (new_total==0){
+    total_text.style.color = "black";
+    total_text.innerHTML = "TIDAK ADA TAMBAHAN";
+  }else{
+    total_text.style.color = "red";
+    total_text.innerHTML = "GANTI : Rp. "+formatangka_titik(new_total);
+  }
 }
+
+function formatangka_titik(total) {
+  var a = (total+"").replace(/[^\d]/g, "");
+
+  var a = +a; // converts 'a' from a string to an int
+
+  return formatNum(a);
+}
+
+function formatNum(rawNum) {
+  rawNum = "" + rawNum; // converts the given number back to a string
+  var retNum = "";
+  var j = 0;
+  for (var i = rawNum.length; i > 0; i--) {
+    j++;
+    if (((j % 3) == 1) && (j != 1))
+      retNum = rawNum.substr(i - 1, 1) + "." + retNum;
+    else
+      retNum = rawNum.substr(i - 1, 1) + retNum;
+  }
+  return retNum;
+}
+
 
 function addNewRowComplain(result_arr){
    var table = document.getElementById("myTable");
@@ -48,13 +87,13 @@ function addNewRowComplain(result_arr){
    var cell5 = row.insertCell(4);
    var cell6 = row.insertCell(5);
 
-   let id = "<input style='display: none;' type='text' class='md-form form-control' value='"+result[4]+"' readonly name='complain[complain_items]["+add_counter+"][item_id]'/>";
+   let id = "<input style='display: none;' type='text' class='md-form form-control' value='"+result[4]+"' readonly name='complain[new_complain_items]["+add_counter+"][item_id]'/>";
    let code = id+"<input type='text' class='md-form form-control' value='"+result[0]+"' readonly />";
    let name = "<input type='text' class='md-form form-control' value='"+result[1]+"' readonly />";
    let cat = "<input type='text' class='md-form form-control' value='"+result[2]+"' readonly />";
-   let price = "<input type='number' class='md-form form-control' value="+result[5]+"  name='complain[complain_items]["+add_counter+"][description]'/>";
-   let quantity = "<input type='number' min=1 class='md-form form-control' value='1' name='complain[complain_items]["+add_counter+"][quantity]'/>"
-   let remove = "<i class='fa fa-trash text-danger' onclick='removeThisRow(this)'></i>"; 
+   let price = "<input readonly type='number' class='md-form form-control' value="+result[5]+"  name='complain[new_complain_items]["+add_counter+"][price]'/>";
+   let quantity = "<input type='number' onchange='total_complain()' min=1 class='md-form form-control' value='1' name='complain[new_complain_items]["+add_counter+"][quantity]'/>"
+   let remove = "<i class='fa fa-trash text-danger' onclick='removeRowComplain(this)'></i>"; 
    cell1.innerHTML = code;
    cell2.innerHTML = name;
    cell3.innerHTML = cat;
@@ -64,12 +103,18 @@ function addNewRowComplain(result_arr){
    add_counter++;
    document.getElementById("itemId").value = "";
 
-   var item_qty = 1
-   var item_price = parseInt(result[5]);
-   var total = parseInt($("#total").val()) + (item_qty * item_price);
-   $("#total").val(total);
-   document.getElementById("total_text").innerHTML = total;
+   total_complain();
 }
+
+function removeRowComplain(params){
+  var row_idx = params.parentNode.parentNode.rowIndex;
+  var table = document.getElementById("myTable");
+  if(table.rows.length > 1){
+    table.deleteRow(row_idx);
+  }
+  total_complain();
+}
+
 
 $(document).keypress(
   function(event){
