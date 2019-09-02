@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_26_143234) do
+ActiveRecord::Schema.define(version: 2019_09_02_074050) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -104,10 +104,14 @@ ActiveRecord::Schema.define(version: 2019_08_26_143234) do
     t.string "invoice", null: false
     t.integer "total_items", null: false
     t.bigint "store_id", null: false
-    t.bigint "member_id", null: false
     t.datetime "date_created"
+    t.bigint "user_id"
+    t.bigint "transaction_id"
+    t.bigint "member_id"
     t.index ["member_id"], name: "index_complains_on_member_id"
     t.index ["store_id"], name: "index_complains_on_store_id"
+    t.index ["transaction_id"], name: "index_complains_on_transaction_id"
+    t.index ["user_id"], name: "index_complains_on_user_id"
   end
 
   create_table "controller_methods", force: :cascade do |t|
@@ -404,6 +408,9 @@ ActiveRecord::Schema.define(version: 2019_08_26_143234) do
     t.integer "discount", default: 0
     t.integer "quantity", null: false
     t.datetime "date_created"
+    t.integer "retur"
+    t.integer "replace"
+    t.string "reason"
     t.index ["item_id"], name: "index_transaction_items_on_item_id"
     t.index ["transaction_id"], name: "index_transaction_items_on_transaction_id"
   end
@@ -499,6 +506,8 @@ ActiveRecord::Schema.define(version: 2019_08_26_143234) do
   add_foreign_key "complain_items", "items"
   add_foreign_key "complains", "members"
   add_foreign_key "complains", "stores"
+  add_foreign_key "complains", "transactions"
+  add_foreign_key "complains", "users"
   add_foreign_key "controller_methods", "controllers"
   add_foreign_key "debts", "stores"
   add_foreign_key "debts", "users"

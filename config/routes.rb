@@ -67,8 +67,7 @@ Rails.application.routes.draw do
   resources :returs
   resources :retur_items
 
-  resources :complains, only: %i[index new create]
-  resources :complain_items, only: %i[index show]
+  resources :complains, only: %i[index new create show]
 
   resources :absents, only: %i[index show]
 

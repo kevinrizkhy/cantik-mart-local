@@ -26,19 +26,11 @@ class ComplainsController < ApplicationController
   end
 
   def new
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_error, "Data tidak ditemukan" unless params[:id].present?
     id = params[:id]
     @transaction = Transaction.find id
     return redirect_back_data_error new_complain_path if @transaction.nil? || @transaction.user.store != current_user.store
     @transaction_items = @transaction.transaction_items
-    @inventories = StoreItem.page param_page
-    all_options = ""
-    @inventories.each do |inventory|
-      stock = inventory.item
-      all_options+= "<option value="+stock.id.to_s+" data-subtext='"+stock.item_cat.name+"'>"+stock.name+"</option>"
-    end
-    gon.select_options = all_options
-    gon.inv_count = @transaction_items.count
   end
 
   def create
@@ -49,48 +41,112 @@ class ComplainsController < ApplicationController
     invoice = "CMP-" + Time.now.to_i.to_s
     items = complain_items
     total_item = items.size
-
+    new_items = new_complain_items
     complain = Complain.create invoice: invoice,
       total_items: total_item,
       store_id: current_user.store.id,
       date_created: Time.now,
-      member_id: address_to
+      member_id: @transaction.member,
+      user_id: current_user.id,
+      transaction_id: @transaction.id
 
-    # complain_items.each do |complain_item|
-    #   item = Item.find complain_item[0]
-    #   break if item.nil?
-    #   ComplainItem.create item_id: complain_item[0], complain_id: complain.id, quantity: complain_item[1], description: complain_item[2]
-    #   store_stock = StoreItem.find_by(item_id: item.id)
-    #   store_stock.stock = store_stock.stock + complain_item[1].to_i
-    #   store_stock.save!
-    # end
-    # return redirect_success complains_path
+    complain_items.each do |complain_item|
+      item = Item.find complain_item[0]
+      if item.nil?
+        complain.delete
+        return redirect_back_data_error returs_path, "Data tidak valid"
+      else
+        store_stock = StoreItem.find_by(item_id: item.id)
+        if store_stock.nil?
+          complain.delete
+          return redirect_back_data_error returs_path, "Data tidak valid"
+        end
+
+        reason = complain_item[5]
+        retur = complain_item[3].to_i
+        replace = complain_item[4].to_i
+
+        transaction_items = @transaction.transaction_items.find_by(item: item)
+        transaction_items.retur = retur
+        transaction_items.replace = replace
+        transaction_items.reason = reason
+        
+        store_stock.stock = store_stock.stock + complain_item[1].to_i
+        # Ubah harga beli
+        store_stock.save!
+        transaction_items.save!
+      end      
+    end
+
+    additional_total = 0
+    additional_discount = 0
+    new_items.each do |new_item|
+      # item discount +sum all  disc
+      item = Item.find_by(id: new_item[0])
+      trx_item = TransactionItem.create item: item,  
+      transaction_id: @transaction.id,
+      quantity: new_item[1], 
+      price: new_item[2],
+      discount: 0,
+      date_created: DateTime.now
+      additional_total+= new_item[1].to_i * new_item[2].to_i
+      additional_discount+= 0 * new_item[2].to_i
+    end
+
+    @transaction.total = @transaction.total + additional_total
+    @transaction.discount = @transaction.discount + additional_discount
+    @transaction.grand_total = @transaction.grand_total + (additional_total - additional_discount)
+
+    @transaction.save!
+
+    a = complain.create_activity :create, owner: current_user
+
+    return redirect_success complains_path, "Komplain "+@transaction.invoice+" selesai"
   end
 
   def show
-    return redirect_back_data_error complains_path unless params[:id].present?
-    @complain = Complain.find_by_id params[:id]
-    return redirect_back_data_error complains_path unless @complain.present?
+    return redirect_back_data_error, "Data tidak ditemukan" unless params[:id].present?
+    id = params[:id]
+    @complain = Complain.find_by(id: id)
+    @transaction = Transaction.find_by(id: @complain.transaction_id)
+    return redirect_back_data_error complains_path, "Data tidak ditemukan" if @transaction.nil?
+    return redirect_back_data_error complains_path, "Tidak memiliki hak akses" if @transaction.user.store != current_user.store
+    @transaction_items = @transaction.transaction_items
   end
 
   private
     def complain_items
       items = []
+      retur_qty_status = false
       params[:complain][:complain_items].each do |item|
-        items << item[1].values
+        complain_items_value = item[1].values
+        
+        qty = complain_items_value[2].to_i
+        retur = complain_items_value[3].to_i
+        replace = complain_items_value[4].to_i
+
+        if qty < retur
+          items = []
+          break
+        else
+          if retur < replace
+            items = []
+            break
+          end
+        end
+
+        items << complain_items_value
+        retur_qty_status = true if retur_qty_status==false && retur>0
       end
       items
     end
 
-    def decrease_stock complain_id
-      complain_items = complainItem.where(complain_id: complain_id)
-      complain_items.each do |complain_item|
-        confirmation = complain_item.accept_item
-        item = StoreItem.find_by(item_id: complain_item.item.id, store_id: current_user.store.id)
-        new_stock = item.stock.to_i - confirmation.to_i
-        item.stock = new_stock
-        item.save!
+    def new_complain_items
+      items = []
+      params[:complain][:new_complain_items].each do |item|
+        items << item[1].values
       end
+      items
     end
 
     def param_page

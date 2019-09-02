@@ -51,5 +51,6 @@ class User < ApplicationRecord
   has_many :notifications
   has_many :transfers
   has_many :invoice_transactions
+  has_many :complains
 
 end

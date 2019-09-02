@@ -17,21 +17,64 @@
 			=> - ___ lakukan pembayaran
 
 
-- if 
-	diganti semua == 0 ==> declined
-	diganti > 0 ==> reason must be available
-	diganti > komplain ==> declined
-	diganti > beli ==> declined
+	- if 
+		diganti semua == 0 ==> declined
+		diganti > 0 ==> reason must be available
+		diganti > komplain ==> declined
+		diganti > beli ==> declined
 
-	komplain > beli ==> declined
-	komplain < 0 ==> declined
+		komplain > beli ==> declined
+		komplain < 0 ==> declined
 
 
 --> absent
 	- check in / overtime in ==> lupa check out / overtime out
 		==> checkin ulang ==> ada ga checkout sebelumnya -> checkout sebelumnya = checkin + 8jam
 		==> overtime out = overtime in + 2jam
+	- hubungin ke fix cost : ditarik per kapan
 
---> 404, 400, 500, 505
+--> harga jual beli diatur dari pusat atau toko ?
+
+--> cek semua notifikasi
+	* payment
+	* due date
+	* confirm order / transfer
+
+--> print laporan 
+	* order
+	* retur
+		# consument
+		# supplier
+		# warehouse
+	* transfer
+	* profit
+	* cash flow
+	* debt
+	* credit
+	* fix cost
+	* tax
+	* operational
+	* assets value
+
+
+--> pembukuan manual per hari secara cron + tombol untuk bulanan
+
+--> laporan => activa passiva
+	* stock value
+	* assets
+	* profit loss
+	* pengeluaran
+	
+	report (CRUD) ==> OK (DB ROUTES), NOK(MODEL CONTROLLERS URLinNAV)
+
+--> check semua params is required ==> mengurangi error params not found
+
+--> semua controllers harus punya show
+
+--> jangan cata activity jika data tidak ada perubahan
+
+--> catat activity jika data dihapus
+
+--> discount
 
 8dda7b5b80d9eff0630be17308b14580

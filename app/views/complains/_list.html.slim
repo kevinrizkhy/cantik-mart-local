@@ -1,10 +1,14 @@
 tr
   td #{retur.invoice}
-  td #{retur.member.name}
+  td 
+  	- if retur.member.present?
+  		| #{retur.member.name}
+  	- else
+  		| -
   td #{retur.total_items}
   td #{retur.date_created.to_date}
   td
-    a href='#{complain_items_path(id: retur.id)}'
+    a href='#{complain_path(id: retur.id)}'
       button class="btn btn-rounded btn-primary"
         | Item
 

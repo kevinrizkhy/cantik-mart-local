@@ -3,5 +3,6 @@ class Transaction < ApplicationRecord
   has_many :transaction_items
   belongs_to :user
   belongs_to :member, optional: true
+  belongs_to :complain
 end
 

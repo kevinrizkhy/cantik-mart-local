@@ -9,5 +9,6 @@ class Member < ApplicationRecord
   has_many :transactions
   belongs_to :user
   belongs_to :store
+  has_many :complains
 end
 
