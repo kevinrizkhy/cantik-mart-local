@@ -98,8 +98,8 @@ class ApisController < ApplicationController
     return render :json => json_result unless search.present?
     return render :json => json_result unless qty.present?
     search = search.gsub(/\s+/, "")
-    items = Item.where(code: search).pluck(:id)
-    item_stores = StoreItem.where(store_id: current_user.store.id, item_id: items)
+    item_id = Item.find_by(code: search)
+    item_stores = StoreItem.where(store_id: current_user.store.id, item: item_id)
     return render :json => json_result unless item_stores.present?
     item_stores.each do |item_store|
       item = []
@@ -112,12 +112,15 @@ class ApisController < ApplicationController
         find_price = grocer_price.where('max >= ? AND min <= ?', qty, qty).order("max ASC")
         if find_price.present?
           item << find_price.first.price
+          item << find_price.first.discount
         else
           item << item_store.item.sell
+          item << item_store.item.discount
         end
       else
         item << item_store.item.sell
       end
+      item << item_id.id
       json_result << item
     end
     render :json => json_result

@@ -33,7 +33,8 @@ function total_complain(){
   for (var i = 1; i < table_length; i++) {
     var price = table.rows[i].cells[4].childNodes[0].value;
     var qty = table.rows[i].cells[3].childNodes[0].value;
-    new_total+= price * qty;
+    var discount = table.rows[i].cells[5].childNodes[0].value;
+    new_total+= (price * qty)-(discount*qty);
   } 
 
   var total_text = document.getElementById("total_text");
@@ -73,11 +74,10 @@ function formatNum(rawNum) {
 }
 
 
-function addNewRowComplain(result_arr){
+function addNewRowComplain(result_arr, qty){
    var table = document.getElementById("myTable");
    var result = result_arr[0];
-   var qty = 1;
-   var total = parseFloat(qty) * (parseFloat(result[3]) - parseFloat("100"));
+   var total = parseFloat(qty) * (parseFloat(result[3]) - parseFloat(result[4]));
    
    var row = table.insertRow(-1);
    var cell1 = row.insertCell(0);
@@ -86,20 +86,23 @@ function addNewRowComplain(result_arr){
    var cell4 = row.insertCell(3);
    var cell5 = row.insertCell(4);
    var cell6 = row.insertCell(5);
+   var cell7 = row.insertCell(6);
 
-   let id = "<input style='display: none;' type='text' class='md-form form-control' value='"+result[4]+"' readonly name='complain[new_complain_items]["+add_counter+"][item_id]'/>";
+   let id = "<input style='display: none;' type='text' class='md-form form-control' value='"+result[5]+"' readonly name='complain[new_complain_items]["+add_counter+"][item_id]'/>";
    let code = id+"<input type='text' class='md-form form-control' value='"+result[0]+"' readonly />";
    let name = "<input type='text' class='md-form form-control' value='"+result[1]+"' readonly />";
    let cat = "<input type='text' class='md-form form-control' value='"+result[2]+"' readonly />";
-   let price = "<input readonly type='number' class='md-form form-control' value="+result[5]+"  name='complain[new_complain_items]["+add_counter+"][price]'/>";
-   let quantity = "<input type='number' onchange='total_complain()' min=1 class='md-form form-control' value='1' name='complain[new_complain_items]["+add_counter+"][quantity]'/>"
+   let price = "<input readonly type='number' class='md-form form-control' value="+result[3]+"  name='complain[new_complain_items]["+add_counter+"][price]'/>";
+   let discount = "<input readonly type='number' class='md-form form-control' value="+result[4]+"  name='complain[new_complain_items]["+add_counter+"][discount]'/>";
+   let quantity = "<input type='number' readonly min=1 class='md-form form-control' value='"+qty+"' name='complain[new_complain_items]["+add_counter+"][quantity]'/>"
    let remove = "<i class='fa fa-trash text-danger' onclick='removeRowComplain(this)'></i>"; 
    cell1.innerHTML = code;
    cell2.innerHTML = name;
    cell3.innerHTML = cat;
    cell4.innerHTML = quantity;
    cell5.innerHTML = price;
-   cell6.innerHTML = remove;
+   cell6.innerHTML = discount;
+   cell7.innerHTML = remove;
    add_counter++;
    document.getElementById("itemId").value = "";
 
@@ -123,8 +126,7 @@ $(document).keypress(
     }
 });
 
-function update_notification()
-{
+function update_notification(){
   $.ajax({ 
     type: 'GET', 
     url: '/api/update_notification', 
@@ -262,34 +264,55 @@ function getData(table_types) {
    clearTimeout(timeout);
    timeout = setTimeout(function() {
      var item_id = document.getElementById("itemId").value;
-     $.ajax({
-       method: "GET",
-       cache: false,
-       url: "/api/order?search=" + item_id,
-       success: function(result_arr) {
-          if(result_arr == ""){
-            document.getElementById("itemId").value = "";
-            alert("Data Barang Tidak Ditemukan")
-            return
-          }else{
-             if (table_types == "order"){
-              addNewRowOrder(result_arr);
+     if(table_types=="complain"){
+        var item_qty = document.getElementById("searchqty").value;
+        $.ajax({
+         method: "GET",
+         cache: false,
+         url: "/api/trx?search=" + item_id +"&qty=" + item_qty,
+         success: function(result_arr) {
+            if(result_arr == ""){
+              document.getElementById("itemId").value = "";
+              alert("Data Barang Tidak Ditemukan")
+              return
+            }else{
+              addNewRowComplain(result_arr, item_qty);
+            }
+         },
+         error: function(error) {
+             document.getElementById("itemId").value = "";
+             document.getElementById("searchqty").value = 1;
+             document.getElementById("itemId").focus();
+         }
+       });
+     }else{
+      $.ajax({
+         method: "GET",
+         cache: false,
+         url: "/api/order?search=" + item_id,
+         success: function(result_arr) {
+            if(result_arr == ""){
+              document.getElementById("itemId").value = "";
+              alert("Data Barang Tidak Ditemukan")
+              return
+            }else{
+               if (table_types == "order"){
+                addNewRowOrder(result_arr);
+               }
+               else if(table_types == "retur"){
+                addNewRowRetur(result_arr);
+               }else if (table_types == "transfer"){
+                addNewRowTransfer(result_arr);
+               }
              }
-             else if(table_types == "retur"){
-              addNewRowRetur(result_arr);
-             }else if (table_types == "transfer"){
-              addNewRowTransfer(result_arr);
-             }else if (table_types == "complain"){
-              addNewRowComplain(result_arr);
-             }
-           }
-       },
-       error: function(error) {
-           document.getElementById("itemId").value = "";
-           document.getElementById("item_qty").value = 1;
-           document.getElementById("itemId").focus();
-       }
-     });
+         },
+         error: function(error) {
+             document.getElementById("itemId").value = "";
+             document.getElementById("item_qty").value = 1;
+             document.getElementById("itemId").focus();
+         }
+       });
+    }
    }, 300);
 };
 

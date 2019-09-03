@@ -3,6 +3,6 @@ class Transaction < ApplicationRecord
   has_many :transaction_items
   belongs_to :user
   belongs_to :member, optional: true
-  belongs_to :complain
+  belongs_to :complain, optional: true
 end
 

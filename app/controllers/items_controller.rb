@@ -10,7 +10,7 @@ class ItemsController < ApplicationController
     if params[:search].present?
       @search = params[:search].downcase
       search = "%"+@search+"%"
-      @items = @items.where("lower(name) like ? OR code like ?", search, search)
+      @items = @items.where("lower(name) like ? OR lower(code) like ?", search, search)
     end
     if params[:order_by].present? && params[:order_type].present?
       @order_by = params[:order_by].downcase
@@ -79,7 +79,7 @@ class ItemsController < ApplicationController
   private
     def item_params
       params.require(:item).permit(
-        :name, :code, :item_cat_id, :buy, :sell, :brand
+        :name, :code, :item_cat_id, :buy, :sell, :brand, :discount
       )
     end
 

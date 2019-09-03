@@ -26,18 +26,22 @@ class ComplainsController < ApplicationController
   end
 
   def new
-    return redirect_back_data_error, "Data tidak ditemukan" unless params[:id].present?
+    return redirect_back_data_error complains_path, "Data tidak ditemukan" unless params[:id].present?
     id = params[:id]
     @transaction = Transaction.find id
-    return redirect_back_data_error new_complain_path if @transaction.nil? || @transaction.user.store != current_user.store
+    return redirect_back_data_error complains_path, "Data tidak ditemukan" if @transaction.nil?
+    return redirect_back_data_error complains_path, "Data tidak valid" if @transaction.user.store != current_user.store
     @transaction_items = @transaction.transaction_items
+    return redirect_back_data_error complains_path, "Tidak dapat melakukan komplain" if Complain.find_by(transaction_id: @transaction).present?
   end
 
   def create
-    return redirect_back_no_access_right unless params[:id].present?
+    return redirect_back_data_error complains_path, "Data tidak ditemukan" unless params[:id].present?
     id = params[:id]
     @transaction = Transaction.find id
-    return redirect_back_no_access_right if @transaction.nil? || @transaction.user.store != current_user.store
+    return redirect_back_data_error complains_path, "Data tidak ditemukan" if @transaction.nil?
+    return redirect_back_data_error complains_path, "Data tidak valid" if @transaction.user.store != current_user.store
+    return redirect_back_data_error complains_path, "Tidak dapat melakukan komplain" if Complain.find_by(transaction_id: @transaction).present?
     invoice = "CMP-" + Time.now.to_i.to_s
     items = complain_items
     total_item = items.size
@@ -71,8 +75,9 @@ class ComplainsController < ApplicationController
         transaction_items.replace = replace
         transaction_items.reason = reason
         
-        store_stock.stock = store_stock.stock + complain_item[1].to_i
-        # Ubah harga beli
+        new_stock = store_stock.stock + complain_item[1].to_i
+        item.buy = ( (item.buy*store_stock.stock) + ( (transaction_items.price-transaction_items.discount) * complain_item[1].to_i ) ) / new_stock
+        item.save!
         store_stock.save!
         transaction_items.save!
       end      
@@ -90,16 +95,15 @@ class ComplainsController < ApplicationController
       discount: 0,
       date_created: DateTime.now
       additional_total+= new_item[1].to_i * new_item[2].to_i
-      additional_discount+= 0 * new_item[2].to_i
+      additional_discount+= new_item[1].to_i * new_item[3].to_i
     end
 
     @transaction.total = @transaction.total + additional_total
     @transaction.discount = @transaction.discount + additional_discount
     @transaction.grand_total = @transaction.grand_total + (additional_total - additional_discount)
-
     @transaction.save!
 
-    a = complain.create_activity :create, owner: current_user
+    complain.create_activity :create, owner: current_user
 
     return redirect_success complains_path, "Komplain "+@transaction.invoice+" selesai"
   end
@@ -143,6 +147,7 @@ class ComplainsController < ApplicationController
 
     def new_complain_items
       items = []
+      return items if  params[:complain][:new_complain_items].nil?
       params[:complain][:new_complain_items].each do |item|
         items << item[1].values
       end

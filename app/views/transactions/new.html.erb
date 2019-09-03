@@ -457,8 +457,8 @@
              var table = $('#itemList').DataTable();
              var result = result_arr[0];
              var qty = qtyInput.value;
-             var total = parseFloat(qty) * (parseFloat(result[3]) - parseFloat("100"));
-             var dataSet = [result[0], result[1], result[2], qty, result[3], 100, total];
+             var total = parseFloat(qty) * (parseFloat(result[3]) - parseFloat(result[4]));
+             var dataSet = [result[0], result[1], result[2], qty, result[3], result[4], total];
          
              table.row.add(dataSet).draw();
              GrandTotal();

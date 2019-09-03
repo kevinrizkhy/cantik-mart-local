@@ -23,9 +23,13 @@
                     | #{item_cat.name}     
           .form-group
             label for="buy" Harga Beli
-            = form.number_field :buy, required: true, class: "form-control md-form", id: "buy"
+            = form.number_field :buy, required: true, class: "form-control md-form", id: "buy", min: "100"
           .form-group
             label for="sell" Harga Jual
-            = form.number_field :sell, required: true, class: "form-control md-form", id: "sell"
+            = form.number_field :sell, required: true, class: "form-control md-form", id: "sell", min: "100"
+          .form-group
+            label for="sell" Diskon
+            = form.number_field :discount, required: true, class: "form-control md-form", id: "sell", min: "0"
+
           .form-group.text-center
             = form.submit "Ubah Barang", class: "btn btn-rounded btn-primary"

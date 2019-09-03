@@ -31,12 +31,14 @@
                 th Min
                 th Max
                 th Harga
+                th Diskon
                 th
               tbody
                 tr
                   td 0
                   td 1
                   td #{@item.sell}
+                  td #{@item.discount}
                   td
                 - item_grocers = @item.grocer_items
                 - if item_grocers.present?
@@ -45,6 +47,7 @@
                       td #{item.min}
                       td #{item.max}
                       td #{item.price}
+                      td #{item.discount}
                       td.text-right
                         a class="btn btn-rounded btn-warning" href="#{edit_grocer_item_path(id: item.id)}"
                           |   Ubah
