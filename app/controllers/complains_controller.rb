@@ -75,8 +75,9 @@ class ComplainsController < ApplicationController
         transaction_items.replace = replace
         transaction_items.reason = reason
         
-        new_stock = store_stock.stock + complain_item[1].to_i
-        item.buy = ( (item.buy*store_stock.stock) + ( (transaction_items.price-transaction_items.discount) * complain_item[1].to_i ) ) / new_stock
+        new_stock = store_stock.stock + retur - replace
+        next if (retur - replace) <= 0
+        item.buy = ( (item.buy*store_stock.stock) + ( (transaction_items.price-transaction_items.discount) * (retur-replace) ) ) / new_stock
         item.save!
         store_stock.save!
         transaction_items.save!
