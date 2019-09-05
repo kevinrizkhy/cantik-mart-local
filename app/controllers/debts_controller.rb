@@ -49,6 +49,12 @@ class DebtsController < ApplicationController
         filters = filters.order("date_created DESC")
         search_text+= "secara menurun"
       end
+
+      if params[:type].present?
+        filters = filters.where(finance_type: Debt.finance_types.key(params[:type].to_i))
+        filters = filters.where("deficiency > ?",0)
+      end
+
       results << search_text
       results << filters
       return results
