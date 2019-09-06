@@ -77,5 +77,14 @@
 
 --> COMPLAIN : prevent kalau total masih minus / merah
 
+--> GET
+	: ITEM
+	: ITEM CAT
+	: USERS
+--> POST
+	: TRX
+	: TRX_ITEM
+	: FINGERPRINT
+
 
 8dda7b5b80d9eff0630be17308b14580
