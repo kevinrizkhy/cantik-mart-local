@@ -9,6 +9,8 @@ class CreateNotifications < ActiveRecord::Migration[5.2]
 
   	    t.references :from_user, foreign_key: { to_table: :users}, null: false
   	    t.references :to_user, foreign_key: { to_table: :users }, null: false
+
+        t.timestamps
     end
   end
 end

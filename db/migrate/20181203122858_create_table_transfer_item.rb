@@ -7,6 +7,8 @@ class CreateTableTransferItem < ActiveRecord::Migration[5.2]
       t.integer :sent_quantity, default: 0
       t.integer :receive_quantity, default: 0
       t.string :description, default: ''
+      t.datetime :date_created
+
       t.timestamps
     end
   end

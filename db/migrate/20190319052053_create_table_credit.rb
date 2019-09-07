@@ -7,8 +7,12 @@ class CreateTableCredit < ActiveRecord::Migration[5.2]
         t.float :deficiency, null: false
     	t.timestamp :date_created, null: false
     	t.string :description, null: false
-    	t.integer :ref_id
+    	t.string :ref_id
     	t.integer :finance_type, null: false
+        t.integer :to_user, null: false, default: 1
+        t.datetime :due_date, null: false
+        
+        t.timestamps
     end
   end
 end

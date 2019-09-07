@@ -5,7 +5,9 @@ class CreateGrocierItem < ActiveRecord::Migration[5.2]
     	t.integer :min, null: false
     	t.integer :max, null: false
     	t.float :price, null: false
-    add_column :items, :buy_grocer, :integer, default: 0
+        t.float :discount, null: false, default: 0
+    	
+    	t.timestamps
     end
   end
 end

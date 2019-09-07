@@ -6,6 +6,8 @@ class CreateTableStockValue < ActiveRecord::Migration[5.2]
     	t.float :nominal, null: false
     	t.timestamp :date_created, null: false
     	t.string :description, null: false
+
+    	t.timestamps
     end
   end
 end
