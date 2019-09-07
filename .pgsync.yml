@@ -1,0 +1,24 @@
+# source database URL
+# database URLs take the format of:
+#   postgres://user:password@host:port/dbname
+# we recommend a command which outputs a database URL
+# so sensitive information is not included in this file
+from: $postgres://localhost:5432/cantik_mart
+
+# destination database URL
+to: postgres://localhost:5432/cantik_mart_cashier
+
+# exclude tables
+# exclude:
+#   - schema_migrations
+#   - ar_internal_metadata
+
+# define groups
+# groups:
+#   group1:
+#     - table1
+#     - table2
+
+# protect sensitive information
+data_rules:
+  

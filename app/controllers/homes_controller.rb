@@ -3,6 +3,7 @@ class HomesController < ApplicationController
   require 'usagewatch'
 
   def index
+    check_new_data
     @total_limit_items = StoreItem.where(store_id: current_user.store.id).where('stock < min_stock').count
     @total_orders = Order.where(store_id: current_user.store.id).where('date_receive is null').count
     @total_payments = Order.where(store_id: current_user.store.id).where('date_receive is not null and date_paid_off is null').count
@@ -27,6 +28,81 @@ class HomesController < ApplicationController
   end
 
   private
+
+    def check_new_data
+      url = "http://localhost:3000/get/users"
+      resp = Net::HTTP.get_response(URI.parse(url))
+      data = JSON.parse(resp.body)
+      data_keys = data.keys
+      data_keys.each do |key|
+        datas = data[key]
+        datas.each do |new_data|
+          sync_data key, new_data
+        end
+      end
+    end
+
+    def sync_data key, data
+      if key == "users"
+        user = User.find_by(id: data["id"])
+        data["password"] = "admin123"
+        if user.present?
+          user.assign_attributes data
+          user.save! if user.changed?
+        else
+          User.create data
+        end 
+      elsif key=="stores"
+        store = Store.find_by(id: data["id"])
+        if store.present?
+          store.assign_attributes data
+          store.save! if store.changed?
+        else
+          Store.create data
+        end
+      elsif key=="departments"
+        department = Department.find_by(id: data["id"])
+        if department.present?
+          department.assign_attributes data
+          department.save! if department.changed?
+        else
+          Department.create data
+        end
+      elsif key=="item_cats"
+        item_cat = ItemCat.find_by(id: data["id"])
+        if item_cat.present?
+          item_cat.assign_attributes data
+          item_cat.save! if item_cat.changed?
+        else
+          ItemCat.create data
+        end
+      elsif key=="items"
+        item = Item.find_by(id: data["id"])
+        if item.present?
+          item.assign_attributes data
+          item.save!
+        else
+          Item.create data
+        end
+      elsif key=="stocks"
+        store_item = StoreItem.find_by(id: data["id"])
+        if store_item.present?
+          store_item.assign_attributes data
+          store_item.save! if store_item.changed?
+        else
+          StoreItem.create data
+        end
+      elsif key=="grocers"
+        grocer_item = GrocerItem.find_by(id: data["id"])
+        if grocer_item.present?
+          grocer_item.assign_attributes data
+          grocer_item.save! if grocer_item.changed?
+        else
+          GrocerItem.create data
+        end
+      end
+    end
+
     def higher_item
       item_sells = TransactionItem.group(:item_id).count
       sort_results = Hash[item_sells.sort_by{|k, v| v}.reverse]

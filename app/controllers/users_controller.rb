@@ -23,7 +23,8 @@ class UsersController < ApplicationController
 
   def create
     user = User.new user_params
-    return redirect_back_data_error new_user_path, "Data Pengguna Tidak Ditemukan" if user.invalid?
+    
+    return redirect_back_data_error new_user_path, "Data Pengguna Tidak Valid" if user.invalid?
     user.save!
     user.create_activity :create, owner: current_user
     return redirect_success users_path, "Pengguna - " + user.name + " - Berhasil Ditambahkan"
@@ -58,9 +59,9 @@ class UsersController < ApplicationController
   def destroy
     return redirect_back_data_error users_path, "Data Tidak Valid" unless params[:id].present?
     user = User.find params[:id]
-    return redirect_back_data_error users_path, "Data Tidak Valid" unless user.present?
+    return redirect_back_data_error users_path, "Data Tidak Ditemukan" unless user.present?
     if user.level == "owner" || user.level == "super_admin"
-      return redirect_back_data_error users_path, "Data Tidak Valid" 
+      return redirect_back_data_error users_path, "Data Tidak Dapat Dihapus" 
     else 
       user.destroy
       return redirect_success users_path, "Data Pengguna - " + user.name + " - Berhasil Dihapus"

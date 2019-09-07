@@ -145,7 +145,7 @@ ActiveRecord::Schema.define(version: 2019_09_02_161339) do
   create_table "finances", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "store_id", null: false
-    t.integer "nominal", null: false
+    t.float "nominal", null: false
     t.integer "finance_type", default: 1, null: false
     t.datetime "date_created"
     t.string "description"
