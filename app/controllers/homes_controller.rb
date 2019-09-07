@@ -2,8 +2,10 @@ class HomesController < ApplicationController
   before_action :require_login
   require 'usagewatch'
 
+  @@last_update = nil
+
   def index
-    check_new_data
+    # check_new_data
     @total_limit_items = StoreItem.where(store_id: current_user.store.id).where('stock < min_stock').count
     @total_orders = Order.where(store_id: current_user.store.id).where('date_receive is null').count
     @total_payments = Order.where(store_id: current_user.store.id).where('date_receive is not null and date_paid_off is null').count
@@ -30,8 +32,8 @@ class HomesController < ApplicationController
   private
 
     def check_new_data
-      url = "http://localhost:3000/get/"+current_user.store.id.to_s+"?last="+DateTime.now.to_s
-      binding.pry
+      new_last_update = DateTime.now
+      url = "http://localhost:3000/get/"+current_user.store.id.to_s+"?from="+@@last_update.to_s+"&to="+new_last_update.to_s
       resp = Net::HTTP.get_response(URI.parse(url))
       data = JSON.parse(resp.body)
       data_keys = data.keys
@@ -41,6 +43,7 @@ class HomesController < ApplicationController
           sync_data key, new_data
         end
       end
+      @@last_update = new_last_update
     end
 
     def sync_data key, data

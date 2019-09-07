@@ -2,7 +2,7 @@
   .col.text-left
     h5
       | Daftar Transaksi #{"(PENCARIAN '"+@search+"')" if @search.present?}
-  / .col.text-right
+  .col.text-right
     a href="#{new_transaction_path}"
       button.btn.btn-rounded.btn-primary type="button" 
         i.fas.fa-plus 

@@ -13,16 +13,3 @@ tr
 	  	a href='#{stock_path(id: inventory.id)}'
 	  		button.btn.btn-rounded.btn-primary type="button" 
         		| Detil
-       	| &nbsp &nbsp
-       	- if inventory.min_stock > inventory.stock
-       		a href='#{new_order_path(item_id: inventory.item.id)}'
-		  		button.btn.btn-rounded.btn-danger type="button" 
-	        		| Order
-		- elsif inventory.min_stock == inventory.stock
-			a href='#{new_order_path(item_id: inventory.item.id)}'
-		  		button.btn.btn-rounded.btn-warning type="button" 
-	        		| Order
-	    - else
-	    	a href='#{new_order_path(item_id: inventory.item.id)}'
-			  	button.btn.btn-rounded.btn-outline-success type="button" 
-		        	| Order

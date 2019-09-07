@@ -3,7 +3,9 @@ class TransactionsController < ApplicationController
   before_action :require_fingerprint
   skip_before_action :verify_authenticity_token, :if => Proc.new { |c| c.request.format == 'application/json' }
 
+  @@last_post = nil
   def index
+    post_head
     @transactions = Transaction.page param_page
     if params[:search].present?
       search = params[:search].downcase
@@ -22,6 +24,40 @@ class TransactionsController < ApplicationController
         @transactions = @transactions.where("invoice like ?", "%"+ search+"%")
       end
     end
+  end
+
+  def post_head
+    if @@last_post==nil
+      @@last_post=DateTime.now - 10.years
+    end
+    url = "http://localhost:3000/api/post/trx"
+    new_post = DateTime.now
+
+
+    post_trx_data = Transaction.where("date_created > ?", @@last_post)
+    datas = []
+    post_trx_data.each do |trx|
+      temp_data = []
+      temp_data << trx.to_json
+      post_trx_items_data = TransactionItem.where(transaction_id: trx["id"]).to_json
+      temp_data << post_trx_items_data
+      datas << temp_data
+    end
+    string_data = datas.to_json.to_s
+    encrypted_data = Base64.encode64(string_data)
+    b = []
+    b << SecureRandom.hex(1)
+    b << encrypted_data
+    b << SecureRandom.hex(1)
+
+    uri = URI(url)
+    req = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
+    req.body = {trxs: b}.to_json
+    res = Net::HTTP.start(uri.hostname, uri.port) do |http|
+      http.request(req)
+    end
+
+
   end
 
   def new
