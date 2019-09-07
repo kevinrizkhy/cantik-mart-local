@@ -1,5 +1,5 @@
 class HomesController < ApplicationController
-  # before_action :require_login
+  before_action :require_login
   require 'usagewatch'
 
   def index
@@ -30,7 +30,8 @@ class HomesController < ApplicationController
   private
 
     def check_new_data
-      url = "http://localhost:3000/get/users"
+      url = "http://localhost:3000/get/"+current_user.store.id.to_s+"?last="+DateTime.now.to_s
+      binding.pry
       resp = Net::HTTP.get_response(URI.parse(url))
       data = JSON.parse(resp.body)
       data_keys = data.keys

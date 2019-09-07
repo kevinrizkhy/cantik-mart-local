@@ -31,7 +31,7 @@ class StoresController < ApplicationController
     store.name = params[:store][:name].camelize
     store.address = params[:store][:address].camelize
     return redirect_back_data_error stores_path if store.invalid?
-    supplier = Supplier.new pic: "GUDANG - "+params[:store][:name],
+    supplier = Supplier.new name: "GUDANG - "+params[:store][:name],
       phone: params[:store][:phone],
       address: params[:store][:address],
       supplier_type: 1
