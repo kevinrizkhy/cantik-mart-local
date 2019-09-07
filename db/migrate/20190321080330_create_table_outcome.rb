@@ -6,6 +6,9 @@ class CreateTableOutcome < ActiveRecord::Migration[5.2]
     	t.float :nominal, null: false
     	t.timestamp :date_created, null: false
     	t.string :description, null: false
+    	t.integer :outcome_type, null: false, default: 4
+
+    	t.timestamps
     end
   end
 end

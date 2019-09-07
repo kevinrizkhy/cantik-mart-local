@@ -4,9 +4,11 @@ class CreateMember < ActiveRecord::Migration[5.2]
       t.string :name, null: false
       t.string :id_card
       t.string :card_number, null: false
-      t.bigint :phone, null: false
+      t.string :phone, null: false
       t.integer :sex
       t.string :address
+      t.references :user, foreign_key: true, null: false
+      t.references :store, foreign_key: true, null: false
 
       t.timestamps
     end

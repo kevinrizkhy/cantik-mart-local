@@ -9,6 +9,11 @@ class CreateReturs < ActiveRecord::Migration[5.2]
       t.datetime :date_picked, default: 'CURRENT_TIMESTAMP'
       t.datetime :date_approve, default: 'CURRENT_TIMESTAMP'
       t.datetime :status, default: 'CURRENT_TIMESTAMP'
+      t.references :user, foreign_key: true, null: false
+      t.bigint :picked_by
+      t.bigint :approved_by
+
+      t.timestamps
     end
   end
 end

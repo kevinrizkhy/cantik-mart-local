@@ -7,6 +7,7 @@ class GetsController < ApplicationController
 		 json_result["item_cats"] = ItemCat.all
 		 json_result["items"] = Item.all
 		 json_result["stocks"] = StoreItem.all
+		 json_result["grocers"] = GrocerItem.all
 		 render :json => json_result
 	end
 end

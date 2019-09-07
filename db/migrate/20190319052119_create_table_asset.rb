@@ -7,6 +7,8 @@ class CreateTableAsset < ActiveRecord::Migration[5.2]
     	t.timestamp :date_created, null: false
     	t.string :description, null: false
     	t.integer :finance_type, null: false
+        
+        t.timestamps
     end
   end
 end

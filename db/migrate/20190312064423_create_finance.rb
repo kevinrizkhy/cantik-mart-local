@@ -7,6 +7,8 @@ class CreateFinance < ActiveRecord::Migration[5.2]
     	t.integer :finance_type, null: false, default: 1
     	t.timestamp :date_created
     	t.string :description
+
+        t.timestamps
     end
   end
 end

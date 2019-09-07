@@ -6,6 +6,10 @@ class CreateAbsent < ActiveRecord::Migration[5.2]
     	t.timestamp :check_out
     	t.timestamp :overtime_in
     	t.timestamp :overtime_out
+    	t.string :work_hour, default: "0:0:0"
+    	t.string :overtime_hour, default: "0:0:0"
+    	
+    	t.timestamps
     end
   end
 end

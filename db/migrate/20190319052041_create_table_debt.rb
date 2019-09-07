@@ -9,6 +9,9 @@ class CreateTableDebt < ActiveRecord::Migration[5.2]
     	t.string :description, null: false
     	t.integer :ref_id, null: true
     	t.integer :finance_type, null: false
+        t.datetime :due_date, null: false
+
+        t.timestamps
     end
   end
 end

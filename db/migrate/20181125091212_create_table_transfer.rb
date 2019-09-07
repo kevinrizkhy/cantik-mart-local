@@ -10,6 +10,13 @@ class CreateTableTransfer < ActiveRecord::Migration[5.2]
       t.integer :total_items
       t.references :from_store, foreign_key: { to_table: :stores}, null: false
       t.references :to_store, foreign_key: { to_table: :stores }, null: false
+      t.string :description, null: false, default: "-"
+      t.references :user, foreign_key: true, null: false
+      t.bigint :approved_by
+      t.bigint :picked_by
+      t.bigint :confirmed_by
+      
+      t.timestamps
     end
   end
 end
