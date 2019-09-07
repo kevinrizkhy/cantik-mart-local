@@ -158,6 +158,8 @@ ActiveRecord::Schema.define(version: 2019_08_23_081123) do
 
   create_table "departments", force: :cascade do |t|
     t.string "name", default: "DEFAULT (NO DEPARTMENT)", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "finances", force: :cascade do |t|

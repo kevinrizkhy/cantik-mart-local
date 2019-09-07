@@ -37,6 +37,9 @@
               .form-group
                 label for="id-card" ID Fingerprint
                 = form.text_field :fingerprint, required: true, class: "form-control md-form", id: "id-card", disabled: "disabled"
+              .form-group
+                label for="id-card" Terakhir Update
+                input type="text" value="#{@user.updated_at}" class="form-control md-form"
           .col-12.text-center
             a href='#{edit_user_path(id: @user.id)}' 
               button.btn.btn-rounded.btn-warning.black-text type="button" 
