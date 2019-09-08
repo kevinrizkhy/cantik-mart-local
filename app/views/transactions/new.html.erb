@@ -2,6 +2,9 @@
 <html>
    <head>
       <meta charset="utf-8"/>
+      <meta http-equiv=“Pragma” content=”no-cache”>
+      <meta http-equiv=“Expires” content=”-1″>
+      <meta http-equiv=“CACHE-CONTROL” content=”NO-CACHE”>
       <title>Cantik Mart</title>
       <style>
          .overflow {
@@ -107,7 +110,7 @@
                <div class="ui tab" data-tab="member">
                   <div class="four fields">
                      <div class="field">
-                        <a href="localhost:3000/members/new"><button class="text-right btn btn-primary">+ MEMBER</button></a>
+                        <a href="localhost:3030/members/new"><button class="text-right btn btn-primary">+ MEMBER</button></a>
                         <br>
                         <label>CARI MEMBER</label>
                         <input type="text" placeholder="Nama Member / No. Telp / Alamat" id="memberSearchId"/>
@@ -198,17 +201,23 @@
                      <select id="bank-select">
                         <option value="1" selected>BCA</option>
                         <option value="2">Mandiri</option>
-                        <option value="3">Permata</option>
+                        <option value="3">BNI</option>
+                        <option value="4">BRI</option>
+                        <option value="5">Permata</option>
                      </select>
                      <label>Bank</label>
                   </div>
                   <div class="input-field col s12">
-                     <input type="text" placeholder="123456789" id="edc-number"/>
+                     <input type="number" placeholder="123456789" id="edc-number" autocomplete="off"/>
                      <label>Nomor TRX (EDC)</label>
+                  </div>
+                  <div class="input-field col s12">
+                     <input type="number" placeholder="123456789" id="card-number" autocomplete="off"/>
+                     <label>Nomor Kartu</label>
                   </div>
                </div>
                <div class="input-field col s12" id="nominal-div">
-                  <input type="number" placeholder="123456789" id="nominal" min="0" onkeyup="exchange()" />
+                  <input type="number" placeholder="123456789" id="nominal" min="0" onkeyup="exchange()" autocomplete="off"/>
                   <label>Jumlah Uang</label>
                </div>
             </div>
@@ -261,12 +270,19 @@
              var payment = $("#payment-method-select").val();
              var member = $("#memberId").val();
              var change = "0";
-             var bank = 0;
-             var edc = "";
+             var bank = $("#bank-select").val();
+             var edc = $("#edc-nnumber").val();
+             var card = $("#card-number").val();
          
              if (payment==1){
-                 nominal= $('#nominal').val();
                  change = $('#change-h5').html();
+
+                 var nominal = parseFloat($('#nominal').val());
+                 if (total > nominal) {
+                   var bilangan = nominal - total;
+                   alert("Jumlah Uang Kurang.")
+                   return false;
+                 }
              }else{
                  bank = $("#bank-select").val();
                  edc = $("#edc-number").val();
@@ -276,6 +292,7 @@
              map["payment"] = payment;
              map["bank"] = bank;
              map["edc"] = edc;
+             map["card"] = card;
              map["member"] = member;
              jQuery.ajax({
                        url: "/api/trx/post",
@@ -288,11 +305,15 @@
                          }
                        },
                        success: function(result) {
-                        var table = $('#itemList').DataTable();
-                        table.clear().draw();
-                        $("#total-h5").html("0");
-                         document.getElementById("label-total").innerHTML = "0";
-                         }
+                          $("#payment-method-select").val(0);
+                          $("#nominal").val();
+                          var table = $('#itemList').DataTable();
+                          table.clear().draw();
+                          $("#total-h5").html("0");
+                          document.getElementById("label-total").innerHTML = "0";
+                          document.location.reload();
+                          window.location.reload()
+                        }
              });
          }
          
@@ -355,29 +376,30 @@
          var total = 0;
          
          function PaymentMethod() {
-         var method = $('#payment-method-select').val();
-         if (method != 1) {
-         $("#card").css("display", "block");
-         $("#nominal-div").css("display", "none");
-         $("#change-div").css("display", "none");
-         } else {
-         $("#nominal-div").css("display", "block");
-         $("#change-div").css("display", "block");
-         $("#card").css("display", "none");
-         }
+           var method = $('#payment-method-select').val();
+           if (method != 1) {
+             $("#card").css("display", "block");
+             $("#nominal-div").css("display", "none");
+             $("#change-div").css("display", "none");
+           } else {
+             $("#nominal-div").css("display", "block");
+             $("#change-div").css("display", "block");
+             $("#card").css("display", "none");
+           }
          }
          
          function exchange() {
-         var nominal = parseFloat($('#nominal').val());
-         if (total <= nominal) {
-         var bilangan = nominal - total;
-         
-         var reverse = bilangan.toString().split('').reverse().join(''),
-         ribuan = reverse.match(/\d{1,3}/g);
-         ribuan = ribuan.join('.').split('').reverse().join('');
-         
-         $("#change-h5").html(ribuan);
-         }
+           var nominal = parseFloat($('#nominal').val());
+           if (total <= nominal) {
+             var bilangan = nominal - total;
+             
+             var reverse = bilangan.toString().split('').reverse().join(''),
+             ribuan = reverse.match(/\d{1,3}/g);
+             ribuan = ribuan.join('.').split('').reverse().join('');
+             
+             $("#change-h5").html(ribuan);
+             return bilangan;
+           }
          }
          
          var itemId = document.getElementById('itemId');

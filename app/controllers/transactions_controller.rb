@@ -34,7 +34,7 @@ class TransactionsController < ApplicationController
     new_post = DateTime.now
 
 
-    post_trx_data = Transaction.where("date_created > ?", @@last_post)
+    post_trx_data = Transaction.where("date_created > ? AND date_created <= ?", @@last_post, new_post)
     datas = []
     post_trx_data.each do |trx|
       temp_data = []
@@ -43,20 +43,31 @@ class TransactionsController < ApplicationController
       temp_data << post_trx_items_data
       datas << temp_data
     end
+
+    members_data = Member.where("created_at > ? AND updated_at <= ?", @@last_post, new_post).to_json.to_s
+    encrypted_data2 = Base64.encode64(members_data)
+
     string_data = datas.to_json.to_s
     encrypted_data = Base64.encode64(string_data)
     b = []
     b << SecureRandom.hex(1)
     b << encrypted_data
     b << SecureRandom.hex(1)
+    b << encrypted_data2
+    b << SecureRandom.hex(1)
 
     uri = URI(url)
     req = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
     req.body = {trxs: b}.to_json
-    res = Net::HTTP.start(uri.hostname, uri.port) do |http|
-      http.request(req)
+    begin
+      res = Net::HTTP.start(uri.hostname, uri.port) do |http|
+        http.request(req)
+      end
+    rescue
+      puts "TIDAK ADA INTERNET"
     end
 
+    @@last_post = new_post
 
   end
 
@@ -96,7 +107,7 @@ class TransactionsController < ApplicationController
     end
     trx.member_id = member_id
     trx.date_created = Time.now
-    trx.payment_type = params[:payment]
+    trx.payment_type = params[:payment].to_i
 
     trx.items = item.to_i
     trx.discount = discount.to_i
@@ -104,8 +115,9 @@ class TransactionsController < ApplicationController
     trx.grand_total = grand_total.to_i
 
     if params[:payment] != 1
-      trx.bank = params[:bank]
-      trx.edc_inv = params[:edc]
+      trx.bank = params[:bank].to_i
+      trx.edc_inv = params[:edc].to_s
+      trx.card_number = params[:card].to_s
     end
 
     trx.save!
