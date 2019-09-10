@@ -2,6 +2,9 @@ class ApplicationController < ActionController::Base
   include Clearance::Controller
   include PublicActivity::StoreController 
   
+  @@last_post = nil
+  @@last_update = nil
+
   protected
     def authorize *authorized_level
       redirect_back_no_access_right unless authorized_level.include? current_user.level
@@ -58,4 +61,7 @@ class ApplicationController < ActionController::Base
       Notification.create from_user: from_user, to_user: to_user, m_type: m_type,
         message: message, link: link, date_created: DateTime.now
     end
+
+
+
 end

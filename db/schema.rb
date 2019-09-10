@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_08_130130) do
+ActiveRecord::Schema.define(version: 2019_09_09_093551) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -114,13 +114,12 @@ ActiveRecord::Schema.define(version: 2019_09_08_130130) do
     t.string "invoice", null: false
     t.integer "total_items", null: false
     t.bigint "store_id", null: false
-    t.bigint "member_id"
     t.datetime "date_created"
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "transaction_id", null: false
-    t.index ["member_id"], name: "index_complains_on_member_id"
+    t.bigint "member_card"
     t.index ["store_id"], name: "index_complains_on_store_id"
     t.index ["transaction_id"], name: "index_complains_on_transaction_id"
     t.index ["user_id"], name: "index_complains_on_user_id"
@@ -439,6 +438,8 @@ ActiveRecord::Schema.define(version: 2019_09_08_130130) do
     t.float "receivable", default: 0.0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "last_update"
+    t.datetime "last_post"
   end
 
   create_table "supplier_items", force: :cascade do |t|
@@ -478,7 +479,6 @@ ActiveRecord::Schema.define(version: 2019_09_08_130130) do
   create_table "transactions", force: :cascade do |t|
     t.string "invoice", null: false
     t.bigint "user_id", null: false
-    t.bigint "member_id"
     t.float "total", null: false
     t.float "discount", default: 0.0
     t.float "grand_total", null: false
@@ -491,7 +491,7 @@ ActiveRecord::Schema.define(version: 2019_09_08_130130) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "card_number"
-    t.index ["member_id"], name: "index_transactions_on_member_id"
+    t.bigint "member_card"
     t.index ["user_id"], name: "index_transactions_on_user_id"
   end
 
@@ -572,7 +572,6 @@ ActiveRecord::Schema.define(version: 2019_09_08_130130) do
   add_foreign_key "cashes", "users"
   add_foreign_key "complain_items", "complains"
   add_foreign_key "complain_items", "items"
-  add_foreign_key "complains", "members"
   add_foreign_key "complains", "stores"
   add_foreign_key "complains", "users"
   add_foreign_key "controller_methods", "controllers"
@@ -616,7 +615,6 @@ ActiveRecord::Schema.define(version: 2019_09_08_130130) do
   add_foreign_key "supplier_items", "suppliers"
   add_foreign_key "transaction_items", "items"
   add_foreign_key "transaction_items", "transactions"
-  add_foreign_key "transactions", "members"
   add_foreign_key "transactions", "users"
   add_foreign_key "transfer_items", "items"
   add_foreign_key "transfer_items", "transfers"
