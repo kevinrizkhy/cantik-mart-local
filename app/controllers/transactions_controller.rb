@@ -61,7 +61,7 @@ class TransactionsController < ApplicationController
     trx.member_card = member_card
     trx.date_created = Time.now
     trx.payment_type = params[:payment].to_i
-    trx.store_id = current_user.store.id
+    trx.store = current_user.store
 
     trx.items = item.to_i
     trx.discount = discount.to_i

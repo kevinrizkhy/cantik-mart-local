@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_09_093551) do
+ActiveRecord::Schema.define(version: 2019_09_12_153910) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -232,6 +232,7 @@ ActiveRecord::Schema.define(version: 2019_09_09_093551) do
     t.float "discount", default: 0.0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "local_item", default: false
     t.index ["item_cat_id"], name: "index_items_on_item_cat_id"
   end
 
@@ -440,6 +441,7 @@ ActiveRecord::Schema.define(version: 2019_09_09_093551) do
     t.datetime "updated_at", null: false
     t.datetime "last_update"
     t.datetime "last_post"
+    t.bigint "grand_total_before", default: 0
   end
 
   create_table "supplier_items", force: :cascade do |t|
@@ -478,6 +480,7 @@ ActiveRecord::Schema.define(version: 2019_09_09_093551) do
 
   create_table "transactions", force: :cascade do |t|
     t.string "invoice", null: false
+    t.bigint "store_id", null: false
     t.bigint "user_id", null: false
     t.float "total", null: false
     t.float "discount", default: 0.0
@@ -492,6 +495,7 @@ ActiveRecord::Schema.define(version: 2019_09_09_093551) do
     t.datetime "updated_at", null: false
     t.string "card_number"
     t.bigint "member_card"
+    t.index ["store_id"], name: "index_transactions_on_store_id"
     t.index ["user_id"], name: "index_transactions_on_user_id"
   end
 
@@ -615,6 +619,7 @@ ActiveRecord::Schema.define(version: 2019_09_09_093551) do
   add_foreign_key "supplier_items", "suppliers"
   add_foreign_key "transaction_items", "items"
   add_foreign_key "transaction_items", "transactions"
+  add_foreign_key "transactions", "stores"
   add_foreign_key "transactions", "users"
   add_foreign_key "transfer_items", "items"
   add_foreign_key "transfer_items", "transfers"
