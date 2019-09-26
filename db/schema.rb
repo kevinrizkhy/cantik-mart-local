@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_12_153910) do
+ActiveRecord::Schema.define(version: 2019_09_24_130925) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -83,6 +83,7 @@ ActiveRecord::Schema.define(version: 2019_09_12_153910) do
     t.string "invoice", default: "-", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "payment"
     t.index ["store_id"], name: "index_cash_flows_on_store_id"
     t.index ["user_id"], name: "index_cash_flows_on_user_id"
   end
@@ -120,6 +121,7 @@ ActiveRecord::Schema.define(version: 2019_09_12_153910) do
     t.datetime "updated_at", null: false
     t.bigint "transaction_id", null: false
     t.bigint "member_card"
+    t.float "nominal", default: 0.0, null: false
     t.index ["store_id"], name: "index_complains_on_store_id"
     t.index ["transaction_id"], name: "index_complains_on_transaction_id"
     t.index ["user_id"], name: "index_complains_on_user_id"
@@ -221,8 +223,8 @@ ActiveRecord::Schema.define(version: 2019_09_12_153910) do
     t.string "code", default: "DEFAULT_CODE", null: false
     t.string "name", default: "DEFAULT_NAME", null: false
     t.integer "stock", default: 0, null: false
-    t.integer "buy", default: 1, null: false
-    t.integer "sell", default: 1, null: false
+    t.integer "buy", default: 0, null: false
+    t.integer "sell", default: 0, null: false
     t.bigint "item_cat_id", null: false
     t.string "brand", null: false
     t.float "wholesale", default: 0.0, null: false
@@ -233,7 +235,30 @@ ActiveRecord::Schema.define(version: 2019_09_12_153910) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "local_item", default: false
+    t.integer "margin", default: 0
     t.index ["item_cat_id"], name: "index_items_on_item_cat_id"
+  end
+
+  create_table "loss_items", force: :cascade do |t|
+    t.bigint "item_id", null: false
+    t.bigint "loss_id", null: false
+    t.integer "quantity", default: 0, null: false
+    t.string "description", default: "-", null: false
+    t.index ["item_id"], name: "index_loss_items_on_item_id"
+    t.index ["loss_id"], name: "index_loss_items_on_loss_id"
+  end
+
+  create_table "losses", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "store_id", null: false
+    t.integer "total_item", null: false
+    t.boolean "from_retur", default: false
+    t.bigint "ref_id"
+    t.string "invoice", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["store_id"], name: "index_losses_on_store_id"
+    t.index ["user_id"], name: "index_losses_on_user_id"
   end
 
   create_table "members", force: :cascade do |t|
@@ -285,6 +310,11 @@ ActiveRecord::Schema.define(version: 2019_09_12_153910) do
     t.integer "new_receive", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "discount_1", default: 0
+    t.integer "discount_2", default: 0
+    t.integer "ppn", default: 0
+    t.bigint "grand_total", default: 0
+    t.bigint "total", default: 0, null: false
     t.index ["item_id"], name: "index_order_items_on_item_id"
     t.index ["order_id"], name: "index_order_items_on_order_id"
   end
@@ -305,6 +335,12 @@ ActiveRecord::Schema.define(version: 2019_09_12_153910) do
     t.bigint "received_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "salesman", default: "-"
+    t.string "no_faktur", default: "-"
+    t.integer "discount", default: 0
+    t.bigint "discount_percentage", default: 0
+    t.boolean "from_retur", default: false
+    t.bigint "grand_total", default: 0
     t.index ["store_id"], name: "index_orders_on_store_id"
     t.index ["supplier_id"], name: "index_orders_on_supplier_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
@@ -414,6 +450,22 @@ ActiveRecord::Schema.define(version: 2019_09_12_153910) do
     t.index ["user_id"], name: "index_stock_values_on_user_id"
   end
 
+  create_table "store_balances", force: :cascade do |t|
+    t.float "cash", null: false
+    t.float "receivable", null: false
+    t.float "stock_value", null: false
+    t.float "asset_value", null: false
+    t.float "equity", null: false
+    t.float "debt", null: false
+    t.float "transaction_value", null: false
+    t.float "outcome", null: false
+    t.bigint "store_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "filename"
+    t.index ["store_id"], name: "index_store_balances_on_store_id"
+  end
+
   create_table "store_items", force: :cascade do |t|
     t.bigint "store_id", null: false
     t.bigint "item_id", null: false
@@ -439,9 +491,9 @@ ActiveRecord::Schema.define(version: 2019_09_12_153910) do
     t.float "receivable", default: 0.0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.datetime "last_update"
+    t.float "grand_total_before", default: 0.0
     t.datetime "last_post"
-    t.bigint "grand_total_before", default: 0
+    t.datetime "last_update"
   end
 
   create_table "supplier_items", force: :cascade do |t|
@@ -480,7 +532,6 @@ ActiveRecord::Schema.define(version: 2019_09_12_153910) do
 
   create_table "transactions", force: :cascade do |t|
     t.string "invoice", null: false
-    t.bigint "store_id", null: false
     t.bigint "user_id", null: false
     t.float "total", null: false
     t.float "discount", default: 0.0
@@ -495,6 +546,10 @@ ActiveRecord::Schema.define(version: 2019_09_12_153910) do
     t.datetime "updated_at", null: false
     t.string "card_number"
     t.bigint "member_card"
+    t.bigint "store_id", default: 1, null: false
+    t.float "sub_from_complain", default: 0.0, null: false
+    t.boolean "from_complain", default: false, null: false
+    t.bigint "complain_id"
     t.index ["store_id"], name: "index_transactions_on_store_id"
     t.index ["user_id"], name: "index_transactions_on_user_id"
   end
@@ -543,6 +598,15 @@ ActiveRecord::Schema.define(version: 2019_09_12_153910) do
     t.index ["controller_method_id"], name: "index_user_methods_on_controller_method_id"
   end
 
+  create_table "user_salaries", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "nominal", default: 0, null: false
+    t.integer "checking", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_user_salaries_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name", null: false
     t.string "email", null: false
@@ -589,6 +653,10 @@ ActiveRecord::Schema.define(version: 2019_09_12_153910) do
   add_foreign_key "invoice_transactions", "users"
   add_foreign_key "item_cats", "departments"
   add_foreign_key "items", "item_cats"
+  add_foreign_key "loss_items", "items"
+  add_foreign_key "loss_items", "losses"
+  add_foreign_key "losses", "stores"
+  add_foreign_key "losses", "users"
   add_foreign_key "members", "stores"
   add_foreign_key "members", "users"
   add_foreign_key "notifications", "users", column: "from_user_id"
@@ -613,6 +681,7 @@ ActiveRecord::Schema.define(version: 2019_09_12_153910) do
   add_foreign_key "returs", "users"
   add_foreign_key "stock_values", "stores"
   add_foreign_key "stock_values", "users"
+  add_foreign_key "store_balances", "stores"
   add_foreign_key "store_items", "items"
   add_foreign_key "store_items", "stores"
   add_foreign_key "supplier_items", "items"
@@ -627,4 +696,5 @@ ActiveRecord::Schema.define(version: 2019_09_12_153910) do
   add_foreign_key "transfers", "stores", column: "to_store_id"
   add_foreign_key "transfers", "users"
   add_foreign_key "user_methods", "controller_methods"
+  add_foreign_key "user_salaries", "users"
 end

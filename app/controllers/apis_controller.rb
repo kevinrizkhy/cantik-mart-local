@@ -3,19 +3,21 @@ class ApisController < ApplicationController
 
   def index
     api_type = params[:api_type]
-  	if api_type == "item"
+    if api_type == "item"
       get_item params
     elsif api_type == "order"
       get_item_order params
     elsif api_type == "trx"
       get_item_trx params
+    elsif api_type == "member_trx"
+      get_member_trx params
     elsif api_type == "member"
       get_member params
     elsif api_type == "get_notification"
       get_notification params
     elsif api_type == "update_notification"
       update_notification params
-    end  	
+    end   
   end
 
   def get_notification params
@@ -47,7 +49,20 @@ class ApisController < ApplicationController
     search = params[:search].squish
     return render :json => json_result unless search.present?
     search = search.gsub(/\s+/, "")
-    members = Member.where('lower(name) like ?', "%"+search.downcase+"%")
+    src = "%"+search.downcase+"%"
+    members = Member.where('lower(name) like ? OR lower(phone) like ? OR card_number = ?', src, src, src)
+    members.each do|member|
+      json_result << [member.card_number, member.name, member.address, member.phone]
+    end
+    render :json => json_result
+  end
+
+  def get_member_trx params
+    json_result = []
+    search = params[:search].squish
+    return render :json => json_result unless search.present?
+    search = search.gsub(/\s+/, "")
+    members = Member.where(card_number: search)
     members.each do|member|
       json_result << [member.card_number, member.name, member.address, member.phone]
     end
@@ -59,7 +74,7 @@ class ApisController < ApplicationController
     search = params[:search].squish
     return render :json => json_result unless search.present?
     search = search.gsub(/\s+/, "")
-    items = Item.where('lower(name) like ?', "%"+search.downcase+"%").pluck(:id)
+    items = Item.where('lower(name) like ? OR lower(code) like ?', "%"+search.downcase+"%", "%"+search.downcase+"%").pluck(:id)
     item_stores = StoreItem.where(store_id: current_user.store.id, item: items)
     return render :json => json_result unless item_stores.present?
     item_stores.each do |item_store|
@@ -68,6 +83,7 @@ class ApisController < ApplicationController
       item << item_store.item.name
       item << item_store.item.item_cat.name
       item << item_store.item.sell
+      item << item_store.stock
       json_result << item
     end
     render :json => json_result
@@ -111,14 +127,25 @@ class ApisController < ApplicationController
       if grocer_price.present?
         find_price = grocer_price.where('max >= ? AND min <= ?', qty, qty).order("max ASC")
         if find_price.present?
-          item << find_price.first.price
-          item << find_price.first.discount
+          price = find_price.first.price
+          disc = find_price.first.discount
+          disc = (disc * price) / 100 if disc <= 100
+          item << price
+          item << disc
         else
-          item << item_store.item.sell
-          item << item_store.item.discount
+          find_price = grocer_price.order("max ASC")
+          price = find_price.first.price
+          disc = find_price.first.discount
+          disc = (disc * price) / 100 if disc <= 100
+          item << price
+          item << disc
         end
       else
-        item << item_store.item.sell
+        price = item_store.item.sell
+        disc = item_id.discount
+        disc = (disc * price) / 100 if disc <= 100
+        item << price
+        item << disc
       end
       item << item_id.id
       json_result << item

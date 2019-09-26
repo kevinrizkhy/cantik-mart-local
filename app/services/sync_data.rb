@@ -1,6 +1,7 @@
 class SyncData
 	
 	@@store_id = 1
+  @@hostname = "http://www.cantikmart.com"
 
 	def initialize
 	end
@@ -12,7 +13,7 @@ class SyncData
       last_post = DateTime.now - 10.years
     end
 
-    url = "http://localhost:3000/api/post/trx"
+    url = @@hostname+"/api/post/trx"
     new_post = DateTime.now
 
 
@@ -66,7 +67,7 @@ class SyncData
       last_update = DateTime.now - 10.years
     end
     new_last_update = DateTime.now
-    url = "http://localhost:3000/get/"+@@store_id.to_s+"?from="+last_update.to_s+"&to="+new_last_update.to_s
+    url = @@hostname+"/get/"+@@store_id.to_s+"?from="+last_update.to_s+"&to="+new_last_update.to_s
     resp = Net::HTTP.get_response(URI.parse(url))
     return if resp.code.to_i != 200 
     data = JSON.parse(resp.body)
