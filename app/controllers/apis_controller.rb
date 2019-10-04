@@ -9,8 +9,6 @@ class ApisController < ApplicationController
       get_item_order params
     elsif api_type == "trx"
       get_item_trx params
-    elsif api_type == "member_trx"
-      get_member_trx params
     elsif api_type == "member"
       get_member params
     elsif api_type == "get_notification"
@@ -49,20 +47,7 @@ class ApisController < ApplicationController
     search = params[:search].squish
     return render :json => json_result unless search.present?
     search = search.gsub(/\s+/, "")
-    src = "%"+search.downcase+"%"
-    members = Member.where('lower(name) like ? OR lower(phone) like ? OR card_number = ?', src, src, src)
-    members.each do|member|
-      json_result << [member.card_number, member.name, member.address, member.phone]
-    end
-    render :json => json_result
-  end
-
-  def get_member_trx params
-    json_result = []
-    search = params[:search].squish
-    return render :json => json_result unless search.present?
-    search = search.gsub(/\s+/, "")
-    members = Member.where(card_number: search)
+    members = Member.where('lower(name) like ?', "%"+search.downcase+"%")
     members.each do|member|
       json_result << [member.card_number, member.name, member.address, member.phone]
     end
@@ -74,7 +59,7 @@ class ApisController < ApplicationController
     search = params[:search].squish
     return render :json => json_result unless search.present?
     search = search.gsub(/\s+/, "")
-    items = Item.where('lower(name) like ? OR lower(code) like ?', "%"+search.downcase+"%", "%"+search.downcase+"%").pluck(:id)
+    items = Item.where('lower(name) like ?', "%"+search.downcase+"%").pluck(:id)
     item_stores = StoreItem.where(store_id: current_user.store.id, item: items)
     return render :json => json_result unless item_stores.present?
     item_stores.each do |item_store|
@@ -83,7 +68,6 @@ class ApisController < ApplicationController
       item << item_store.item.name
       item << item_store.item.item_cat.name
       item << item_store.item.sell
-      item << item_store.stock
       json_result << item
     end
     render :json => json_result
@@ -113,43 +97,56 @@ class ApisController < ApplicationController
     search = params[:search].squish
     return render :json => json_result unless search.present?
     return render :json => json_result unless qty.present?
+    return render :json => json_result if qty.to_i <= 0
     search = search.gsub(/\s+/, "")
     item_id = Item.find_by(code: search)
-    item_stores = StoreItem.where(store_id: current_user.store.id, item: item_id)
-    return render :json => json_result unless item_stores.present?
-    item_stores.each do |item_store|
-      item = []
-      item << item_store.item.code
-      item << item_store.item.name
-      item << item_store.item.item_cat.name
-      curr_item = item_store.item
-      grocer_price = curr_item.grocer_items
-      if grocer_price.present?
-        find_price = grocer_price.where('max >= ? AND min <= ?', qty, qty).order("max ASC")
-        if find_price.present?
-          price = find_price.first.price
-          disc = find_price.first.discount
-          disc = (disc * price) / 100 if disc <= 100
-          item << price
-          item << disc
-        else
-          find_price = grocer_price.order("max ASC")
-          price = find_price.first.price
-          disc = find_price.first.discount
-          disc = (disc * price) / 100 if disc <= 100
-          item << price
-          item << disc
-        end
+    item_store = StoreItem.find_by(store_id: current_user.store.id, item: item_id)
+    return render :json => json_result unless item_store.present?
+
+    item = []
+    item << item_store.item.code
+    item << item_store.item.name
+    item << item_store.item.item_cat.name
+    curr_item = item_store.item
+    grocer_price = curr_item.grocer_items
+    if grocer_price.present?
+      find_price = grocer_price.where('max >= ? AND min <= ?', qty, qty).order("max ASC")
+      if find_price.present?
+        price = find_price.first.price
+        disc = find_price.first.discount
+        disc = (disc * price) / 100 if disc <= 100
+        item << price
+        item << disc
       else
-        price = item_store.item.sell
-        disc = item_id.discount
+        find_price = grocer_price.order("max ASC")
+        price = find_price.first.price
+        disc = find_price.first.discount
         disc = (disc * price) / 100 if disc <= 100
         item << price
         item << disc
       end
-      item << item_id.id
-      json_result << item
+    else
+      price = item_store.item.sell
+      disc = item_id.discount
+      disc = (disc * price) / 100 if disc <= 100
+      item << price
+      item << disc
     end
+
+    item << item_id.id
+
+
+    promo = Promotion.where(buy_item: item_id).where("start_promo <= ? AND end_promo >= ? AND buy_quantity <= ?", DateTime.now, DateTime.now, qty).first
+    if promo.present?
+      hit_promo = qty.to_i / promo.buy_quantity
+      item << promo.promo_code
+      item << promo.free_item.code
+      item << promo.free_item.name
+      item << hit_promo * promo.free_quantity
+    end
+    
+    json_result << item
+
     render :json => json_result
   end
 

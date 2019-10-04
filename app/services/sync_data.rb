@@ -2,7 +2,8 @@ class SyncData
 	
 	@@store_id = 1
   @@hostname = "http://www.cantikmart.com"
-
+  # @@hostname = "http://localhost:3000"
+  
 	def initialize
 	end
 
@@ -17,7 +18,7 @@ class SyncData
     new_post = DateTime.now
 
 
-    post_trx_data = Transaction.where("date_created > ? AND date_created <= ?", last_post, new_post)
+    post_trx_data = Transaction.where("updated_at > ? AND updated_at <= ?", last_post, new_post)
     datas = []
     post_trx_data.each do |trx|
       temp_data = []
@@ -30,11 +31,11 @@ class SyncData
     string_data = datas.to_json.to_s
     encrypted_data = Base64.encode64(string_data)
 
-    members_data = Member.where("created_at > ? AND updated_at <= ?", last_post, new_post).to_json.to_s
+    members_data = Member.where("updated_at > ? AND updated_at <= ?", last_post, new_post).to_json.to_s
     encrypted_data2 = Base64.encode64(members_data)
 
-    absents_data = Absent.where("created_at > ? AND updated_at <= ?", last_post, new_post).to_json.to_s
-    encrypted_data3 = Base64.encode64(members_data)
+    absents_data = Absent.where("updated_at > ? AND updated_at <= ?", last_post, new_post).to_json.to_s
+    encrypted_data3 = Base64.encode64(absents_data)
 
     b = []
     b << SecureRandom.hex(1)
@@ -44,7 +45,7 @@ class SyncData
     b << SecureRandom.hex(1)
     b << encrypted_data3
     b << SecureRandom.hex(1)
-
+    
     uri = URI(url)
     req = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
     req.body = {trxs: b}.to_json
@@ -140,6 +141,14 @@ class SyncData
         store_item.save! if store_item.changed?
       else
         StoreItem.create data
+      end
+    elsif key=="promotions"
+      promotion = Promotion.find_by(id: data["id"])
+      if promotion.present?
+        promotion.assign_attributes data
+        promotion.save! if promotion.changed?
+      else
+        Promotion.create data
       end
     elsif key=="grocers"
       grocer_item = GrocerItem.find_by(id: data["id"])

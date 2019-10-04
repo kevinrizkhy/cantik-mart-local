@@ -41,11 +41,22 @@ class TransactionsController < ApplicationController
     grand_total = 0
     hpp_total = 0
 
+    promotions_code  = []
+
     items.each do |trx_item|
       item += trx_item[1].to_i
       discount += trx_item[1].to_i * trx_item[3].to_i
       total += trx_item[1].to_i * trx_item[2].to_i
       grand_total += trx_item[4].to_i
+      promo = trx_item[5]
+      promotions_code << promo if promo.include? "PROMO-"
+    end
+
+    promotions = Promotion.where(promo_code: promotions_code)
+
+    promotions.each do |promotion|
+      promotion.hit = promotion.hit + 1
+      promotion.save!
     end
 
     trx = Transaction.new
@@ -79,12 +90,19 @@ class TransactionsController < ApplicationController
     items.each do |item_par|
       item = Item.find_by(code: item_par[0])
       next if item.nil?
-      TransactionItem.create item: item,  
+
+      trx_item = TransactionItem.create item: item,  
       transaction_id: trx.id,
       quantity: item_par[1], 
       price: item_par[2],
       discount: item_par[3],
       date_created: DateTime.now
+
+      if trx_item.price == 0
+        promo = item_par[5]
+        trx_item.reason = promo
+        trx_item.save!
+      end
       store_stock = StoreItem.find_by(store: current_user.store, item: item)
       hpp_total += item_par[1].to_i * item.buy.to_i
       next if store_stock.nil?

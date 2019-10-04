@@ -8,11 +8,11 @@ class CreateItem < ActiveRecord::Migration[5.2]
       t.integer :sell, null: false, default: 0
       t.references :item_cat, null: false, foreign_key: true
       t.string :brand, null: false, defautl: "DEFAULT BRAND"
-      t.float :wholesale, null: false, default: 0
-      t.float :box, null: false, default: 0
+      t.bigint :wholesale, null: false, default: 0
+      t.bigint :box, null: false, default: 0
       t.string :image
-      t.float :buy_grocer, default: 0
-      t.float :discount, null: false, default: 0
+      t.bigint :buy_grocer, default: 0
+      t.bigint :discount, null: false, default: 0
       
       t.timestamps
     end
