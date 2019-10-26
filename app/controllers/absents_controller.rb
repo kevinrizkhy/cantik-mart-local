@@ -3,7 +3,6 @@ class AbsentsController < ApplicationController
 
   def index
     status = get_data
-    @bool_stats = status
     if !status
       @status = "Fingerprint tidak terhubung."
     end

@@ -1,5 +1,5 @@
 class Member < ApplicationRecord
-  validates :name, :address, :card_number, :id_card, :sex, :phone, presence: true
+  validates :name, :address, :card_number, :sex, :phone, presence: true
 
   enum sex: {
     laki_laki: 0,
@@ -8,5 +8,6 @@ class Member < ApplicationRecord
 
   belongs_to :user
   belongs_to :store
+  has_many :points
 end
 

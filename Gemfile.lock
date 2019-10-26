@@ -5,6 +5,13 @@ GIT
     rspec_junit_formatter (0.4.1)
       rspec-core (>= 2, < 4, != 2.12.0)
 
+GIT
+  remote: https://github.com/mileszs/wicked_pdf.git
+  revision: 783f9e20c958d5255fb6f9830f20e53ffb41f63b
+  specs:
+    wicked_pdf (1.4.0)
+      activesupport
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -70,6 +77,13 @@ GEM
     arel (9.0.0)
     autoprefixer-rails (9.6.1.1)
       execjs
+    axlsx (1.3.6)
+      htmlentities (~> 4.3.1)
+      nokogiri (>= 1.4.1)
+      rubyzip (>= 0.9.5)
+    axlsx_rails (0.6.0)
+      actionpack (>= 3.1)
+      caxlsx (>= 3.0)
     bcrypt (3.1.13)
     bindex (0.8.1)
     brakeman (4.6.1)
@@ -96,8 +110,14 @@ GEM
       image_processing (~> 1.1)
       mimemagic (>= 0.3.0)
       mini_mime (>= 0.1.3)
+    caxlsx (3.0.0)
+      htmlentities (~> 4.3, >= 4.3.4)
+      mimemagic (~> 0.3)
+      nokogiri (~> 1.8, >= 1.8.2)
+      rubyzip (~> 1.2, >= 1.2.1)
     childprocess (2.0.0)
       rake (< 13.0)
+    chronic (0.10.2)
     clearance (1.17.0)
       actionmailer (>= 3.1)
       activemodel (>= 3.1)
@@ -321,6 +341,7 @@ GEM
       os (>= 0.9, < 2.0)
       signet (~> 0.7)
     hashdiff (1.0.0)
+    htmlentities (4.3.4)
     http (4.1.1)
       addressable (~> 2.3)
       http-cookie (~> 1.0)
@@ -385,7 +406,6 @@ GEM
       railties (>= 3.1)
     multi_json (1.13.1)
     multipart-post (2.1.1)
-    multiprocessing (0.0.2)
     netrc (0.11.0)
     nio4r (2.5.1)
     nokogiri (1.10.4)
@@ -394,14 +414,8 @@ GEM
     os (1.0.1)
     ovirt-engine-sdk (4.3.0)
       json (>= 1, < 3)
-    parallel (1.17.0)
     pdfkit (0.8.4.1)
     pg (1.1.4)
-    pgsync (0.4.1)
-      multiprocessing
-      parallel
-      pg (>= 0.18.2)
-      slop (>= 4.2.0)
     pry (0.12.2)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
@@ -528,7 +542,6 @@ GEM
     slim (4.0.1)
       temple (>= 0.7.6, < 0.9)
       tilt (>= 2.0.6, < 2.1)
-    slop (4.7.0)
     spring (2.1.0)
     spring-commands-rspec (1.0.4)
       spring (>= 0.9.1)
@@ -571,13 +584,16 @@ GEM
     websocket-driver (0.7.1)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.4)
-    wicked_pdf (1.4.0)
-      activesupport
+    whenever (1.0.0)
+      chronic (>= 0.6.3)
+    wkhtmltopdf-binary (0.12.4)
     wkhtmltopdf-heroku (2.12.5.0)
     xml-simple (1.1.5)
     xmlrpc (0.3.0)
     xpath (3.2.0)
       nokogiri (~> 1.8)
+    zip-zip (0.3)
+      rubyzip (>= 1.0.0)
 
 PLATFORMS
   ruby
@@ -585,6 +601,8 @@ PLATFORMS
 DEPENDENCIES
   activity_notification
   administrate
+  axlsx
+  axlsx_rails
   brakeman
   byebug
   capybara
@@ -602,7 +620,6 @@ DEPENDENCIES
   kaminari
   pdfkit
   pg
-  pgsync
   pry
   pry-nav
   public_activity
@@ -613,6 +630,7 @@ DEPENDENCIES
   roo (~> 2.8.0)
   rspec-rails
   rspec_junit_formatter!
+  rubyzip
   sass-rails (~> 5.0)
   selenium-webdriver
   simplecov
@@ -626,8 +644,11 @@ DEPENDENCIES
   web-console (>= 3.3.0)
   webmock
   webpacker (~> 3.5)
-  wicked_pdf (~> 1.1)
+  whenever
+  wicked_pdf!
+  wkhtmltopdf-binary
   wkhtmltopdf-heroku
+  zip-zip
 
 RUBY VERSION
    ruby 2.5.1p57

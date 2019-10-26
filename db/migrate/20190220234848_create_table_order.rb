@@ -7,7 +7,7 @@ class CreateTableOrder < ActiveRecord::Migration[5.2]
 		  	t.references :supplier, foreign_key: true, null: false
 		  	t.references :store, foreign_key: true, null: false
 		  	t.integer :total_items, null: false
-		  	t.integer :total, null: false
+		  	t.bigint :total, null: false
 		  	t.datetime :date_paid_off
 		  	t.boolean :editable, null: false, default: true
 		  	t.bigint :old_total, null: false, default: 0

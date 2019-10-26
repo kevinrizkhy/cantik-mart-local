@@ -64,8 +64,6 @@ class InsertProdlist
 		cat = ItemCat.find_by(name: cat_name)
 		if cat.present?
 			return cat
-		else
-			binding.pry
 		end
 	end
 end

@@ -5,7 +5,13 @@ class SyncData
   # @@hostname = "http://localhost:3000"
   
 	def initialize
+    sync_now
 	end
+
+  def self.sync_now
+    post_local_data
+    check_new_data
+  end
 
 	def self.post_local_data
     store = Store.find_by(id: @@store_id)
@@ -101,6 +107,24 @@ class SyncData
         member.save! if member.changed?
       else
         Member.create data
+      end
+    elsif key=="exchange_points"
+      epoint = ExchangePoint.find_by(id: data[:id])
+      data.delete("id")
+      if epoint.present?
+        epoint.assign_attributes data
+        epoint.save! if member.changed?
+      else
+        ExchangePoint.create data
+      end
+    elsif key=="vouchers"
+      voucher = Voucher.find_by(id: data[:id])
+      data.delete("id")
+      if voucher.present?
+        voucher.assign_attributes data
+        voucher.save! if member.changed?
+      else
+        Voucher.create data
       end
     elsif key=="stores"
       store = Store.find_by(id: data["id"])
