@@ -13,31 +13,6 @@ br
 .container-fluid
   .col-lg-12.col-md-12
     .card-header.white-text.info-color
-      h5.font-weight-500.my-1
-        - if @search_text.present?
-          | #{@search_text}
-        - else
-          | Pencarian
-    .card.mb-4
-      .card-body
-        = form_for :user, url: absents_path, method: 'GET' do |form|
-          - if @search_id.nil?
-            input type="number" class="form-control md-form" name="id" value="#{@search_id}" style="display: none"
-          .row.align-middle
-            - if User::OWNER == current_user.level || User::SUPER_ADMIN == current_user.level 
-              .col-md-6.text-center
-                input type="text" class="form-control md-form" id="search" name="search" placeholder="Cari nama..."
-              .col-md-6.text-center
-                input#date-picker-example.md-form.form-control.datepicker[placeholder="Selected date" type="text" data-value="2015/04/20" name="date_search"]        
-            - else
-              .col-md-12.text-center
-                input#date-picker-example.md-form.form-control.datepicker[placeholder="Selected date" type="text" data-value="2015/04/20" name="date_search"]            
-            .col-md-12.text-center
-              button class="btn btn-rounded btn-primary"
-                | Cari
-.container-fluid
-  .col-lg-12.col-md-12
-    .card-header.white-text.info-color
         h5.font-weight-500.my-1
           | Data
     .card.mb-4

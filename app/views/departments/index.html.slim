@@ -2,11 +2,6 @@
   .col
     h5
       | Daftar Department
-  .col.text-right
-    a href="#{new_department_path}"
-      button.btn.btn-rounded.btn-success type="button" 
-        i.fas.fa-plus 
-        |   Tambah Deparment
 br
 .container-fluid
   .col-lg-12.col-md-12
@@ -32,7 +27,6 @@ br
         table class="table"
           thead
             th Name
-            th Aksi
           tbody
             = render partial: 'list', collection: @departments, as: :department
         = paginate @departments

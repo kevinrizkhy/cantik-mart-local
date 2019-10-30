@@ -2,11 +2,6 @@
   .col.text-left
     h5
       | Daftar Member
-  .col.text-right
-    a href="#{new_member_path}"
-      button.btn.btn-rounded.btn-success type="button" 
-        i.fas.fa-plus 
-        |   Tambah Member
 br
 .container-fluid
   .col-lg-12.col-md-12
@@ -37,7 +32,6 @@ br
             th KTP
             th Nomor Telepon
             th Jenis Kelamin
-            th Aksi
           tbody
             = render partial: 'list', collection: @members, as: :member
         = paginate @members

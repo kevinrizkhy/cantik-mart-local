@@ -33,7 +33,7 @@ html
             li.logo-sn.waves-effect.py-3
               .text-center
                 a.pl-0 href="#" 
-                  =image_tag("/images/logo.png", height: '70')
+                  =image_tag("/images/logo.png", height: '100')
                   / img src="images/logo.png" width="120px"/
             li
               ul.collapsible.collapsible-accordion
@@ -51,12 +51,6 @@ html
         = yield
     - else
       = yield
-    
-    footer.page-footer.pt-0.mt-5.rgba-stylish-light
-      .footer-copyright.py-3.text-center
-        .container-fluid
-          | © 2019 Copyright:
-          a href="https://www.pardev.co.id" target="_blank"  www.pardev.co.id
 
     = javascript_include_tag '/dist/js/jquery-3.4.0.min.js'
     = javascript_include_tag '/dist/js/popper.min.js'
