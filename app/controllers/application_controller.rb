@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
     end
 
     def require_fingerprint
-      authorization
+      # authorization
       # user = current_user
       # absent = Absent.find_by("DATE(check_in) = ? AND user_id = ?", DateTime.now.to_date, user.id)
       # redirect_to absents_path, flash: { error: 'Silakan untuk melakukan absensi terlebih dahulu' }
