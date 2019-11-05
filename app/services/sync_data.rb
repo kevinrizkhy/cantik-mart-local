@@ -1,8 +1,8 @@
 class SyncData
 	
 	@@store_id = 1
-  @@hostname = "http://www.cantikmart.com"
-  # @@hostname = "http://localhost:3000"
+  # @@hostname = "http://www.cantikmart.com"
+  @@hostname = "http://localhost:3000"
   
 	def initialize
     sync_now
