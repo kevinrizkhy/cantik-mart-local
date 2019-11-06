@@ -6,9 +6,11 @@ env :PATH, ENV['PATH']
 
 # Example:
 #
-# set :output, "/path/to/my/cron_log.log"
+set :environment, 'development'
+set :output, "log/cron.log"
 #
-every 1.hours do
+
+every :hour do
   runner "SyncData.sync_now"
 end
 #
