@@ -30,6 +30,10 @@ class TransactionsController < ApplicationController
   end
 
   def new
+    gon.invoice = Time.now.to_i.to_s + "-" + current_user.store.id.to_s + "-" + current_user.id.to_s
+    gon.cashier = current_user.name.upcase
+    gon.current_time = DateTime.now.to_s
+
     respond_to do |format|
       format.html { render "transactions/new", :layout => false  } 
     end
@@ -55,7 +59,7 @@ class TransactionsController < ApplicationController
     end
 
     trx = Transaction.new
-    trx.invoice = "TRX-" + Time.now.to_i.to_s + "-" + current_user.store.id.to_s + "-" + current_user.id.to_s
+    trx.invoice = "TRX-" + params[:invoice]
     trx.user = current_user
     member_card = nil
     if params[:member] != ""

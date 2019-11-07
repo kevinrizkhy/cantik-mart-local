@@ -298,7 +298,7 @@
 
 
 
-
+      <%= include_gon %>
       <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
       <script src='https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/javascript/semantic.min.js'></script>
       <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery.address/1.6/jquery.address.min.js'></script>
@@ -306,6 +306,7 @@
       <!-- Compiled and minified JavaScript -->
       <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/js/materialize.min.js"></script>
       <script type="text/javascript">
+
          function CheckOut() {
              var table = $('#itemList').DataTable();
              var data = table.rows().data();
@@ -350,7 +351,8 @@
              map["edc"] = edc;
              map["card"] = card;
              map["member"] = member;
-             map["voucher"] = voucher_code
+             map["voucher"] = voucher_code;
+             map["invoice"] = gon.invoice;
 
              PrintBill();
              jQuery.ajax({
@@ -676,7 +678,7 @@
 
            var code= result[0];
 
-          if (table.rows().count()<1) {
+           if (table.rows().count()<1) {
             var dataSet = [code, result[1], result[2], qty, result[3], result[4], total];
             table.row.add(dataSet).draw();
             checkPromo(result);
@@ -759,7 +761,7 @@
            return;
          }
 
-         function checkPromo(result){
+        function checkPromo(result){
           var table = $('#itemList').DataTable();
           var t_size = $('#itemList').DataTable().rows().count();
           var promo_present = false;
@@ -807,8 +809,11 @@
            document.getElementById("label-total").innerHTML = ribuan;
          }
          
+         var invoice = gon.invoice
+         var cashier = gon.cashier
+         var time = gon.current_time
          
-         var header = '<!DOCTYPE html> <html> <head> <meta content="text/html;charset=utf-8" http-equiv="Content-Type"> <meta content="utf-8" http-equiv="encoding"> <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"> <style type="text/css"> td { font-size: 18px; } </style> <title></title> </head> <body> <div class="row"> <div class="col-sm-12 text-center"> <img style="width: 150px;" src="http://192.168.100.54:3000/images/logo.png"/> </div><div class="col-sm-12 text-center"> <p class="medium"> Jl. Raya Plered,Purwakarta No.17 <br> Kec. Plered, Kabupaten Purwakarta, Jawa Barat <br> =========================================================== </p> </div>';
+         var header = '<!DOCTYPE html> <html> <head> <meta content="text/html;charset=utf-8" http-equiv="Content-Type"> <meta content="utf-8" http-equiv="encoding"> <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"> <style type="text/css"> td { font-size: 18px; } </style> <title></title> </head> <body> <div class="row"> <div class="col-sm-12 text-center"> <h3>CANTIK MART</h3> </div><div class="col-sm-12 text-center"> <p class="medium"> Jl. Raya Plered,Purwakarta No.17 <br> Kec. Plered, Kabupaten Purwakarta, Jawa Barat <br> =========================================================== <br> ' + invoice + ' <br> '+ cashier + ' - ' + time +' <br> =========================================================== </p>  </div>';
 
          var footer = '<p class="medium"> =========================================================== </p> <div class="text-center"> <h4> Terima kasih atas kunjungan Anda </h4> </div> </div> </div> </body> </html>';
 
