@@ -45,7 +45,6 @@ class TransactionsController < ApplicationController
     hpp_total = 0
 
     promotions_code  = []
-
     items.each do |trx_item|
       item += trx_item[1].to_i
       discount += trx_item[1].to_i * trx_item[3].to_i

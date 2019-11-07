@@ -106,7 +106,7 @@
                     </div>
                     <div class="col-sm-4">
                       <label>JUMLAH</label>
-                      <input type="number" value="1" min="1" id="item_qty"/>
+                      <input type="number" value="1" min="0.1" id="item_qty" step="0.005" />
                     </div>
                     <div class="col-sm-4 text-right">
                       <button data-target="modal1" class="btn btn-primary btn-large modal-trigger">BAYAR</button>
@@ -351,6 +351,8 @@
              map["card"] = card;
              map["member"] = member;
              map["voucher"] = voucher_code
+
+             PrintBill();
              jQuery.ajax({
                        url: "/api/trx/post",
                        type: "POST",
@@ -370,7 +372,10 @@
                           document.getElementById("label-total").innerHTML = "0";
                           document.location.reload();
                           window.location.reload()
-                        }
+                        }, 
+                       error: function(result){
+                          alert("ERROR")
+                       }
              });
          }
          
@@ -444,6 +449,7 @@
                searching: false,
                lengthChange: false
             });
+
            document.getElementById("itemId").focus();
            $('.modal').modal();
            $('select').formSelect();
@@ -662,8 +668,8 @@
          function updateTable(result_arr){
            var table = $('#itemList').DataTable();
            var result = result_arr[0];
-           var qty = parseInt(qtyInput.value);
-           var total = parseFloat(qty) * (parseFloat(result[3]) - parseFloat(result[4]));
+           var qty = parseFloat(qtyInput.value);
+           var total = Math.round(parseFloat(qty) * (parseFloat(result[3]) - parseFloat(result[4])));
 
            var code= result[0];
 
