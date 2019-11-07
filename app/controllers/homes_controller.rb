@@ -3,8 +3,7 @@ class HomesController < ApplicationController
   require 'usagewatch'
 
   def index
-    # SyncData.post_local_data
-    # SyncData.check_new_data
+    SyncData.sync_now
 
     @total_limit_items = StoreItem.where(store_id: current_user.store.id).where('stock < min_stock').count
     @total_orders = Order.where(store_id: current_user.store.id).where('date_receive is null').count

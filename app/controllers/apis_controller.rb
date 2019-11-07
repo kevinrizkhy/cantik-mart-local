@@ -73,7 +73,7 @@ class ApisController < ApplicationController
     search = params[:search].squish
     return render :json => json_result unless search.present?
     search = search.gsub(/\s+/, "")
-    items = Item.where('lower(name) like ?', "%"+search.downcase+"%").pluck(:id)
+    items = Item.where('lower(name) like ? OR code = ?', "%"+search.downcase+"%", search.downcase).pluck(:id)
     item_stores = StoreItem.where(store_id: current_user.store.id, item: items)
     return render :json => json_result unless item_stores.present?
     item_stores.each do |item_store|
@@ -82,6 +82,7 @@ class ApisController < ApplicationController
       item << item_store.item.name
       item << item_store.item.item_cat.name
       item << item_store.item.sell
+      item << item_store.stock
       json_result << item
     end
     render :json => json_result
@@ -119,6 +120,7 @@ class ApisController < ApplicationController
     search = search.gsub(/\s+/, "")
     item_id = Item.find_by(code: search)
     item_store = StoreItem.find_by(store_id: current_user.store.id, item: item_id)
+
     return render :json => json_result unless item_store.present?
 
     item = []
