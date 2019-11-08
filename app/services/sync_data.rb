@@ -1,6 +1,6 @@
 class SyncData
 	
-	@@store_id = 3
+	@@store_id = 2
   @@hostname = "http://www.cantikmart.com"
   # @@hostname = "http://localhost:3000"
   
