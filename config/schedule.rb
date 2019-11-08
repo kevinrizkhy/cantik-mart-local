@@ -6,16 +6,11 @@ env :PATH, ENV['PATH']
 
 # Example:
 #
-set :environment, 'development'
-set :output, "log/cron.log"
+# set :environment, 'development'
+# set :output, "log/cron.log"
 #
 
-every :hour do
-  runner "SyncData.sync_now"
-end
-#
-# every 4.days do
-#   runner "AnotherModel.prune_old_records"
+# every :hour do
+#   runner "SyncData.sync_now"
 # end
-
-# Learn more: http://github.com/javan/whenever
+#

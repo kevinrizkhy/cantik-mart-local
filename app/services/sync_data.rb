@@ -6,7 +6,7 @@ class SyncData
   
 	def initialize
     # binding.pry
-    sync_now
+    # sync_now
 	end
 
   def self.sync_now

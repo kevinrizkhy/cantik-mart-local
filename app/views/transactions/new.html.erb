@@ -813,7 +813,7 @@
          var cashier = gon.cashier
          var time = gon.current_time
          
-         var header = '<!DOCTYPE html> <html> <head> <meta content="text/html;charset=utf-8" http-equiv="Content-Type"> <meta content="utf-8" http-equiv="encoding"> <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"> <style type="text/css"> td { font-size: 18px; } </style> <title></title> </head> <body> <div class="row"> <div class="col-sm-12 text-center"> <h3>CANTIK MART</h3> </div><div class="col-sm-12 text-center"> <p class="medium"> Jl. Raya Plered,Purwakarta No.17 <br> Kec. Plered, Kabupaten Purwakarta, Jawa Barat <br> =========================================================== <br> ' + invoice + ' <br> '+ cashier + ' - ' + time +' <br> =========================================================== </p>  </div>';
+         var header = '<!DOCTYPE html> <html> <head> <meta content="text/html;charset=utf-8" http-equiv="Content-Type"> <meta content="utf-8" http-equiv="encoding"> <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"> <style type="text/css"> td { font-size: 18px; } </style> <title></title> </head> <body> <div class="row"> <div class="col-sm-12 text-center"> <h3>CANTIK MART</h3> </div><div class="col-sm-12 text-center"> <p class="medium"> Jl. Raya Cirata - Cilangkap<br> Kec. Tegalwaru, Kabupaten Purwakarta <br> =========================================================== <br> ' + invoice + ' <br> '+ cashier + ' - ' + time +' <br> =========================================================== </p>  </div>';
 
          var footer = '<p class="medium"> =========================================================== </p> <div class="text-center"> <h4> Terima kasih atas kunjungan Anda </h4> </div> </div> </div> </body> </html>';
 
@@ -880,7 +880,6 @@
             var wnd = window.open("about:blank", "", "_blank");
             wnd.document.write(html);
             wnd.print();
-            wnd.close();
             items = ' <div class="col-sm-12"><table class="table">';
             HTML_totals = '<table class="table">';
          }
