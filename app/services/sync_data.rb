@@ -1,10 +1,11 @@
 class SyncData
 	
-	@@store_id = 3
-  # @@hostname = "http://www.cantikmart.com"
-  @@hostname = "http://localhost:3000"
+	@@store_id = 2
+  @@hostname = "http://www.cantikmart.com"
+  # @@hostname = "http://localhost:3000"
   
 	def initialize
+    # binding.pry
     sync_now
 	end
 
