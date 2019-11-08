@@ -1,5 +1,18 @@
-h1
-  | Selamat Datang, #{current_user.name}
-a href="#{new_transaction_path}" class="btn btn-primary"
-  | MENU KASIR
+- trx =  Transaction.where("created_at >= ? AND created_at <= ?", DateTime.now.beginning_of_day, DateTime.now.end_of_day)
+- trx = trx.where(user: current_user)
+- trx_total = trx.sum(:grand_total)
 
+h3
+  | Selamat Datang, #{current_user.name}
+h5
+	p
+		| Penjualan hari ini (#{Date.today}) : 
+		b
+		 | #{number_to_currency(trx_total, delimiter: ".", separator: ",", unit: "Rp. ")}
+.row
+	.col.text-center
+		a href="#{new_transaction_path}" class="btn btn-primary"
+		  | MENU KASIR
+	.col.text-center
+		a href="#{new_transaction_path}" class="btn btn-success"
+		  | CETAK PENJUALAN

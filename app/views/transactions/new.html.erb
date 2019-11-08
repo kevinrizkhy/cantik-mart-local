@@ -674,8 +674,8 @@
            var table = $('#itemList').DataTable();
            var result = result_arr[0];
            var qty = parseFloat(qtyInput.value);
-           var total = Math.round(parseFloat(qty) * (parseFloat(result[3]) - parseFloat(result[4])));
-
+           var total = parseInt(parseFloat(qty) * (parseFloat(result[3]) - parseFloat(result[4])));
+           total = Math.round(total);
            var code= result[0];
 
            if (table.rows().count()<1) {
@@ -840,10 +840,13 @@
                  total = parseFloat(data[i][3])*parseFloat(data[i][4]);
                  diskon = parseFloat(data[i][3])*parseFloat(data[i][5]);
                  total_diskon += diskon;
-                 subtotal += total;
+                 total = Math.round(total);
+                 var p_total = parseInt(total);
+
+                 subtotal += p_total;
 
                  items += '<tr><td colspan="4">'+item_name+'</td> </tr>'
-                 items += '<tr><td class="text-center">'+qty+'</td><td class="text-center">x</td><td class="text-center">'+price+'</td><td class="text-right">'+splitRibuan(total)+'</td></tr>';
+                 items += '<tr><td class="text-center">'+qty+'</td><td class="text-center">x</td><td class="text-center">'+price+'</td><td class="text-right">'+splitRibuan(p_total)+'</td></tr>';
                  if(diskon > 0){
                   items += '<tr><td class="text-center" colspan="3">DISKON :</td><td class="text-right">-'+splitRibuan(diskon)+'</td></tr>';
                  }
@@ -867,7 +870,9 @@
               payment_method = "KREDIT ("+bank+")"
               pay = subtotal-total_diskon;
              }
-
+             subtotal = parseInt(subtotal);
+             total_diskon = parseInt(total_diskon);
+             pay = parseInt(pay);
              HTML_totals += '<tr><td> Subtotal </td><td class="text-right">'+splitRibuan(subtotal)+' </td></tr><tr><td> Total Diskon</td><td class="text-right">'+splitRibuan(total_diskon)+'</td></tr><tr><td>Total</td><td class="text-right">'+splitRibuan(subtotal-total_diskon)+'</td></tr><tr><td> Bayar - '+payment_method+' </td><td class="text-right">'+splitRibuan(pay)+'</td></tr><tr><td> Kembali</td><td class="text-right">'+$("#change-h5").html()+'</td></tr>';
 
              HTML_totals +="</table>"
