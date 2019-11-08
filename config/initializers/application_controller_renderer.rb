@@ -6,3 +6,4 @@
 #     https: false
 #   )
 # end
+Date::DATE_FORMATS[:default] = "%d-%m-%Y"
