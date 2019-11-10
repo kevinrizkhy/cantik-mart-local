@@ -1,7 +1,9 @@
 - trx =  Transaction.where("created_at >= ? AND created_at <= ?", DateTime.now.beginning_of_day, DateTime.now.end_of_day)
 - trx = trx.where(user: current_user)
 - trx_total = trx.sum(:grand_total)
-
+- cash = trx.where(payment_type: "CASH").sum(:grand_total)
+- debit = trx.where(payment_type: "DEBIT").sum(:grand_total)
+- jumlah_trx = trx.count
 h3
   | Selamat Datang, #{current_user.name}
 h5
@@ -14,5 +16,5 @@ h5
 		a href="#{new_transaction_path}" class="btn btn-primary"
 		  | MENU KASIR
 	.col.text-center
-		a href="#{new_transaction_path}" class="btn btn-success"
+		button.btn.btn-success onclick="printShift('#{trx_total}', '#{current_user.name.upcase}', '#{DateTime.now.to_s}', #{cash}, #{debit}, #{jumlah_trx})"
 		  | CETAK PENJUALAN
