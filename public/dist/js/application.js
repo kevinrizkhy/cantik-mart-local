@@ -1,5 +1,45 @@
 // setInterval(get_notification, 10000);
 
+var separator = '<p class="medium">===========================================================</p>';
+var header = '<!DOCTYPE html> <html> <head> <meta content="text/html;charset=utf-8" http-equiv="Content-Type"> <meta content="utf-8" http-equiv="encoding"> <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"> <style type="text/css"> td { font-size: 15px; padding: 0 !important; border-top: none !important;} </style> <title></title> </head> <body> <div class="row"> <div class="col-sm-12 text-center"> <img src="/images/logo.png" style="width: 150px"/> </div><div class="col-sm-12 text-center"> <p class="medium"> Jl. Cirata - Cilangkap, Ds. Cadassari <br> Kec. Tegalwaru, Kabupaten Purwakarta, Jawa Barat <br> '+separator+' <br> LAPORAN PENDAPATAN SHIFT <br> '+separator+' </p>  </div>';
+
+// var header = '<!DOCTYPE html> <html> <head> <meta content="text/html;charset=utf-8" http-equiv="Content-Type"> <meta content="utf-8" http-equiv="encoding"> <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"> <style type="text/css"> td { font-size: 15px; padding: 0 !important; border-top: none !important;} </style> <title></title> </head> <body> <div class="row"> <div class="col-sm-12 text-center"> <img src="/images/logo.png" /> </div><div class="col-sm-12 text-center"> <p class="medium"> Jl. Raya Plered,Purwakarta No.17 <br> Kec. Plered, Kabupaten Purwakarta, Jawa Barat <br> =========================================================== <br> ' + invoice + ' <br> '+ cashier + ' - ' + time +' <br> =========================================================== </p>  </div>';
+
+
+var head = ' <div class="col-sm-12"><table class="table">';
+
+function printShift(total, cashier, time, cash, debit, n_trx){
+  var data = "";
+  data += head
+  data += '<tr><td>Kasir</td> <td>:</td> <td>'+cashier+'</td></tr>';
+  data += '<tr><td>Waktu</td> <td>:</td> <td>'+time+'</td></tr>';
+  data += '<tr><td>Jumlah TRX</td> <td>:</td> <td>'+n_trx+' x</td></tr>';
+  data += '<tr><td colspan=3>'+separator+'</td></tr>';
+  data += '<tr><td>TUNAI</td> <td>:</td> <td>'+splitRibuan(cash)+'</td></tr>';
+  data += '<tr><td>DEBIT</td> <td>:</td> <td>'+splitRibuan(debit)+'</td></tr>';
+  data += '<tr><td>TOTAL</td> <td>:</td> <td>'+splitRibuan(total)+'</td></tr>';
+  data += '</table>';
+
+  printHTML(header+data+separator);
+                 
+}
+
+function printHTML(html) {
+  var wnd = window.open("about:blank", "", "_blank");
+  wnd.document.write(html);
+  wnd.print();
+}
+
+
+function splitRibuan(total){
+  var bilangan = total;
+ 
+ var reverse = bilangan.toString().split('').reverse().join(''),
+ ribuan = reverse.match(/\d{1,3}/g);
+ ribuan = ribuan.join('.').split('').reverse().join('');
+ return ribuan;
+}
+
 function formatangka_titik(total) {
   var a = (total+"").replace(/[^\d]/g, "");
 
@@ -185,40 +225,5 @@ $(function () {
 
 // var add_counter = gon.inv_count;
 var add_counter = 0
-
-var ctxP = document.getElementById("higher_sales").getContext('2d');
-var myPieChart = new Chart(ctxP, {
-  type: 'doughnut',
-  data: {
-    labels: gon.higher_item_cats_label,
-    datasets: [{
-      data: gon.higher_item_cats_data,
-      backgroundColor: ["#F7464A", "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
-      hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
-    }]
-  },
-  options: {
-    responsive: true
-  }
-});
-
-var ctxP = document.getElementById("lower_sales").getContext('2d');
-var myPieChart = new Chart(ctxP, {
-  type: 'doughnut',
-  data: {
-    labels: gon.lower_item_cats_label,
-    datasets: [{
-      data: gon.lower_item_cats_data,
-      backgroundColor: ["rgba(255, 99, 132, 0.2)", "rgba(255, 159, 64, 0.2)",
-        "rgba(255, 205, 86, 0.2)", "rgba(75, 192, 192, 0.2)", "rgba(54, 162, 235, 0.2)",
-        "rgba(153, 102, 255, 0.2)", "rgba(201, 203, 207, 0.2)"
-      ],
-      hoverBackgroundColor: ["#FF5A5E", "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
-    }]
-  },
-  options: {
-    responsive: true
-  }
-});
 
 
