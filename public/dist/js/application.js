@@ -1,26 +1,29 @@
 // setInterval(get_notification, 10000);
 
 var separator = '<p class="medium">===========================================================</p>';
-var header = '<!DOCTYPE html> <html> <head> <meta content="text/html;charset=utf-8" http-equiv="Content-Type"> <meta content="utf-8" http-equiv="encoding"> <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"> <style type="text/css"> td { font-size: 15px; padding: 0 !important; border-top: none !important;} </style> <title></title> </head> <body> <div class="row"> <div class="col-sm-12 text-center"> <img src="/images/logo.png" style="width: 150px"/> </div><div class="col-sm-12 text-center"> <p class="medium"> Jl. Cirata - Cilangkap, Ds. Cadassari <br> Kec. Tegalwaru, Kabupaten Purwakarta, Jawa Barat <br> '+separator+' <br> LAPORAN PENDAPATAN SHIFT <br> '+separator+' </p>  </div>';
+var header = '<!DOCTYPE html> <html> <head> <meta content="text/html;charset=utf-8" http-equiv="Content-Type"> <meta content="utf-8" http-equiv="encoding"> <link rel="stylesheet" href="/dist/css/bootstrap.min.css"> <style type="text/css"> td { font-size: 15px; padding: 0 !important; border-top: none !important;} </style> <title></title> </head> <body> <div class="row"> <div class="col-sm-12 text-center"> <img src="/images/logo.png" style="width: 150px"/> </div><div class="col-sm-12 text-center"> <p class="medium"> Jl. Cirata - Cilangkap, Ds. Cadassari <br> Kec. Tegalwaru, Kabupaten Purwakarta, Jawa Barat '+separator+' LAPORAN PENDAPATAN SHIFT <br> '+separator+' </p>  </div>';
 
 // var header = '<!DOCTYPE html> <html> <head> <meta content="text/html;charset=utf-8" http-equiv="Content-Type"> <meta content="utf-8" http-equiv="encoding"> <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"> <style type="text/css"> td { font-size: 15px; padding: 0 !important; border-top: none !important;} </style> <title></title> </head> <body> <div class="row"> <div class="col-sm-12 text-center"> <img src="/images/logo.png" /> </div><div class="col-sm-12 text-center"> <p class="medium"> Jl. Raya Plered,Purwakarta No.17 <br> Kec. Plered, Kabupaten Purwakarta, Jawa Barat <br> =========================================================== <br> ' + invoice + ' <br> '+ cashier + ' - ' + time +' <br> =========================================================== </p>  </div>';
 
 
-var head = ' <div class="col-sm-12"><table class="table">';
+var head = ' <div class="col-sm-12 text-left"><table class="table">';
 
 function printShift(total, cashier, time, cash, debit, n_trx){
   var data = "";
   data += head
   data += '<tr><td>Kasir</td> <td>:</td> <td>'+cashier+'</td></tr>';
   data += '<tr><td>Waktu</td> <td>:</td> <td>'+time+'</td></tr>';
-  data += '<tr><td>Jumlah TRX</td> <td>:</td> <td>'+n_trx+' x</td></tr>';
+  data += '<tr><td>Jumlah Struk</td> <td>:</td> <td>'+n_trx+' x</td></tr>';
   data += '<tr><td colspan=3>'+separator+'</td></tr>';
   data += '<tr><td>TUNAI</td> <td>:</td> <td>'+splitRibuan(cash)+'</td></tr>';
   data += '<tr><td>DEBIT</td> <td>:</td> <td>'+splitRibuan(debit)+'</td></tr>';
   data += '<tr><td>TOTAL</td> <td>:</td> <td>'+splitRibuan(total)+'</td></tr>';
+  data += '<tr><td>SELISIH</td> <td>:</td> <td></td></tr>';
   data += '</table>';
+  data += separator;
+  data += '<table class="table"><tr><td class="text-center">TTD</td><td class="text-center"> TTD</td></tr><tr><td><br><br></td></tr><tr><td class="text-center">Kepala Toko</td><td class="text-center"> '+cashier+'</td></tr></table>';
 
-  printHTML(header+data+separator);
+  printHTML(header+data);
                  
 }
 
