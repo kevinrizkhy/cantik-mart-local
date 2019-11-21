@@ -7,7 +7,7 @@ class StocksController < ApplicationController
     if params[:search].present?
       @search = params[:search].downcase
       search = "%"+@search+"%"
-      items = Item.where('lower(name) like ? OR code like ?', search, search).pluck(:id)
+      items = Item.where('lower(name) like ? OR lower(code) = ?', search, @search).pluck(:id)
       @inventories = @inventories.where(item_id: items)
     end
 
