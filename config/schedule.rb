@@ -11,6 +11,7 @@ env :PATH, ENV['PATH']
 #
 
 every 15.minutes do
-  runner "SyncData.sync_now"
+	
+  	runner "SyncData.sync_now"
 end
 #
