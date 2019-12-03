@@ -45,7 +45,7 @@ Rails.application.routes.draw do
 
   resources :server_informations, only: %i[index]
 
-  
+  get "/sync/now", to:"homes#sync", as: 'sync_now'
   get "/403", to: "errors#no_access_right", as: 'no_access_right'
   get "/404", to: "errors#not_found", as: 'not_found'
   get "/422", to: "errors#unacceptable", as: 'unacceptable'

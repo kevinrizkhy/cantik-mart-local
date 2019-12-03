@@ -1,16 +1,16 @@
 class SyncData
 	
 	@@store_id = 3
-  @@hostname = "http://www.cantikmart.com"
-  # @@hostname = "http://localhost:3000"
+  # @@hostname = "http://www.cantikmart.com"
+  @@hostname = "http://localhost:3030"
   
 	def initialize
     # binding.pry
-    # sync_now
+    sync_now
 	end
 
   def self.sync_now
-    # post_local_data
+    post_local_data
     check_new_data
   end
 
@@ -64,8 +64,7 @@ class SyncData
       puts "TIDAK ADA INTERNET"
     end
 
-    store.last_post = new_post
-    store.save!
+    
   end
 
   def self.check_new_data 

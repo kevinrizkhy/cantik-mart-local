@@ -16,5 +16,8 @@ h5
 		a href="#{new_transaction_path}" class="btn btn-primary"
 		  | MENU KASIR
 	.col.text-center
+		a href="#{sync_now_path}" class="btn btn-warning"
+		  | Sync
+	.col.text-center
 		button.btn.btn-success onclick="printShift('#{trx_total}', '#{current_user.name.upcase}', '#{DateTime.now.to_s}', #{cash}, #{debit}, #{jumlah_trx})"
 		  | CETAK PENJUALAN

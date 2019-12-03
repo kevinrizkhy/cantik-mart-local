@@ -28,6 +28,11 @@ class HomesController < ApplicationController
 
   end
 
+  def sync
+    SyncData.sync_now
+    return redirect_success root_path, "Sync selesai."
+  end
+
   private
 
     def higher_item

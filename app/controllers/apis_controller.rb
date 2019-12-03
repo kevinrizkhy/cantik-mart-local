@@ -120,7 +120,6 @@ class ApisController < ApplicationController
     search = search.gsub(/\s+/, "")
     item_id = Item.find_by(code: search)
     item_store = StoreItem.find_by(store_id: current_user.store.id, item: item_id)
-
     return render :json => json_result unless item_store.present?
 
     item = []
