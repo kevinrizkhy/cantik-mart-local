@@ -13,7 +13,3 @@ env :PATH, ENV['PATH']
 every 15.minutes do
   runner "SyncData.sync_now"
 end
-<<<<<<< HEAD
-=======
-#
->>>>>>> 29131aa3c33fd30d662196a3b72d256bbc5558bf
