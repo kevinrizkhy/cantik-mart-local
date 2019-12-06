@@ -130,7 +130,7 @@ class ApisController < ApplicationController
     curr_item = item_store.item
     qty = qty.to_i
     grocer_price = nil 
-    grocer_price = curr_item.grocer_items if qty.to_i > 0
+    grocer_price = curr_item.grocer_items.where("min <= ?", qty) if qty.to_i > 1
     if grocer_price.present?
       find_price = grocer_price.where('max >= ? AND min <= ?', qty, qty).order("max ASC")
       if find_price.present?

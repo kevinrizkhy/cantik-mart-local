@@ -5,26 +5,26 @@ class HomesController < ApplicationController
   def index
     # SyncData.sync_now
 
-    @total_limit_items = StoreItem.where(store_id: current_user.store.id).where('stock < min_stock').count
-    @total_orders = Order.where(store_id: current_user.store.id).where('date_receive is null').count
-    @total_payments = Order.where(store_id: current_user.store.id).where('date_receive is not null and date_paid_off is null').count
-    @total_returs = Retur.where(store_id: current_user.store.id).where('date_picked is not null').count
-  	# UserMailer.welcome_email("kevin.rizkhy85@gmail.com", "Subject 1").deliver
+   #  @total_limit_items = StoreItem.where(store_id: current_user.store.id).where('stock < min_stock').count
+   #  @total_orders = Order.where(store_id: current_user.store.id).where('date_receive is null').count
+   #  @total_payments = Order.where(store_id: current_user.store.id).where('date_receive is not null and date_paid_off is null').count
+   #  @total_returs = Retur.where(store_id: current_user.store.id).where('date_picked is not null').count
+   #  UserMailer.welcome_email("kevin.rizkhy85@gmail.com", "Subject 1").deliver
   	
 
-    item_cats_data = higher_item_cats_graph
-    gon.higher_item_cats_data = item_cats_data.values
-    gon.higher_item_cats_label = item_cats_data.keys
+   #  item_cats_data = higher_item_cats_graph
+   #  gon.higher_item_cats_data = item_cats_data.values
+   #  gon.higher_item_cats_label = item_cats_data.keys
 
-    item_cats_data = lower_item_cats_graph
-    gon.lower_item_cats_data = item_cats_data.values
-    gon.lower_item_cats_label = item_cats_data.keys
+   #  item_cats_data = lower_item_cats_graph
+   #  gon.lower_item_cats_data = item_cats_data.values
+   #  gon.lower_item_cats_label = item_cats_data.keys
 
-    @higher_item = higher_item
-    @lower_item = lower_item
+   #  @higher_item = higher_item
+   #  @lower_item = lower_item
 
-    @debt = Debt.where("deficiency > ?",0)
-    @receivable = Receivable.where("deficiency > ?",0)
+   #  @debt = Debt.where("deficiency > ?",0)
+   #  @receivable = Receivable.where("deficiency > ?",0)
 
   end
 
