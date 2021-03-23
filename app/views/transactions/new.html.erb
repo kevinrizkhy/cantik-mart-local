@@ -282,8 +282,8 @@
                </div>
             </div>
            <div class="modal-footer">
-              <a onclick="PrintBill()" style="color: blue;">TEST CETAK</a>
-              <a class="modal-close btn btn-success" onclick="CheckOut()">SELESAI</a>
+              <a onclick="CheckOut('/TP')" style="color: blue;">TEST CETAK</a>
+              <a class="modal-close btn btn-success" onclick="CheckOut('')">SELESAI</a>
            </div>
          </div>
       </div>
@@ -300,7 +300,7 @@
 
       <script type="text/javascript">
 
-         function CheckOut() {
+         function CheckOut(from) {
              var table = $('#itemList').DataTable();
              var data = table.rows().data();
              var items = [];
@@ -345,7 +345,7 @@
              map["card"] = card;
              map["member"] = member;
              map["voucher"] = voucher_code;
-             map["invoice"] = gon.invoice;
+             map["invoice"] = gon.invoice+from;
 
              PrintBill();
              jQuery.ajax({
