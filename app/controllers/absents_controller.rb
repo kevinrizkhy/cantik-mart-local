@@ -54,7 +54,6 @@ class AbsentsController < ApplicationController
       next if date_time.to_date != DateTime.now.to_date
       absent = Absent.find_by("DATE(check_in) = ? AND user_id = ?", DateTime.now.to_date, user.id)
       absent = Absent.create user: user, check_in: date_time if absent.nil? && check_type == "0"
-      next if absent.nil?
       if check_type == "0"
         next if absent.check_in.present?
         absent.check_in = date_time

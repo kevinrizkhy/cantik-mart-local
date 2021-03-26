@@ -10,11 +10,7 @@ env :PATH, ENV['PATH']
 # set :output, "log/cron.log"
 #
 
-every 30.minutes do
-	puts "START: " + DateTime.now.to_s
-  runner "SyncData.sync_now"
-  	puts "END: " + DateTime.now.to_s
-  	puts "-----------------------------"
-
+every 20.minutes do
+  	runner "SyncData.sync_now"
 end
 #

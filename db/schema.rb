@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_10_08_110457) do
+ActiveRecord::Schema.define(version: 2020_06_25_083827) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -251,6 +251,7 @@ ActiveRecord::Schema.define(version: 2019_10_08_110457) do
     t.integer "margin", default: 0
     t.datetime "price_updated"
     t.bigint "sell_member", default: 0, null: false
+    t.bigint "counter", default: 0
     t.index ["item_cat_id"], name: "index_items_on_item_cat_id"
   end
 
@@ -328,7 +329,7 @@ ActiveRecord::Schema.define(version: 2019_10_08_110457) do
     t.datetime "updated_at", null: false
     t.integer "discount_1", default: 0
     t.integer "discount_2", default: 0
-    t.integer "ppn", default: 0
+    t.float "ppn", default: 0.0
     t.bigint "grand_total", default: 0
     t.bigint "total", default: 0, null: false
     t.index ["item_id"], name: "index_order_items_on_item_id"
@@ -354,7 +355,7 @@ ActiveRecord::Schema.define(version: 2019_10_08_110457) do
     t.string "salesman", default: "-"
     t.string "no_faktur", default: "-"
     t.integer "discount", default: 0
-    t.bigint "discount_percentage", default: 0
+    t.float "discount_percentage", default: 0.0
     t.boolean "from_retur", default: false
     t.bigint "grand_total", default: 0
     t.index ["store_id"], name: "index_orders_on_store_id"
@@ -524,13 +525,14 @@ ActiveRecord::Schema.define(version: 2019_10_08_110457) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "filename"
+    t.bigint "bank", default: 0, null: false
     t.index ["store_id"], name: "index_store_balances_on_store_id"
   end
 
   create_table "store_items", force: :cascade do |t|
     t.bigint "store_id", null: false
     t.bigint "item_id", null: false
-    t.integer "stock", default: 0, null: false
+    t.float "stock", default: 0.0, null: false
     t.integer "min_stock", default: 0, null: false
     t.bigint "buy", default: 0, null: false
     t.bigint "sell", default: 0, null: false
@@ -556,6 +558,8 @@ ActiveRecord::Schema.define(version: 2019_10_08_110457) do
     t.bigint "modals_before", default: 0
     t.datetime "last_post"
     t.datetime "last_update"
+    t.bigint "bank", default: 0, null: false
+    t.bigint "grand_total_card_before", default: 0, null: false
   end
 
   create_table "supplier_items", force: :cascade do |t|
@@ -581,7 +585,7 @@ ActiveRecord::Schema.define(version: 2019_10_08_110457) do
     t.bigint "transaction_id", null: false
     t.bigint "price", null: false
     t.bigint "discount", default: 0
-    t.bigint "quantity", null: false
+    t.float "quantity", null: false
     t.datetime "date_created"
     t.integer "retur"
     t.integer "replace"

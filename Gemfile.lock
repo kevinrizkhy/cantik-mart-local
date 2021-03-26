@@ -618,6 +618,7 @@ DEPENDENCIES
   gon
   jbuilder (~> 2.5)
   kaminari
+  listen
   pdfkit
   pg
   pry
