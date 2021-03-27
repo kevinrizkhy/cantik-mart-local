@@ -91,98 +91,104 @@ class SyncData
   end
 
   def self.sync_data key, data
-    if key == "users"
-      user = User.find_by(id: data["id"])
-      data["password"] = "admin123"
-      if user.present?
-        user.assign_attributes data
-        user.save! if user.changed?
-      else
-        User.create data
-      end 
-    elsif key=="members"
-      member = Member.find_by(card_number: data["card_number"])
-      data.delete("id")
-      if member.present?
-        member.assign_attributes data
-        member.save! if member.changed?
-      else
-        Member.create data
+    begin
+      if key == "users"
+        user = User.find_by(id: data["id"])
+        data["password"] = "admin123"
+        if user.present?
+          user.assign_attributes data
+          user.save! if user.changed?
+        else
+          User.create data
+        end 
+      elsif key=="members"
+        member = Member.find_by(card_number: data["card_number"])
+        data.delete("id")
+        if member.present?
+          member.assign_attributes data
+          member.save! if member.changed?
+        else
+          Member.create data
+        end
+      elsif key=="exchange_points"
+        epoint = ExchangePoint.find_by(id: data[:id])
+        data.delete("id")
+        if epoint.present?
+          epoint.assign_attributes data
+          epoint.save! if member.changed?
+        else
+          ExchangePoint.create data
+        end
+      elsif key=="vouchers"
+        voucher = Voucher.find_by(id: data[:id])
+        data.delete("id")
+        if voucher.present?
+          voucher.assign_attributes data
+          voucher.save! if member.changed?
+        else
+          Voucher.create data
+        end
+      elsif key=="stores"
+        store = Store.find_by(id: data["id"])
+        if store.present?
+          store.assign_attributes data
+          store.save! if store.changed?
+        else
+          Store.create data
+        end
+      elsif key=="departments"
+        department = Department.find_by(id: data["id"])
+        if department.present?
+          department.assign_attributes data
+          department.save! if department.changed?
+        else
+          Department.create data
+        end
+      elsif key=="item_cats"
+        item_cat = ItemCat.find_by(id: data["id"])
+        if item_cat.present?
+          item_cat.assign_attributes data
+          item_cat.save! if item_cat.changed?
+        else
+          ItemCat.create data
+        end
+      elsif key=="items"
+        item = Item.find_by(id: data["id"])
+        if item.present?
+          item.assign_attributes data
+          item.save!
+        else
+          Item.create data
+        end
+      elsif key=="stocks"
+        store_item = StoreItem.find_by(id: data["id"])
+        if store_item.present?
+          store_item.assign_attributes data
+          store_item.save! if store_item.changed?
+        else
+          StoreItem.create data
+        end
+      elsif key=="promotions"
+        promotion = Promotion.find_by(id: data["id"])
+        if promotion.present?
+          promotion.assign_attributes data
+          promotion.save! if promotion.changed?
+        else
+          Promotion.create data
+        end
+      elsif key=="grocers"
+        grocer_item = GrocerItem.find_by(id: data["id"])
+        if grocer_item.present?
+          grocer_item.assign_attributes data
+          grocer_item.save! if grocer_item.changed?
+        else
+          GrocerItem.create data
+        end
       end
-    elsif key=="exchange_points"
-      epoint = ExchangePoint.find_by(id: data[:id])
-      data.delete("id")
-      if epoint.present?
-        epoint.assign_attributes data
-        epoint.save! if member.changed?
-      else
-        ExchangePoint.create data
-      end
-    elsif key=="vouchers"
-      voucher = Voucher.find_by(id: data[:id])
-      data.delete("id")
-      if voucher.present?
-        voucher.assign_attributes data
-        voucher.save! if member.changed?
-      else
-        Voucher.create data
-      end
-    elsif key=="stores"
-      store = Store.find_by(id: data["id"])
-      if store.present?
-        store.assign_attributes data
-        store.save! if store.changed?
-      else
-        Store.create data
-      end
-    elsif key=="departments"
-      department = Department.find_by(id: data["id"])
-      if department.present?
-        department.assign_attributes data
-        department.save! if department.changed?
-      else
-        Department.create data
-      end
-    elsif key=="item_cats"
-      item_cat = ItemCat.find_by(id: data["id"])
-      if item_cat.present?
-        item_cat.assign_attributes data
-        item_cat.save! if item_cat.changed?
-      else
-        ItemCat.create data
-      end
-    elsif key=="items"
-      item = Item.find_by(id: data["id"])
-      if item.present?
-        item.assign_attributes data
-        item.save!
-      else
-        Item.create data
-      end
-    elsif key=="stocks"
-      store_item = StoreItem.find_by(id: data["id"])
-      if store_item.present?
-        store_item.assign_attributes data
-        store_item.save! if store_item.changed?
-      else
-        StoreItem.create data
-      end
-    elsif key=="promotions"
-      promotion = Promotion.find_by(id: data["id"])
-      if promotion.present?
-        promotion.assign_attributes data
-        promotion.save! if promotion.changed?
-      else
-        Promotion.create data
-      end
-    elsif key=="grocers"
-      grocer_item = GrocerItem.find_by(id: data["id"])
-      if grocer_item.present?
-        grocer_item.assign_attributes data
-        grocer_item.save! if grocer_item.changed?
-      else
-        GrocerItem.create data
-      end
+    rescue Exception
+      puts key
+      puts "_________________________"
+      puts data
     end
   end
 end
