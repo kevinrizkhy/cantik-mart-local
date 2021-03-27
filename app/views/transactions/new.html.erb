@@ -283,8 +283,8 @@
                </div>
             </div>
            <div class="modal-footer">
-              <a onclick="PrintBill()" style="color: blue;">TEST CETAK</a>
-              <a class="modal-close btn btn-success" onclick="CheckOut()">SELESAI</a>
+              <a onclick="CheckOut('/TP')" style="color: blue;">TEST CETAK</a>
+              <a class="modal-close btn btn-success" onclick="CheckOut('')">SELESAI</a>
            </div>
          </div>
       </div>
@@ -302,7 +302,7 @@
       <script type="text/javascript">
 
          var idx = 1;
-         function CheckOut() {
+         function CheckOut(from) {
              var table = $('#itemList').DataTable();
              var data = table.rows().data();
 
@@ -349,7 +349,7 @@
              map["card"] = card;
              map["member"] = member;
              map["voucher"] = voucher_code;
-             map["invoice"] = gon.invoice;
+             map["invoice"] = gon.invoice+from;
 
              PrintBill();
              jQuery.ajax({
@@ -652,7 +652,7 @@
            });
            }, 300);
          };
-         
+         // recall
          itemId.onkeyup = function(e) {
            clearTimeout(timeout);
            timeout = setTimeout(function() {
@@ -825,6 +825,7 @@
          // var header = '<!DOCTYPE html> <html> <head> <meta content="text/html;charset=utf-8" http-equiv="Content-Type"> <meta content="utf-8" http-equiv="encoding"> <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"> <style type="text/css"> td { font-size: 15px; padding: 0 !important; border-top: none !important;} </style> <title></title> </head> <body> <div class="row"> <div class="col-sm-12 text-center"> <img src="/images/logo.png" style="width: 150px"/> </div><div class="col-sm-12 text-center"> <p class="medium"> Jl. Cirata - Cilangkap, Ds. Cadassari <br> Kec. Tegalwaru, Kabupaten Purwakarta, Jawa Barat <br> =========================================================== <br> ' + invoice + ' <br> '+ cashier + ' - ' + time +' <br> =========================================================== </p>  </div>';
 
          var header = '<!DOCTYPE html> <html> <head> <meta content="text/html;charset=utf-8" http-equiv="Content-Type"> <meta content="utf-8" http-equiv="encoding"> <link rel="stylesheet" href="/dist/css/bootstrap340.min.css"> <style type="text/css"> td { font-size: 15px; padding: 0 !important; border-top: none !important;} </style> <title></title> </head> <body> <div class="row"> <div class="col-sm-12 text-center"> <img src="/images/logo.png" style="width: 150px"/> </div><div class="col-sm-12 text-center"> <p class="medium"> Jl. Raya Plered,Purwakarta No.17 <br> Kec. Plered, Kabupaten Purwakarta, Jawa Barat  <br> =========================================================== <br> ' + invoice + ' <br> '+ cashier + ' - ' + time +' <br> =========================================================== </p>  </div>';
+
 
 
          var footer = '<p class="medium"> =========================================================== </p> <div class="text-center"> <h4> Terima kasih atas kunjungan Anda </h4> </div> </div> </div> </body> </html>';
