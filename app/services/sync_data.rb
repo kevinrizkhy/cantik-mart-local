@@ -242,7 +242,7 @@ class SyncData
     return true
   end
 
-  def calculate_work_hour check_in, check_out
+  def self.calculate_work_hour check_in, check_out
     return nil if check_out.nil?
     divide_hour = check_out.to_time - check_in.to_time
     raw_hour = divide_hour / 1.hour
