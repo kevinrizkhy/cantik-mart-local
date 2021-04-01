@@ -193,7 +193,7 @@ class SyncData
     end
   end
 
-  def get_absents
+  def self.get_absents
     url = URI.parse('http://localhost/getData.php')
     req = Net::HTTP::Get.new(url.to_s)
     res = Net::HTTP.start(url.host, url.port) {|http|
