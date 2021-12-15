@@ -2,7 +2,7 @@ class SyncData
 	
 	@@store_id = 3
   @@hostname = "http://www.cantikmart.com"
-  # @@hostname = "http://localhost:3030"
+  # @@hostname = "http://193.168.195.145:3030"
   
 	def initialize
     sync_now
@@ -92,7 +92,7 @@ def self.get_data
     new_post = DateTime.now
 
 
-    post_trx_data = Transaction.where("updated_at > ? AND updated_at <= ?", last_post, new_post)
+    post_trx_data = Transaction.where(updated_at: last_post..new_post)
     datas = []
     post_trx_data.each do |trx|
       temp_data = []
@@ -109,8 +109,10 @@ def self.get_data
     encrypted_data2 = Base64.encode64(members_data)
 
     absents_data = Absent.where("updated_at > ? AND updated_at <= ?", last_post, new_post).to_json.to_s
+    # absents_data = []
     encrypted_data3 = Base64.encode64(absents_data)
-
+    puts "----> TRX total : " + post_trx_data.count.to_s
+    puts "--> HEXING"
     b = []
     b << SecureRandom.hex(1)
     b << encrypted_data
@@ -119,13 +121,17 @@ def self.get_data
     b << SecureRandom.hex(1)
     b << encrypted_data3
     b << SecureRandom.hex(1)
-    
+    puts "--> POST"
     uri = URI(url)
     req = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
     req.body = {trxs: b}.to_json
     begin
       res = Net::HTTP.start(uri.hostname, uri.port) do |http|
         http.request(req)
+        store.last_post = new_post
+        store.save!
+        puts "--> POST DONE"
+
       end
     rescue
       puts "TIDAK ADA INTERNET"
