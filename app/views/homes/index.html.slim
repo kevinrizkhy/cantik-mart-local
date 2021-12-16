@@ -17,6 +17,7 @@ h5
 	.col.text-center
 		a href="#{sync_now_path}" class="btn btn-warning"
 		  | Sync
+	- store_name = current_user.store.name
 	.col.text-center
-		button.btn.btn-success onclick="printShift('#{trx_total}', '#{current_user.name.upcase}', '#{DateTime.now.to_s}', #{cash}, #{debit}, #{jumlah_trx})"
+		button.btn.btn-success onclick="printShift('#{trx_total.to_i}', '#{current_user.name.upcase}', '#{DateTime.now.strftime("%d/%m/%Y %H:%M:%S")}', #{cash.to_i}, #{debit.to_i}, '#{jumlah_trx.to_i}', '#{current_user.store.id}' , '#{store_name}' )"
 		  | CETAK PENJUALAN
