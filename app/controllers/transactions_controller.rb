@@ -57,7 +57,7 @@ class TransactionsController < ApplicationController
     end
 
     trx = Transaction.new
-    trx.invoice = "TRX-" + params[:invoice]
+    trx.invoice = "TRX-"+DateTime.now.to_i.to_s+"-"+current_user.store.id.to_s+"-"+current_user.id.to_s
     trx.user = current_user
     member_card = nil
     if params[:member] != ""
@@ -125,11 +125,10 @@ class TransactionsController < ApplicationController
     new_point = trx_total_for_point / @@point
     trx.point = new_point
     trx.save!
-
     render status: 200, json: {
-      message: "Transaksi Berhasil",
+      invoice: trx.invoice.to_s,
       time: trx.created_at.strftime("%d/%m/%Y %H:%M:%S"),
-      invoice: trx.invoice
+      
     }.to_json
   end
 

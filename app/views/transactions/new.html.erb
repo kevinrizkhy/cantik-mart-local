@@ -893,33 +893,35 @@
              map["member"] = member;
              map["voucher"] = voucher_code;
              map["invoice"] = gon.invoice+from;
-
              jQuery.ajax({
-                       url: "/api/trx/post",
-                       type: "POST",
-                       data: map,
-                       dataType: "json",
-                       beforeSend: function(x) {
-                         if (x && x.overrideMimeType) {
-                           x.overrideMimeType("application/j-son;charset=UTF-8");
-                         }
-                       },
-                       success: function(result_arr) {
-                           PrintBill(result_arr['invoice'], result_arr['time']);
-                          // $("#payment-method-select").val(0);
-                          // $("#nominal").val();
-                          // var table = $('#itemList').DataTable();
-                          // table.clear().draw();
-                          // $("#total-h5").html("0");
-                          // document.getElementById("label-total").innerHTML = "0";
-                          // document.location.reload();
-                          // window.location.reload()
-                        }, 
-                       error: function(result){
-                          alert(result[0][0]);
-                          alert("ERROR")
-                       }
+                 url: "/api/trx/post",
+                 type: "POST",
+                 data: map,
+                 dataType: "json",
+                 beforeSend: function(x) {
+                   if (x && x.overrideMimeType) {
+                     x.overrideMimeType("application/j-son;charset=UTF-8");
+                   }
+                 },
+                 success: function(result_arr) {
+                     PrintBill(result_arr['invoice'], result_arr['time']);
+                    $("#payment-method-select").val(0);
+                    $("#nominal").val();
+                    var table = $('#itemList').DataTable();
+                    table.clear().draw();
+                    $("#total-h5").html("0");
+                    document.getElementById("label-total").innerHTML = "0";
+                    document.location.reload();
+                    window.location.reload()
+                     }, 
+                    error: function(result){
+                       alert(result[0][0]);
+                       alert("ERROR")
+                    }
              });
+             if (isOK == true){
+                  alert("HERE");
+             }
          }
          
       </script>
