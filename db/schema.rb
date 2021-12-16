@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_26_012228) do
+ActiveRecord::Schema.define(version: 2021_12_15_085920) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -253,6 +253,7 @@ ActiveRecord::Schema.define(version: 2021_03_26_012228) do
     t.bigint "sell_member", default: 0, null: false
     t.bigint "counter", default: 0
     t.bigint "kpi", default: 0
+    t.bigint "tax", default: 0
     t.index ["item_cat_id"], name: "index_items_on_item_cat_id"
   end
 
@@ -359,6 +360,7 @@ ActiveRecord::Schema.define(version: 2021_03_26_012228) do
     t.float "discount_percentage", default: 0.0
     t.boolean "from_retur", default: false
     t.bigint "grand_total", default: 0
+    t.bigint "tax", default: 0
     t.index ["store_id"], name: "index_orders_on_store_id"
     t.index ["supplier_id"], name: "index_orders_on_supplier_id"
     t.index ["user_id"], name: "index_orders_on_user_id"
@@ -581,6 +583,7 @@ ActiveRecord::Schema.define(version: 2021_03_26_012228) do
     t.integer "supplier_type", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "tax", default: 0
   end
 
   create_table "transaction_items", force: :cascade do |t|
@@ -622,6 +625,7 @@ ActiveRecord::Schema.define(version: 2021_03_26_012228) do
     t.bigint "point", default: 0, null: false
     t.bigint "voucher_id"
     t.bigint "voucher"
+    t.bigint "tax", default: 0
     t.index ["store_id"], name: "index_transactions_on_store_id"
     t.index ["user_id"], name: "index_transactions_on_user_id"
     t.index ["voucher_id"], name: "index_transactions_on_voucher_id"

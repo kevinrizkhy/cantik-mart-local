@@ -30,9 +30,7 @@ class TransactionsController < ApplicationController
   end
 
   def new
-    gon.invoice = Time.now.to_i.to_s + "-" + current_user.store.id.to_s + "-" + current_user.id.to_s
-    gon.cashier = current_user.name.upcase
-    gon.current_time = DateTime.now.to_s
+    gon.store_id = current_user.store.id
 
     respond_to do |format|
       format.html { render "transactions/new", :layout => false  } 
@@ -78,6 +76,7 @@ class TransactionsController < ApplicationController
     trx.discount = discount.to_i
     trx.total = total.to_i
     trx.grand_total = grand_total.to_i
+    trx.tax = 0
 
     if params[:payment] != 1
       trx.bank = params[:bank].to_i
@@ -87,6 +86,7 @@ class TransactionsController < ApplicationController
     trx.save!
     
     trx_total_for_point = 0
+    tax = 0
     items.each do |item_par|
       item = Item.find_by(code: item_par[0])
       next if item.nil?
@@ -104,6 +104,11 @@ class TransactionsController < ApplicationController
       discount: item_par[3],
       date_created: DateTime.now
 
+
+      if item.tax != 0
+        tax += trx_item.quantity*(trx_item.price-((100.0/ (100.0 + item.tax)*trx_item.price))).to_i
+      end
+
       if trx_item.price == 0
         promo = item_par[5]
         trx_item.reason = promo
@@ -115,13 +120,16 @@ class TransactionsController < ApplicationController
       store_stock.stock = store_stock.stock.to_i - item_par[1].to_i
       store_stock.save!
     end
+    trx.tax = tax
     trx.hpp_total = hpp_total
     new_point = trx_total_for_point / @@point
     trx.point = new_point
     trx.save!
 
     render status: 200, json: {
-      message: "Transaksi Berhasil"
+      message: "Transaksi Berhasil",
+      time: trx.created_at.strftime("%d/%m/%Y %H:%M:%S"),
+      invoice: trx.invoice
     }.to_json
   end
 
