@@ -31,7 +31,9 @@ class TransactionsController < ApplicationController
 
   def new
     gon.store_id = current_user.store.id
-
+    gon.cashier_name = current_user.name.upcase.split(" ")[0]
+    trx_last_store_id = Transaction.last.store.id
+    return redirect_back_data_error root_path, "ID kasir tidak terdaftar." if trx_last_store_id != current_user.store.id
     respond_to do |format|
       format.html { render "transactions/new", :layout => false  } 
     end

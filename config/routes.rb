@@ -11,7 +11,6 @@ Rails.application.routes.draw do
       root to: "users#index"
     end
   root :to => "homes#index"
-
   resources :registers, only: %i[new create]
 
   # Clearance
