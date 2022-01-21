@@ -1,6 +1,5 @@
 class SyncData
 	
-	@@store_id = 3
   @@hostname = "http://www.cantikmart.com"
   # @@hostname = "http://localhost:3000"
   
@@ -82,7 +81,7 @@ def self.get_data
   end
 
 	def self.post_local_data
-    store = Store.find_by(id: @@store_id)
+    store = Transaction.last.store
     last_post = store.last_post
     if last_post == nil
       last_post = DateTime.now - 10.years
@@ -141,13 +140,13 @@ def self.get_data
   end
 
   def self.check_new_data 
-    store = Store.find_by(id: @@store_id)
+    store = Transaction.last.store
     last_update = store.last_update
     if last_update == nil
       last_update = DateTime.now - 10.years
     end
     new_last_update = DateTime.now
-    url = @@hostname+"/get/"+@@store_id.to_s+"?from="+last_update.to_s+"&to="+new_last_update.to_s
+    url = @@hostname+"/get/"+store.id.to_s+"?from="+last_update.to_s+"&to="+new_last_update.to_s
     resp = Net::HTTP.get_response(URI.parse(url))
     return if resp.code.to_i != 200 
     data = JSON.parse(resp.body)
