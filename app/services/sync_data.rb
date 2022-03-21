@@ -149,6 +149,7 @@ def self.get_data
     url = @@hostname+"/get/"+store.id.to_s+"?from="+last_update.to_s+"&to="+new_last_update.to_s
     resp = Net::HTTP.get_response(URI.parse(url))
     return if resp.code.to_i != 200 
+    GrocerItem.destroy_all
     data = JSON.parse(resp.body)
     data_keys = data.keys
     data_keys.each do |key|
@@ -248,11 +249,6 @@ def self.get_data
           Promotion.create data
         end
       elsif key=="grocers"
-        grocer_item = GrocerItem.find_by(id: data["id"])
-        if grocer_item.present?
-          grocer_item.assign_attributes data
-          grocer_item.save! if grocer_item.changed?
-        else
           GrocerItem.create data
         end
       end
