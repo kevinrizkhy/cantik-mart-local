@@ -250,7 +250,6 @@ def self.get_data
         end
       elsif key=="grocers"
           GrocerItem.create data
-        end
       end
     rescue Exception
       puts key
