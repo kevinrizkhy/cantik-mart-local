@@ -7,8 +7,6 @@ class TransactionsController < ApplicationController
   @@point = 10000
 
   def index
-    # SyncData.check_new_data
-    # SyncData.post_local_data
     @transactions = Transaction.page param_page
     if params[:search].present?
       search = params[:search].downcase
