@@ -20,7 +20,7 @@ class SyncData
   end
 
 
-def self.get_data
+  def self.get_data
     url = URI.parse('http://localhost/getData.php')
     req = Net::HTTP::Get.new(url.to_s)
     res = Net::HTTP.start(url.host, url.port) {|http|
