@@ -17,11 +17,11 @@ class SyncData
     store = Transaction.last.store
 
     post_local_data curr_date
-    store.last_post = new_post
+    store.last_post = curr_date
     store.save!
 
     check_new_data curr_date
-    store.last_post = new_post
+    store.last_post = curr_date
     store.save!
     puts "-----------------------------"
     puts "END: " + DateTime.now.to_s
