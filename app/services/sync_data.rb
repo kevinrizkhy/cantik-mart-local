@@ -14,6 +14,8 @@ class SyncData
     check_duplicate
     get_data 
 
+    store = Transaction.last.store
+
     post_local_data curr_date
     store.last_post = new_post
     store.save!
