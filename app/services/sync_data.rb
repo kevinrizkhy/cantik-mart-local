@@ -10,11 +10,17 @@ class SyncData
   def self.sync_now
     puts "START: " + DateTime.now.to_s
     puts "-----------------------------"
+    curr_date = DateTime.now - 10.minutes
     check_duplicate
-    get_data
-    post_local_data
-    check_new_data
-    
+    get_data 
+
+    post_local_data curr_date
+    store.last_post = new_post
+    store.save!
+
+    check_new_data curr_date
+    store.last_post = new_post
+    store.save!
     puts "-----------------------------"
     puts "END: " + DateTime.now.to_s
   end
@@ -80,7 +86,7 @@ class SyncData
     return hour+":"+minute+":"+sec
   end
 
-	def self.post_local_data
+	def self.post_local_data new_post
     store = Transaction.last.store
     last_post = store.last_post
     if last_post == nil
@@ -88,7 +94,6 @@ class SyncData
     end
 
     url = @@hostname+"/api/post/trx"
-    new_post = DateTime.now
 
 
     post_trx_data = Transaction.where(updated_at: last_post..new_post)
@@ -130,22 +135,22 @@ class SyncData
         store.last_post = new_post
         store.save!
         puts "--> POST DONE"
-
       end
+      return true
     rescue
       puts "TIDAK ADA INTERNET"
+      return false
     end
 
     
   end
 
-  def self.check_new_data 
+  def self.check_new_data new_last_update
     store = Transaction.last.store
     last_update = store.last_update
     if last_update == nil
       last_update = DateTime.now - 10.years
     end
-    new_last_update = DateTime.now
     url = @@hostname+"/get/"+store.id.to_s+"?from="+last_update.to_s+"&to="+new_last_update.to_s
     resp = Net::HTTP.get_response(URI.parse(url))
     return if resp.code.to_i != 200 
