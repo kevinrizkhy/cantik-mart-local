@@ -3,6 +3,8 @@
 - cash = trx.where(payment_type: "CASH").sum(:grand_total)
 - debit = trx.where(payment_type: "DEBIT").sum(:grand_total)
 - jumlah_trx = trx.count
+- have_sync_access = false
+- have_sync_access = true if current_user.store.id == Transaction.last.store.id
 h3
   | Selamat Datang, #{current_user.name}
 h5
@@ -11,15 +13,19 @@ h5
 	
 .row
 	.col.text-center
-		a href="#{new_transaction_path}" class="btn btn-primary"
-		  | MENU KASIR
+		- if have_sync_access
+			a href="#{new_transaction_path}" class="btn btn-primary"
+			  | MENU KASIR
 	.col.text-center
-		a href="#{sync_now_path}" class="btn btn-warning"
-		  | Sync
+		- if have_sync_access
+			a href="#{sync_now_path}" class="btn btn-warning"
+			  | Sync
 	- store_name = current_user.store.name
-	.col.text-center
-		button.btn.btn-success onclick="printShift('#{trx_total.to_i}', '#{current_user.name.upcase}', '#{DateTime.now.strftime("%d/%m/%Y %H:%M:%S")}', #{cash.to_i}, #{debit.to_i}, '#{jumlah_trx.to_i}', '#{current_user.store.id}' , '#{store_name}' )"
-		  | CETAK PENJUALAN
+
+	- if have_sync_access
+		.col.text-center
+			button.btn.btn-success onclick="printShift('#{trx_total.to_i}', '#{current_user.name.upcase}', '#{DateTime.now.strftime("%d/%m/%Y %H:%M:%S")}', #{cash.to_i}, #{debit.to_i}, '#{jumlah_trx.to_i}', '#{current_user.store.id}' , '#{store_name}' )"
+			  | CETAK PENJUALAN
 
 br
 hr
@@ -35,7 +41,7 @@ br
           .card-body.card-body-cascade.pb-0
 						- if ["super_visi", "super_admin"].include? current_user.level
 							.row.py-3.pl-4
-								.col-6
+								.col
 									h4
 										| POST Terakhir : 
 										b #{current_user.store.last_post.strftime("%d/%m/%Y   %H:%M:%S")}
@@ -43,28 +49,35 @@ br
 									h4
 										| UPDATE Terakhir : 
 										b #{current_user.store.last_update.strftime("%d/%m/%Y   %H:%M:%S")}
-								.col-6
-									= form_for :home, url: update_store_path, method: "POST" do |form|
-										.row
-											.col-12
-												label Ubah Tanggal 
-												input type="date" class="form-control md-form" value="#{(Date.today-1.day).strftime("%m/%d/%Y")}" name="new_date" required=true
-											.col-12.text-center
-												button.btn.btn-danger
-												  | UBAH
 
-							br
-							hr
-							br
+								- if have_sync_access
+									.col
+										= form_for :home, url: update_store_path, method: "POST" do |form|
+											.row
+												.col-12
+													label Ubah Tanggal 
+													input type="date" class="form-control md-form" value="#{(Date.today-1.day).strftime("%m/%d/%Y")}" name="new_date" required=true
+												.col-12.text-center
+														button.btn.btn-danger
+														  | UBAH
 
-							= form_for :home, url: sync_daily_path, method: "POST" do |form|
-								.row.py-3.pl-4
-									.col-12
-										h4
-											b SYNC DAILY
-									.col-6
-										label Pilih Tanggal Sync
-										input type="date" class="form-control md-form" value="#{(Date.today-1.day).strftime("%m/%d/%Y")}" name="sync_date" required=true
-									.col-6.text-center
-										button.btn.btn-warning
-										  | SYNC DAILY
+
+							- if have_sync_access
+								br
+								hr
+								br
+								= form_for :home, url: sync_daily_path, method: "POST" do |form|
+									.row.py-3.pl-4
+										.col-12
+											h4
+												b SYNC DAILY
+										.col-6
+											label Pilih Tanggal Sync
+											input type="date" class="form-control md-form" value="#{(Date.today-1.day).strftime("%m/%d/%Y")}" name="sync_date" required=true id="sync_date" onchange="getTotalCurrDate(this)"
+
+											h6 id="trx_count" Jumlah TRX : -
+											h6 id="trx_total" Total TRX : -
+
+										.col-6.text-center
+												button.btn.btn-warning
+												  | SYNC DAILY

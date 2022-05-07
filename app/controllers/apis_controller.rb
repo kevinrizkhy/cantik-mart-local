@@ -17,7 +17,22 @@ class ApisController < ApplicationController
       get_notification params
     elsif api_type == "update_notification"
       update_notification params
+    elsif api_type == "total_trx"
+      get_total_trx params
     end   
+  end
+
+  def get_total_trx params
+    json_result = []
+    search = params[:search].squish
+    return render :json => json_result if search.empty?
+    sync_date = search.to_datetime.localtime.beginning_of_day
+    end_date = sync_date.end_of_day
+    trxs = Transaction.where(created_at: sync_date..end_date)
+    return render :json => json_result if trxs.empty?
+    json_result << trxs.count
+    json_result << trxs.sum(:grand_total)
+    render :json => json_result
   end
 
   def get_voucher params

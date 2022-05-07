@@ -41,6 +41,29 @@ function printHTML(html) {
   wnd.print();
 }
 
+function getTotalCurrDate(input_date){
+  sync_date = input_date.value;
+  $.ajax({
+    method: "GET",
+    cache: false,
+    url: "/api/total_trx?search=" + sync_date,
+    success: function(result_arr) {
+      if(result_arr == ""){
+        $('#trx_count').text("Jumlah TRX : -");
+        $('#trx_total').text("Nominal TRX : -");
+        return
+      }else{
+        $('#trx_count').text("Jumlah TRX : " + result_arr[0]);
+        $('#trx_total').text("Nominal TRX : " + formatangka_titik(result_arr[1]));
+        return
+      }
+    },error: function(error) {
+      $('#trx_count').text("Jumlah TRX : -");
+      $('#trx_total').text("Nominal TRX : -");
+    }
+  });
+}
+
 
 function splitRibuan(total){
   var bilangan = total;
@@ -144,7 +167,7 @@ function getData(table_types) {
              document.getElementById("searchqty").value = 1;
              document.getElementById("itemId").focus();
          }
-       });
+        });
      }else{
       $.ajax({
          method: "GET",
