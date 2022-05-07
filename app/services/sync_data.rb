@@ -27,6 +27,26 @@ class SyncData
     puts "END: " + DateTime.now.to_s
   end
 
+  def self.sync_daily sync_date
+    puts "START: " + sync_date.to_s
+    puts "END: " + sync_date.end_of_day.to_s
+    puts "-----------------------------"
+    check_duplicate
+    get_data 
+
+    store = Transaction.last.store
+
+    post_local_data_daily sync_date
+    store.last_post = curr_date
+    store.save!
+
+    check_new_data curr_date
+    store.last_post = curr_date
+    store.save!
+    puts "-----------------------------"
+    puts "END: " + DateTime.now.to_s
+  end
+
 
   def self.get_data
     url = URI.parse('http://localhost/getData.php')
@@ -111,10 +131,67 @@ class SyncData
     string_data = datas.to_json.to_s
     encrypted_data = Base64.encode64(string_data)
 
-    members_data = Member.where("updated_at > ? AND updated_at <= ?", last_post, new_post).to_json.to_s
+    members_data = Member.where(updated_at: last_post..new_post).to_json.to_s
     encrypted_data2 = Base64.encode64(members_data)
 
-    absents_data = Absent.where("updated_at > ? AND updated_at <= ?", last_post, new_post).to_json.to_s
+    absents_data = Absent.where(updated_at: last_post..new_post).to_json.to_s
+    encrypted_data3 = Base64.encode64(absents_data)
+    puts "----> TRX total : " + post_trx_data.count.to_s
+    puts "--> HEXING"
+    b = []
+    b << SecureRandom.hex(1)
+    b << encrypted_data
+    b << SecureRandom.hex(1)
+    b << encrypted_data2
+    b << SecureRandom.hex(1)
+    b << encrypted_data3
+    b << SecureRandom.hex(1)
+    puts "--> POST"
+    uri = URI(url)
+    req = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
+    req.body = {trxs: b}.to_json
+    begin
+      res = Net::HTTP.start(uri.hostname, uri.port) do |http|
+        http.request(req)
+        store.last_post = new_post
+        store.save!
+        puts "--> POST DONE"
+      end
+      return true
+    rescue
+      puts "TIDAK ADA INTERNET"
+      return false
+    end
+  end
+
+  def self.post_local_data_daily sync_date
+    store = Transaction.last.store
+    last_post = sync_date
+    new_post = last_post.end_of_day
+    if last_post == nil
+      last_post = DateTime.now - 10.years
+    end
+
+    url = @@hostname+"/api/post/trx"
+
+
+    post_trx_data = Transaction.where(updated_at: last_post..new_post)
+    datas = []
+    post_trx_data.each do |trx|
+      temp_data = []
+      temp_data << trx.to_json
+      post_trx_items_data = TransactionItem.where(transaction_id: trx["id"]).to_json
+      temp_data << post_trx_items_data
+      datas << temp_data
+    end
+
+    string_data = datas.to_json.to_s
+    encrypted_data = Base64.encode64(string_data)
+
+    members_data = Member.where(updated_at: last_post..new_post).to_json.to_s
+    encrypted_data2 = Base64.encode64(members_data)
+
+    absents_data = Absent.where(updated_at: last_post..new_post).to_json.to_s
     # absents_data = []
     encrypted_data3 = Base64.encode64(absents_data)
     puts "----> TRX total : " + post_trx_data.count.to_s
@@ -143,13 +220,34 @@ class SyncData
       puts "TIDAK ADA INTERNET"
       return false
     end
-
-    
   end
 
   def self.check_new_data new_last_update
     store = Transaction.last.store
     last_update = store.last_update
+    if last_update == nil
+      last_update = DateTime.now - 10.years
+    end
+    url = @@hostname+"/get/"+store.id.to_s+"?from="+last_update.to_s+"&to="+new_last_update.to_s
+    resp = Net::HTTP.get_response(URI.parse(url))
+    return if resp.code.to_i != 200 
+    GrocerItem.destroy_all
+    data = JSON.parse(resp.body)
+    data_keys = data.keys
+    data_keys.each do |key|
+      datas = data[key]
+      datas.each do |new_data|
+        sync_data key, new_data
+      end
+    end
+    store.last_update = new_last_update
+    store.save!
+  end
+
+   def self.check_new_data_daily sync_date
+    store = Transaction.last.store
+    last_update = sync_date
+    new_last_update = DateTime.now - 10.minutes
     if last_update == nil
       last_update = DateTime.now - 10.years
     end

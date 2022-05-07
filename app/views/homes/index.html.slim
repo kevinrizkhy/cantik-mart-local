@@ -8,7 +8,7 @@ h3
 h5
 	p
 		| Penjualan hari ini (#{Date.today}) : 
-		
+	
 .row
 	.col.text-center
 		a href="#{new_transaction_path}" class="btn btn-primary"
@@ -20,3 +20,51 @@ h5
 	.col.text-center
 		button.btn.btn-success onclick="printShift('#{trx_total.to_i}', '#{current_user.name.upcase}', '#{DateTime.now.strftime("%d/%m/%Y %H:%M:%S")}', #{cash.to_i}, #{debit.to_i}, '#{jumlah_trx.to_i}', '#{current_user.store.id}' , '#{store_name}' )"
 		  | CETAK PENJUALAN
+
+br
+hr
+br
+
+.section.mb-5
+  .card.card-cascade.narrower
+    .section
+      .row
+        .col-xl-12.col-lg-12.mr-0.pb-2
+          .view.view-cascade.gradient-card-header.light-blue.lighten-1
+            h2.h2-responsive.mb-0.font-weight-500 SYNCHRONIZATION
+          .card-body.card-body-cascade.pb-0
+						- if ["super_visi", "super_admin"].include? current_user.level
+							.row.py-3.pl-4
+								.col-6
+									h4
+										| POST Terakhir : 
+										b #{current_user.store.last_post.strftime("%d/%m/%Y   %H:%M:%S")}
+									br
+									h4
+										| UPDATE Terakhir : 
+										b #{current_user.store.last_update.strftime("%d/%m/%Y   %H:%M:%S")}
+								.col-6
+									= form_for :home, url: update_store_path, method: "POST" do |form|
+										.row
+											.col-12
+												label Ubah Tanggal 
+												input type="date" class="form-control md-form" value="#{(Date.today-1.day).strftime("%m/%d/%Y")}" name="new_date" required=true
+											.col-12.text-center
+												button.btn.btn-danger
+												  | UBAH
+
+							br
+							hr
+							br
+
+							= form_for :home, url: sync_daily_path, method: "POST" do |form|
+								.row.py-3.pl-4
+									.col-12
+										h4
+											b SYNC DAILY
+									.col-6
+										label Pilih Tanggal Sync
+										input type="date" class="form-control md-form" value="#{(Date.today-1.day).strftime("%m/%d/%Y")}" name="sync_date" required=true
+									.col-6.text-center
+										button.btn.btn-warning
+										  | SYNC DAILY
