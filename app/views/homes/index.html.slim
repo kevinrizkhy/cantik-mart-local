@@ -17,9 +17,9 @@ h3
 				a href="#{sync_now_path}" class="btn btn-warning"
 				  | Sync
 		- store_name = current_user.store.name
-			.col.text-center
-				button.btn.btn-success onclick="printShift('#{trx_total.to_i}', '#{current_user.name.upcase}', '#{DateTime.now.strftime("%d/%m/%Y %H:%M:%S")}', #{cash.to_i}, #{debit.to_i}, '#{jumlah_trx.to_i}', '#{current_user.store.id}' , '#{store_name}' )"
-				  | CETAK PENJUALAN
+		.col.text-center
+			button.btn.btn-success onclick="printShift('#{trx_total.to_i}', '#{current_user.name.upcase}', '#{DateTime.now.strftime("%d/%m/%Y %H:%M:%S")}', #{cash.to_i}, #{debit.to_i}, '#{jumlah_trx.to_i}', '#{current_user.store.id}' , '#{store_name}' )"
+			  | CETAK PENJUALAN
 br
 	- if !have_sync_access
 		h8.text-danger
@@ -79,7 +79,10 @@ br
 											input type="date" class="form-control md-form" value="#{(Date.today-1.day).strftime("%m/%d/%Y")}" name="sync_date" required=true id="sync_date" onchange="getTotalCurrDate(this)"
 
 											h6 id="trx_count" Jumlah TRX : -
-											h6 id="trx_total" Total TRX : -
+											h6 id="trx_total" Nominal TRX : -
+											br
+											h6 id="trx_cloud_count" Jumlah TRX Pusat: -
+											h6 id="trx_cloud_total" Nominal TRX Pusat: -
 
 										.col-6.text-center
 												button.btn.btn-warning

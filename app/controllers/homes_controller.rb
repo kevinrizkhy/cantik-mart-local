@@ -3,6 +3,7 @@ class HomesController < ApplicationController
   require 'usagewatch'
 
   def index
+    gon.store_id = Transaction.last.store.id
     # SyncData.sync_now
 
    #  @total_limit_items = StoreItem.where(store_id: current_user.store.id).where('stock < min_stock').count

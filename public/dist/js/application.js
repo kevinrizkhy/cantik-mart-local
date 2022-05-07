@@ -1,5 +1,8 @@
 // setInterval(get_notification, 10000);
 
+var url = "http://localhost:3000";
+// var url = "http://cantikmart.com"
+
 var separator = '<p class="medium">===========================================================</p>';
 
 var header_cirata = '<!DOCTYPE html> <html> <head> <meta content="text/html;charset=utf-8" http-equiv="Content-Type"> <meta content="utf-8" http-equiv="encoding"> <style type="text/css"> table {table-layout:auto; width:100%;} td { font-size: 15px; padding: 0 !important; border-top: none !important;} </style> <title></title> </head> <body> ' + '<table widht: "100%;" ><tr><td style="text-align: left; vertical-align: middle;"><img src="/images/logo.png" style="width: 150px"/></td><td style="text-align: right;font-size: 12px !important;">' + 'PT. Cantik Berkah Sejahtera <br>' + 'NPWP: 53.925.657.9-409.000 <br>' +  'Jl. Cirata - Cilangkap, Ds. Cadassari<br> Kec. Tegalwaru, Kabupaten Purwakarta,<br>Jawa Barat'+'</td></tr></table>'+separator;
@@ -60,6 +63,29 @@ function getTotalCurrDate(input_date){
     },error: function(error) {
       $('#trx_count').text("Jumlah TRX : -");
       $('#trx_total').text("Nominal TRX : -");
+    }
+  });
+
+  // sync_url = "http://localhost:3000/sync/3/2022-04-26";
+  sync_url = "http://localhost:3000/sync/"+gon.store_id+"/"+sync_date;
+  $.ajax({
+    method: "GET",
+    cache: false,
+    crossDomain: true,
+    url: sync_url,
+    success: function(result_arr) {
+      if(result_arr == ""){
+        $('#trx_cloud_count').text("Jumlah TRX Pusat : -");
+        $('#trx_cloud_total').text("Nominal TRX Pusat : -");
+        return
+      }else{
+        $('#trx_cloud_count').text("Jumlah TRX Pusat: " + result_arr[0]);
+        $('#trx_cloud_total').text("Nominal TRX Pusat: " + formatangka_titik(result_arr[1]));
+        return
+      }
+    },error: function(error) {
+      $('#trx_cloud_count').text("Jumlah TRX Pusat : -");
+      $('#trx_cloud_total').text("Nominal TRX Pusat : -");
     }
   });
 }
