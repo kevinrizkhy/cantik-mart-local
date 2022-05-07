@@ -1,7 +1,8 @@
 // setInterval(get_notification, 10000);
 
-var url = "http://localhost:3000";
-// var url = "http://cantikmart.com"
+// var url = "http://localhost:3000";
+// var url = "http://cantikmart.com:8080"
+var url = "http://cantikmart.com"
 
 var separator = '<p class="medium">===========================================================</p>';
 
@@ -46,6 +47,7 @@ function printHTML(html) {
 
 function getTotalCurrDate(input_date){
   sync_date = input_date.value;
+  local_data = []
   $.ajax({
     method: "GET",
     cache: false,
@@ -54,11 +56,12 @@ function getTotalCurrDate(input_date){
       if(result_arr == ""){
         $('#trx_count').text("Jumlah TRX : -");
         $('#trx_total').text("Nominal TRX : -");
-        return
       }else{
         $('#trx_count').text("Jumlah TRX : " + result_arr[0]);
+
         $('#trx_total').text("Nominal TRX : " + formatangka_titik(result_arr[1]));
-        return
+        local_data.push(result_arr[0]);
+        local_data.push(result_arr[1]);
       }
     },error: function(error) {
       $('#trx_count').text("Jumlah TRX : -");
@@ -66,8 +69,8 @@ function getTotalCurrDate(input_date){
     }
   });
 
-  // sync_url = "http://localhost:3000/sync/3/2022-04-26";
-  sync_url = "http://localhost:3000/sync/"+gon.store_id+"/"+sync_date;
+  cloud_data = []
+  sync_url = url + "/sync/"+gon.store_id+"/"+sync_date;
   $.ajax({
     method: "GET",
     cache: false,
@@ -77,17 +80,45 @@ function getTotalCurrDate(input_date){
       if(result_arr == ""){
         $('#trx_cloud_count').text("Jumlah TRX Pusat : -");
         $('#trx_cloud_total').text("Nominal TRX Pusat : -");
-        return
       }else{
         $('#trx_cloud_count').text("Jumlah TRX Pusat: " + result_arr[0]);
         $('#trx_cloud_total').text("Nominal TRX Pusat: " + formatangka_titik(result_arr[1]));
-        return
+        cloud_data.push(result_arr[0]);
+        cloud_data.push(result_arr[1]);
       }
     },error: function(error) {
       $('#trx_cloud_count').text("Jumlah TRX Pusat : -");
       $('#trx_cloud_total').text("Nominal TRX Pusat : -");
     }
   });
+
+
+  setTimeout(function (){
+    if( (cloud_data.length != local_data.length) || (local_data.length == 0)) {
+      $("#notice_sync").html("TIDAK DAPAT MELAKUKAN SYNC");
+      $("#notice_not_sync").html();
+      $("#daily_sync_button").hide();
+    }else{
+      if(cloud_data[0]==local_data[0]){
+        if(cloud_data[1]==local_data[1]){
+          $("#notice_sync").hide();;
+          $("#notice_not_sync").show();
+          $("#daily_sync_button").hide();
+        }else{
+          $("#notice_not_sync").hide();;
+          $("#notice_sync").html("SILAHKAN MELAKUKAN SYNC");
+          $("#daily_sync_button").show();
+        }
+      }else{
+        $("#notice_not_sync").hide();
+        $("#notice_sync").html("SILAHKAN MELAKUKAN SYNC");
+        $("#daily_sync_button").show();
+      }
+    }
+  }, 3000);
+  
+  
+
 }
 
 
