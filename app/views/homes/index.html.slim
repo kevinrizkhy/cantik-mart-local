@@ -7,26 +7,23 @@
 - have_sync_access = true if current_user.store.id == Transaction.last.store.id
 h3
   | Selamat Datang, #{current_user.name}
-h5
-	p
-		| Penjualan hari ini (#{Date.today}) : 
 	
-.row
-	.col.text-center
-		- if have_sync_access
-			a href="#{new_transaction_path}" class="btn btn-primary"
-			  | MENU KASIR
-	.col.text-center
-		- if have_sync_access
-			a href="#{sync_now_path}" class="btn btn-warning"
-			  | Sync
-	- store_name = current_user.store.name
-
-	- if have_sync_access
+- if have_sync_access
+	.row
 		.col.text-center
-			button.btn.btn-success onclick="printShift('#{trx_total.to_i}', '#{current_user.name.upcase}', '#{DateTime.now.strftime("%d/%m/%Y %H:%M:%S")}', #{cash.to_i}, #{debit.to_i}, '#{jumlah_trx.to_i}', '#{current_user.store.id}' , '#{store_name}' )"
-			  | CETAK PENJUALAN
-
+				a href="#{new_transaction_path}" class="btn btn-primary"
+				  | MENU KASIR
+		.col.text-center
+				a href="#{sync_now_path}" class="btn btn-warning"
+				  | Sync
+		- store_name = current_user.store.name
+			.col.text-center
+				button.btn.btn-success onclick="printShift('#{trx_total.to_i}', '#{current_user.name.upcase}', '#{DateTime.now.strftime("%d/%m/%Y %H:%M:%S")}', #{cash.to_i}, #{debit.to_i}, '#{jumlah_trx.to_i}', '#{current_user.store.id}' , '#{store_name}' )"
+				  | CETAK PENJUALAN
+br
+	- if !have_sync_access
+		h8.text-danger
+			| Status akun anda tidak berada di toko ini, silahkan menghubungi ADMIN untuk mengubah status toko anda.
 br
 hr
 br
@@ -41,14 +38,20 @@ br
           .card-body.card-body-cascade.pb-0
 						- if ["super_visi", "super_admin"].include? current_user.level
 							.row.py-3.pl-4
+								h4
 								.col
-									h4
-										| POST Terakhir : 
-										b #{current_user.store.last_post.strftime("%d/%m/%Y   %H:%M:%S")}
-									br
-									h4
-										| UPDATE Terakhir : 
-										b #{current_user.store.last_update.strftime("%d/%m/%Y   %H:%M:%S")}
+									.row
+										.col
+											h4 POST Terakhir : 
+										.col
+											h4 
+												b #{Transaction.last.store.last_post.strftime("%d/%m/%Y   %H:%M:%S")}
+									.row
+										.col
+											h4 UPDATE Terakhir : 
+										.col
+											h4
+												b #{Transaction.last.store.last_update.strftime("%d/%m/%Y   %H:%M:%S")}
 
 								- if have_sync_access
 									.col
