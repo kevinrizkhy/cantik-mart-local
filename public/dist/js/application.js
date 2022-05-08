@@ -99,19 +99,13 @@ function getTotalCurrDate(input_date){
       $("#notice_not_sync").html();
       $("#daily_sync_button").hide();
     }else{
-      if(cloud_data[0]==local_data[0]){
-        if(cloud_data[1]==local_data[1]){
-          $("#notice_sync").hide();;
-          $("#notice_not_sync").show();
-          $("#daily_sync_button").hide();
-        }else{
-          $("#notice_not_sync").hide();;
-          $("#notice_sync").html("SILAHKAN MELAKUKAN SYNC");
-          $("#daily_sync_button").show();
-        }
+      if((cloud_data[0]==local_data[0]) && (cloud_data[1]==local_data[1]) ){
+        $("#notice_not_sync").show();
+        $("#notice_sync").hide();;
+        $("#daily_sync_button").hide();
       }else{
         $("#notice_not_sync").hide();
-        $("#notice_sync").html("SILAHKAN MELAKUKAN SYNC");
+        $("#notice_sync").show();
         $("#daily_sync_button").show();
       }
     }

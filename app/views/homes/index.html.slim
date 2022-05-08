@@ -38,7 +38,7 @@ br
             h2.h2-responsive.mb-0.font-weight-500 SYNCHRONIZATION
           .card-body.card-body-cascade.pb-0
 						- if ["super_visi", "super_admin"].include? current_user.level
-							/.row.py-3.pl-4
+							.row.py-3.pl-4
 								h4
 								.col
 									.row
@@ -55,7 +55,7 @@ br
 												b #{Transaction.last.store.last_update.strftime("%d/%m/%Y   %H:%M:%S")}
 
 								- if have_sync_access
-									.col
+									/ .col
 										= form_for :home, url: update_store_path, method: "POST" do |form|
 											.row
 												.col-12
@@ -90,7 +90,8 @@ br
 											br
 											br
 											br
-											h6.text-danger id="notice_sync"
+											h6.text-danger id="notice_sync" style="display: none;"
+												| SILAHKAN MELAKUKAN SYNC
 
 											h6.text-success id="notice_not_sync" style="display: none;"
 												| DATA TELAH SAMA DENGAN PUSAT
