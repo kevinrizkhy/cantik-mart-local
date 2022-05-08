@@ -96,14 +96,16 @@ function getTotalCurrDate(input_date){
   setTimeout(function (){
     if( (cloud_data.length != local_data.length) || (local_data.length == 0)) {
       $("#notice_sync").html("TIDAK DAPAT MELAKUKAN SYNC");
-      $("#notice_not_sync").html();
+      $("#notice_sync").show();
+      $("#notice_not_sync").hide();
       $("#daily_sync_button").hide();
     }else{
       if((cloud_data[0]==local_data[0]) && (cloud_data[1]==local_data[1]) ){
         $("#notice_not_sync").show();
-        $("#notice_sync").hide();;
+        $("#notice_sync").hide();
         $("#daily_sync_button").hide();
       }else{
+        $("#notice_sync").html("SILAHKAN MELAKUKAN SYNC");
         $("#notice_not_sync").hide();
         $("#notice_sync").show();
         $("#daily_sync_button").show();
