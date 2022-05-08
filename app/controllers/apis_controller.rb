@@ -31,7 +31,7 @@ class ApisController < ApplicationController
     trxs = Transaction.where(created_at: sync_date..end_date)
     return render :json => json_result if trxs.empty?
     json_result << trxs.count
-    json_result << trxs.sum(:grand_total)
+    json_result << trxs.sum(:grand_total).to_i
     render :json => json_result
   end
 
