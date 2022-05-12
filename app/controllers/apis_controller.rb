@@ -128,6 +128,7 @@ class ApisController < ApplicationController
     if params[:member].present?
       member = Member.find_by(card_number: params[:member])
     end
+    member = nil
     search = params[:search].squish
     return render :json => json_result unless search.present?
     return render :json => json_result unless qty.present?

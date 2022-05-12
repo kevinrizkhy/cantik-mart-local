@@ -18,8 +18,10 @@ class HomesController < ApplicationController
     sync_date = params[:sync_date]
     return redirect_back_data_error root_path, "Cek tanggal!" if sync_date.nil?
     sync_date = sync_date.to_datetime.localtime.beginning_of_day
-    SyncData.sync_daily sync_date
-    return redirect_success root_path, "SYNC ( " + sync_date.to_s + " ) telah dijalankan."
+    Thread.start{
+      SyncData.sync_daily sync_date
+    }
+    return redirect_success root_path, "Sinkronisasi ( " + sync_date.to_date.to_s + " ) sedang berjalan."
   
   end
 
@@ -32,8 +34,10 @@ class HomesController < ApplicationController
   end
 
   def sync
-    SyncData.sync_now
-    return redirect_success root_path, "Sync selesai."
+    Thread.start{
+      SyncData.sync_now
+    }
+    return redirect_success root_path, "Sync sedang berjalan."
   end
 
   private
