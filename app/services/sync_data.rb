@@ -1,7 +1,7 @@
 class SyncData
 	
-  @@hostname = "http://www.cantikmart.com"
-  # @@hostname = "http://localhost:3000"
+  # @@hostname = "http://www.cantikmart.com"
+  @@hostname = "http://localhost:3000"
   
 	def initialize
     sync_now
@@ -27,6 +27,46 @@ class SyncData
     puts "END: " + DateTime.now.to_s
   end
 
+  # SyncData.update_item_id
+  def self.update_item_id
+    store = Transaction.last.store
+    last_update = store.last_update
+    if last_update == nil
+      last_update = DateTime.now - 10.years
+    end
+    url = @@hostname+"/api/update_item_id"
+    resp = Net::HTTP.get_response(URI.parse(url))
+    return if resp.code.to_i != 200 
+    datas = JSON.parse(resp.body)
+    
+    datas_ids = datas.values
+    local_item_ids = Item.all.pluck(:id)
+    diff_ids = local_item_ids-datas_ids
+
+    not_found = []
+    binding.pry
+    diff_ids.each do |diff_id|
+      diff_item = Item.find_by(id: diff_id)
+      code = diff_item.code
+      items = Item.where(code: code)
+
+      if items.size == 1
+        not_found << diff_id
+        next
+      end
+
+      items_ids = items.pluck(:id)
+      use_id = datas[code]
+      remove_ids = items_ids - [use_id]
+      TransactionItem.where(item_id: remove_ids).update_all(item_id: use_id)
+      StoreItem.where(item_id: remove_ids).update_all(item_id: use_id)
+      GrocerItem.where(item_id: remove_ids).update_all(item_id: use_id)
+      Item.where(id: remove_ids).destroy_all
+    end
+    puts "ID yang tidak bisa dihapus : " + not_found.to_s
+  end
+
+  # SyncData.sync_daily DateTime.now.beginning_of_day-1.day
   def self.sync_daily sync_date
     puts "START: " + sync_date.to_s
     puts "END: " + sync_date.end_of_day.to_s
@@ -244,7 +284,7 @@ class SyncData
     store.save!
   end
 
-   def self.check_new_data_daily sync_date
+  def self.check_new_data_daily sync_date
     store = Transaction.last.store
     last_update = sync_date
     new_last_update = DateTime.now - 10.minutes

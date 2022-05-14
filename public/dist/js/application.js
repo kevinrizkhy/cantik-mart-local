@@ -94,7 +94,7 @@ function getTotalCurrDate(input_date){
 
 
   setTimeout(function (){
-    if(local_data.length == 0) {
+    if( (cloud_data.length != local_data.length) || (local_data.length == 0)) {
       $("#notice_sync").html("TIDAK DAPAT MELAKUKAN SYNC");
       $("#notice_sync").show();
       $("#notice_not_sync").hide();
