@@ -101,11 +101,11 @@ class SyncData
     store = Transaction.last.store
 
     post_local_data_daily sync_date
-    store.last_post = curr_date
+    store.last_post = sync_date
     store.save!
 
-    check_new_data curr_date
-    store.last_post = curr_date
+    check_new_data sync_date
+    store.last_post = sync_date
     store.save!
     puts "-----------------------------"
     puts "END: " + DateTime.now.to_s
@@ -286,6 +286,7 @@ class SyncData
     end
   end
 
+  # SyncData.check_new_data DateTime.now
   def self.check_new_data new_last_update
     store = Transaction.last.store
     last_update = store.last_update
@@ -330,6 +331,7 @@ class SyncData
     store.last_update = new_last_update
     store.save!
   end
+
 
   def self.sync_data key, data
     begin
