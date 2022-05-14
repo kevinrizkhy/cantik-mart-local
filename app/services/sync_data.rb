@@ -36,7 +36,16 @@ class SyncData
     datas_ids = datas.values
     local_item_ids = Item.all.pluck(:id)
     diff_ids = local_item_ids-datas_ids
+
     Item.where(id: diff_ids).destroy_all
+    diff_ids.each do |diff_id|
+      diff_item = Item.find_by(id: diff_id)
+      next if diff_item.nil?
+      next if TransactionItem.where(item: diff_item)
+      StoreItem.where(item_id: diff_id).destroy_all
+      GrocerItem.where(item_id: diff_id).destroy_all
+      Item.where(id: diff_id).destroy_all
+    end
   end
 
   # SyncData.update_item_id
