@@ -27,6 +27,7 @@ class SyncData
     puts "END: " + DateTime.now.to_s
   end
 
+  # SyncData.deleteItem
   def self.deleteItem
     url = @@hostname+"/api/update_item_id"
     resp = Net::HTTP.get_response(URI.parse(url))
@@ -37,15 +38,21 @@ class SyncData
     local_item_ids = Item.all.pluck(:id)
     diff_ids = local_item_ids-datas_ids
 
-    Item.where(id: diff_ids).destroy_all
+    not_found = []
     diff_ids.each do |diff_id|
       diff_item = Item.find_by(id: diff_id)
       next if diff_item.nil?
-      next if TransactionItem.where(item: diff_item)
+      if TransactionItem.where(item: diff_item).present?
+        not_found << diff_id
+      end
       StoreItem.where(item_id: diff_id).destroy_all
       GrocerItem.where(item_id: diff_id).destroy_all
       Item.where(id: diff_id).destroy_all
     end
+    puts "ID NOT FOUND : " + not_found.to_s
+    puts "ID YANG TIDAK BISA DIHAPUS KARENA : "
+    puts "1. LINK DENGAN TRX_ITEMS"
+    puts "2. ITEM SUDAH DIHAPUS DARI SERVER PUSAT"
   end
 
   # SyncData.update_item_id
