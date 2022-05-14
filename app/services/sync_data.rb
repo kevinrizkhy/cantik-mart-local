@@ -44,7 +44,6 @@ class SyncData
     diff_ids = local_item_ids-datas_ids
 
     not_found = []
-    binding.pry
     diff_ids.each do |diff_id|
       diff_item = Item.find_by(id: diff_id)
       code = diff_item.code
