@@ -46,6 +46,7 @@ class SyncData
     not_found = []
     diff_ids.each do |diff_id|
       diff_item = Item.find_by(id: diff_id)
+      next if diff_item.nil?
       code = diff_item.code
       items = Item.where(code: code)
 
