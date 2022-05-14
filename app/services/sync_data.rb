@@ -1,7 +1,7 @@
 class SyncData
 	
-  # @@hostname = "http://www.cantikmart.com"
-  @@hostname = "http://localhost:3000"
+  @@hostname = "http://www.cantikmart.com"
+  # @@hostname = "http://localhost:3000"
   
 	def initialize
     sync_now
@@ -27,13 +27,20 @@ class SyncData
     puts "END: " + DateTime.now.to_s
   end
 
+  def self.deleteItem
+    url = @@hostname+"/api/update_item_id"
+    resp = Net::HTTP.get_response(URI.parse(url))
+    return if resp.code.to_i != 200 
+    datas = JSON.parse(resp.body)
+    
+    datas_ids = datas.values
+    local_item_ids = Item.all.pluck(:id)
+    diff_ids = local_item_ids-datas_ids
+    Item.where(id: diff_ids).destroy_all
+  end
+
   # SyncData.update_item_id
   def self.update_item_id
-    store = Transaction.last.store
-    last_update = store.last_update
-    if last_update == nil
-      last_update = DateTime.now - 10.years
-    end
     url = @@hostname+"/api/update_item_id"
     resp = Net::HTTP.get_response(URI.parse(url))
     return if resp.code.to_i != 200 
