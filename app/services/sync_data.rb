@@ -44,6 +44,7 @@ class SyncData
       next if diff_item.nil?
       if TransactionItem.where(item: diff_item).present?
         not_found << diff_id
+        next
       end
       StoreItem.where(item_id: diff_id).destroy_all
       GrocerItem.where(item_id: diff_id).destroy_all
