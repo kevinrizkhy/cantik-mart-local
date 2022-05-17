@@ -70,6 +70,9 @@ function getTotalCurrDate(input_date){
   });
 
   cloud_data = []
+  retur_count = 0
+  retur_nominal = 0
+  $("#retur").hide();
   sync_url = url + "/sync/"+gon.store_id+"/"+sync_date;
   $.ajax({
     method: "GET",
@@ -85,6 +88,8 @@ function getTotalCurrDate(input_date){
         $('#trx_cloud_total').text("Nominal TRX Pusat: " + formatangka_titik(result_arr[1]));
         cloud_data.push(result_arr[0]);
         cloud_data.push(result_arr[1]);
+        retur_count = result_arr[2];
+        retur_nominal = result_arr[3];
       }
     },error: function(error) {
       $('#trx_cloud_count').text("Jumlah TRX Pusat : -");
@@ -124,6 +129,10 @@ function getTotalCurrDate(input_date){
           $("#daily_sync_button").show();
         }
       }
+    }
+    if(retur_count > 0){
+      $("#retur").html("RETUR KONSUMEN : " + retur_count + "x (" + formatangka_titik(retur_nominal) + ")");
+      $("#retur").show();
     }
   }, 3000);
   
