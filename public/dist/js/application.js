@@ -111,10 +111,16 @@ function getTotalCurrDate(input_date){
           $("#notice_sync").hide();
           $("#daily_sync_button").hide();
         }else{
-          $("#notice_sync").html("TERDAPAT RETUR KONSUMEN, SILAHKAN CEK SECARA MANUAL");
-          $("#notice_not_sync").hide();
-          $("#notice_sync").show();
-          $("#daily_sync_button").hide();
+          if(Math.abs(cloud_data[1]-local_data[1]) < 10){
+            $("#notice_not_sync").show();
+            $("#notice_sync").hide();
+            $("#daily_sync_button").hide();
+          }else{
+            $("#notice_sync").html("TERDAPAT RETUR KONSUMEN, SILAHKAN CEK SECARA MANUAL");
+            $("#notice_not_sync").hide();
+            $("#notice_sync").show();
+            $("#daily_sync_button").hide();
+          }
         }
       }else{
         if (cloud_data[0] > local_data[0]){
