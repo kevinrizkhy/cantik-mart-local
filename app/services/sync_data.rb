@@ -90,7 +90,7 @@ class SyncData
     puts "POST SUCCESS ! " + end_post.to_s
     puts "-----------------------------"
 
-    check_new_data sync_date, end_post
+    check_new_data_daily sync_date, end_post
     if sync_date.to_date == DateTime.now.to_date
       store.last_update = end_post 
       store.save!
