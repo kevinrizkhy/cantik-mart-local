@@ -174,10 +174,7 @@ class SyncData
 
 	def self.post_local_data new_post
     store = Transaction.last.store
-    last_post = store.last_post
-    if last_post == nil
-      last_post = DateTime.now - 10.years
-    end
+    last_post = DateTime.now.beginning_of_day
 
     url = @@hostname+"/api/post/trx"
 
@@ -289,10 +286,8 @@ class SyncData
   # SyncData.check_new_data DateTime.now
   def self.check_new_data new_last_update
     store = Transaction.last.store
-    last_update = store.last_update
-    if last_update == nil
-      last_update = DateTime.now - 10.years
-    end
+    last_update = DateTime.now.beginning_of_day
+    
     url = @@hostname+"/get/"+store.id.to_s+"?from="+last_update.to_s+"&to="+new_last_update.to_s
     resp = Net::HTTP.get_response(URI.parse(url))
     return if resp.code.to_i != 200 
