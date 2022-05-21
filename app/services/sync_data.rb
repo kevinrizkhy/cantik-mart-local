@@ -4,7 +4,6 @@ class SyncData
   # @@hostname = "http://localhost:3000"
   
 	def initialize
-    sync_now
 	end
 
 
