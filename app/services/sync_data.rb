@@ -228,7 +228,7 @@ class SyncData
         sync_data key, new_data
       end
     end
-    store.last_update = new_last_update
+    store.last_update = end_post
     store.save!
   end
 
