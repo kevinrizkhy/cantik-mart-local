@@ -212,7 +212,7 @@ class SyncData
     end
   end
 
-  # SyncData.check_new_data DateTime.now
+  # SyncData.check_new_data_daily DateTime.now
   def self.check_new_data_daily sync_date, end_post
     store = Transaction.last.store
 
