@@ -3,6 +3,7 @@ class HomesController < ApplicationController
   require 'usagewatch'
 
   def index
+    @last_backup = Backup.last
     gon.store_id = Transaction.last.store.id
   end
 

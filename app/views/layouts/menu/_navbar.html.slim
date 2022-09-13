@@ -58,3 +58,9 @@ li
     a.collapsible-header.waves-effect.arrow-r  href="#{transactions_path}"
       i.w-fa.fas.fa-credit-card
       | Transaksi
+
+- if ["super_visi", "super_admin", "owner"].include? current_user.level
+  li
+    a.collapsible-header.waves-effect.arrow-r  href="#{backups_path}"
+      i.w-fa.fas.fa-history
+      | Backup

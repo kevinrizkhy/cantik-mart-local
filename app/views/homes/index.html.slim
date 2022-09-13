@@ -1,3 +1,15 @@
+- if (@last_backup.created.to_date + 6.days) == Date.today
+	- if ["super_visi", "super_admin", "owner"].include?  current_user.level
+	  .alert.alert-warning
+	    h4.alert-heading 
+	    	b PERINGATAN
+	    p Segera melakukan backup bulanan
+	    hr
+	    p 
+	    	| Backup terakhir 
+	    	b 
+	    		u #{@last_backup.created.strftime("%d/%m/%Y %H:%M:%S")}
+
 - trx =  Transaction.where("created_at >= ? AND created_at <= ?", DateTime.now.beginning_of_day, DateTime.now.end_of_day).where(user: current_user)
 - trx_total = trx.sum(:grand_total)
 - cash = trx.where(payment_type: "CASH").sum(:grand_total)
@@ -5,8 +17,7 @@
 - jumlah_trx = trx.count
 - have_sync_access = false
 - have_sync_access = true if current_user.store.id == Transaction.last.store.id
-h3
-  | Selamat Datang, #{current_user.name}
+
 	
 - if have_sync_access
 	.row
