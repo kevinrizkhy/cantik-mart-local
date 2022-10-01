@@ -25,7 +25,8 @@ html
     = stylesheet_link_tag '/dist/css/mdb.min.css'
     = stylesheet_link_tag "/dist/css/application", media: "all"
     
-  body.fixed-sn.white-skin onload="startTime()"
+  / body.fixed-sn.white-skin onload="startTime()"
+  body.fixed-sn.white-skin 
     - if params[:controller] != "sessions" && params[:controller] != "registers"
       header
         #slide-out.side-nav.sn-bg-4.fixed
