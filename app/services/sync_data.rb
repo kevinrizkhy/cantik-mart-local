@@ -212,7 +212,7 @@ class SyncData
     end
   end
 
-  # SyncData.check_new_data_daily DateTime.now
+  # SyncData.check_new_data_daily DateTime.now.beginning_of_day, DateTime.now.end_of_day
   def self.check_new_data_daily sync_date, end_post
     store = Transaction.last.store
 
@@ -234,6 +234,7 @@ class SyncData
 
 
   def self.sync_data key, data
+    data["edited_by"] = nil
     begin
       if key == "users"
         user = User.find_by(id: data["id"])
@@ -301,7 +302,7 @@ class SyncData
           item.assign_attributes data
           item.save!
         else
-          Item.create data
+          item = Item.create data
         end
       elsif key=="stocks"
         store_item = StoreItem.find_by(id: data["id"])
