@@ -7,5 +7,8 @@ class Item < ApplicationRecord
   has_many :transaction_items
   has_many :grocer_items
   has_many :supplier_items
+
+  belongs_to :edited_by, class_name: "User", foreign_key: "edited_by", optional: true
+
 end
 
