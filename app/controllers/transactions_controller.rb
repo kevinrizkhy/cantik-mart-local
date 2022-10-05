@@ -61,12 +61,9 @@ class TransactionsController < ApplicationController
     trx.user = current_user
     member_card = nil
     if params[:member] != ""
-      member = Member.find_by(card_number: params[:member].to_i)
-      if member.present?
-        member_card = member.card_number
-      end
+      member = Member.find_by(id: params[:member].to_i)
+      trx.member_card = member if member.present?
     end
-    trx.member_card = member_card
     trx.date_created = Time.now
     trx.payment_type = params[:payment].to_i
     trx.store = current_user.store
@@ -131,6 +128,7 @@ class TransactionsController < ApplicationController
       
     }.to_json
   end
+
 
   private
     def trx_items

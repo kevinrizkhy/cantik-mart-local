@@ -3,7 +3,9 @@ class Transaction < ApplicationRecord
   has_many :transaction_items
   belongs_to :user
   belongs_to :store
-  belongs_to :complain, optional: true
+  belongs_to :complain, optional: true 
+  belongs_to :member_card, class_name: "Member", foreign_key: "member_card", optional: true
+
 
   enum payment_type:{
   	CASH: 1,

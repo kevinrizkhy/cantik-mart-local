@@ -76,9 +76,13 @@ class ApisController < ApplicationController
     search = params[:search].squish
     return render :json => json_result unless search.present?
     search = search.gsub(/\s+/, "")
-    members = Member.where('lower(name) like ? OR card_number = ?', "%"+search.downcase+"%", search)
+    if params[:only].present?
+      members = Member.where(card_number: search)
+    else
+      members = Member.where('lower(name) like ? OR card_number = ?', "%"+search.downcase+"%", search)
+    end
     members.each do|member|
-      json_result << [member.card_number, member.name, member.address, member.phone]
+      json_result << [member.card_number, member.name, member.address, member.phone, member.id]
     end
     render :json => json_result
   end
@@ -124,11 +128,13 @@ class ApisController < ApplicationController
   def get_item_trx params
     json_result = []
     qty = params[:qty]
+
     member = nil
     if params[:member].present?
       member = Member.find_by(card_number: params[:member])
     end
     member = nil
+
     search = params[:search].squish
     return render :json => json_result unless search.present?
     return render :json => json_result unless qty.present?
@@ -152,7 +158,6 @@ class ApisController < ApplicationController
         price = find_price.first
         disc = find_price.first.discount
         disc = (disc * price.price) / 100 if disc <= 100
-        
         if member.present?
           disc = find_price.first.discount
           disc = (disc * price.member_price) / 100 if disc <= 100
