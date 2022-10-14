@@ -82,7 +82,7 @@ class SyncData
 
     store = Transaction.last.store
 
-    post_local_data_daily sync_date, end_post, nil
+    post_local_data_daily sync_date, end_post
     if sync_date.to_date == DateTime.now.to_date
       store.last_post = end_post 
       store.save!
@@ -99,6 +99,9 @@ class SyncData
     puts "-----------------------------"
   end
 
+
+  # last_post = DateTime.now.beginning_of_day
+  # end_post = last_post.end_of_day
   # SyncData.sync_all_absents DateTime.now.beginning_of_day
   def self.sync_all_absents sync_date
     url = @@hostname+"/api/post/trx"
@@ -131,8 +134,6 @@ class SyncData
     begin
       res = Net::HTTP.start(uri.hostname, uri.port) do |http|
         http.request(req)
-        store.last_post = end_post
-        store.save!
         puts "--> POST DONE"
       end
       return true
@@ -202,12 +203,11 @@ class SyncData
     sec = ((raw_min - raw_min.to_i)*60).to_i.to_s
     return hour+":"+minute+":"+sec
   end
-
-  # last_post = DateTime.now.beginning_of_day
-  # end_post = last_post.end_of_day
+  
   # SyncData.post_local_data_daily last_post, end_post
-  def self.post_local_data_daily last_post, end_post, method_name
+  def self.post_local_data_daily last_post, end_post
     store = Transaction.last.store
+    url = @@hostname+"/api/post/trx"
 
     post_trx_data = Transaction.where(updated_at: last_post..end_post)
     datas = []
