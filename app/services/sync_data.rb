@@ -100,14 +100,11 @@ class SyncData
   end
 
 
-  # last_post = DateTime.now.beginning_of_day
-  # end_post = last_post.end_of_day
   # SyncData.sync_all_absents DateTime.now.beginning_of_day
   def self.sync_all_absents sync_date
     url = @@hostname+"/api/post/trx"
     puts "START: " + sync_date.to_s
-    end_post = sync_date.end_of_day
-    end_post = DateTime.now-5.minutes if sync_date.to_date == DateTime.now.to_date
+    end_post = DateTime.now
     puts "END: " + end_post.to_s
     puts "-----------------------------"
     get_data 
@@ -203,7 +200,9 @@ class SyncData
     sec = ((raw_min - raw_min.to_i)*60).to_i.to_s
     return hour+":"+minute+":"+sec
   end
-  
+
+  # last_post = DateTime.now.beginning_of_day
+  # end_post = last_post.end_of_day
   # SyncData.post_local_data_daily last_post, end_post
   def self.post_local_data_daily last_post, end_post
     store = Transaction.last.store
