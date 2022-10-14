@@ -100,7 +100,7 @@ class SyncData
   end
 
 
-  # SyncData.sync_all_absents DateTime.now.beginning_of_day
+  # SyncData.sync_all_absents DateTime.now.beginning_of_day - 6.month
   def self.sync_all_absents sync_date
     url = @@hostname+"/api/post/trx"
     puts "START: " + sync_date.to_s
@@ -162,7 +162,7 @@ class SyncData
       date_time = data["waktu"]
       next if date_time.to_date != DateTime.now.to_date
       absent = Absent.find_by("DATE(check_in) = ? AND user_id = ?", DateTime.now.to_date, user.id)
-      absent = Absent.create user: user, check_in: date_time if absent.nil? && check_type == "0"
+      absent = Absent.create user: user, check_in: date_time, store: user.store if absent.nil? && check_type == "0"
       if check_type == "0"
         next if absent.check_in.present?
         absent.check_in = date_time

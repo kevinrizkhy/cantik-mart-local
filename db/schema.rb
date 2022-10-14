@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_10_04_044030) do
+ActiveRecord::Schema.define(version: 2022_10_14_115630) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,6 +25,8 @@ ActiveRecord::Schema.define(version: 2022_10_04_044030) do
     t.string "overtime_hour", default: "0:0:0"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "store_id"
+    t.index ["store_id"], name: "index_absents_on_store_id"
     t.index ["user_id"], name: "index_absents_on_user_id"
   end
 
@@ -736,6 +738,7 @@ ActiveRecord::Schema.define(version: 2022_10_04_044030) do
     t.index ["exchange_point_id"], name: "index_vouchers_on_exchange_point_id"
   end
 
+  add_foreign_key "absents", "stores"
   add_foreign_key "absents", "users"
   add_foreign_key "assets", "stores"
   add_foreign_key "assets", "users"
