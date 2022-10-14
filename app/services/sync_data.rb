@@ -82,7 +82,7 @@ class SyncData
 
     store = Transaction.last.store
 
-    post_local_data_daily sync_date, end_post
+    post_local_data_daily sync_date, end_post, nil
     if sync_date.to_date == DateTime.now.to_date
       store.last_post = end_post 
       store.save!
@@ -97,6 +97,49 @@ class SyncData
     end
     puts "UPDATE DATA SUCCESS ! " + end_post.to_s
     puts "-----------------------------"
+  end
+
+  # SyncData.sync_all_absents DateTime.now.beginning_of_day
+  def self.sync_all_absents sync_date
+    url = @@hostname+"/api/post/trx"
+    puts "START: " + sync_date.to_s
+    end_post = sync_date.end_of_day
+    end_post = DateTime.now-5.minutes if sync_date.to_date == DateTime.now.to_date
+    puts "END: " + end_post.to_s
+    puts "-----------------------------"
+    get_data 
+
+    string_data = "[]"
+    encrypted_data = Base64.encode64(string_data)
+    members_data = Member.where(updated_at: sync_date..end_post).to_json.to_s
+    encrypted_data2 = Base64.encode64(members_data)
+    absents_data = Absent.where(updated_at: sync_date..end_post).to_json.to_s
+    encrypted_data3 = Base64.encode64(absents_data)
+    puts "--> HEXING"
+    b = []
+    b << SecureRandom.hex(1)
+    b << encrypted_data
+    b << SecureRandom.hex(1)
+    b << encrypted_data2
+    b << SecureRandom.hex(1)
+    b << encrypted_data3
+    b << SecureRandom.hex(1)
+    puts "--> POST"
+    uri = URI(url)
+    req = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
+    req.body = {trxs: b}.to_json
+    begin
+      res = Net::HTTP.start(uri.hostname, uri.port) do |http|
+        http.request(req)
+        store.last_post = end_post
+        store.save!
+        puts "--> POST DONE"
+      end
+      return true
+    rescue
+      puts "TIDAK ADA INTERNET"
+      return false
+    end
   end
 
 
@@ -160,10 +203,11 @@ class SyncData
     return hour+":"+minute+":"+sec
   end
 
-  def self.post_local_data_daily last_post, end_post
+  # last_post = DateTime.now.beginning_of_day
+  # end_post = last_post.end_of_day
+  # SyncData.post_local_data_daily last_post, end_post
+  def self.post_local_data_daily last_post, end_post, method_name
     store = Transaction.last.store
-
-    url = @@hostname+"/api/post/trx"
 
     post_trx_data = Transaction.where(updated_at: last_post..end_post)
     datas = []
