@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   include Clearance::Controller
   include PublicActivity::StoreController 
-  before_action :screening
+  # before_action :screening
 
   @@last_post = nil
   @@last_update = nil
