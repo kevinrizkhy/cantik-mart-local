@@ -7,7 +7,7 @@
       <meta http-equiv=“CACHE-CONTROL” content=”NO-CACHE”>
       <title>CANTIK MART </title>
 
-      <link rel="stylesheet" href="/assets/css/cashier.css">
+      <!-- <link rel="stylesheet" href="/assets/css/cashier.css"> -->
 
       <%= stylesheet_link_tag '/dist/css/semantic.min.css' %>
       <%= stylesheet_link_tag '/dist/css/font-awesome.min.css' %>
@@ -630,13 +630,19 @@
 
 
          function updateTable(result_arr){
+           if (result_arr.length == 0){
+            alert("BARANG TIDAK DITEMUKAN.")
+            document.getElementById("itemId").value = "";
+            document.getElementById("item_qty").value = 1;
+            document.getElementById("itemId").focus();
+            return;
+           }
            var table = $('#itemList').DataTable();
            var result = result_arr[0];
            var qty = parseFloat(qtyInput.value);
            var total = parseInt(parseFloat(qty) * (parseFloat(result[3]) - parseFloat(result[4])));
            total = Math.round(total);
            var code= result[0];
-
            if (table.rows().count()<1) {
             var dataSet = [code, result[1], result[2], qty, result[3], result[4], total, idx];
             idx+=1;
