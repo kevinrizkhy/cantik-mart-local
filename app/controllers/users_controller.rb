@@ -2,7 +2,6 @@ class UsersController < ApplicationController
   before_action :require_login
   before_action :require_fingerprint
   def index
-    SyncData.sync_now
     @users = User.page param_page
     if params[:search].present?
       @search = params[:search].downcase
