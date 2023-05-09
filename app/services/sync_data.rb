@@ -268,7 +268,7 @@ class SyncData
     data_keys.each do |key|
       datas = data[key]
       datas.each do |new_data|
-        sync_data key, new_data
+        sync_data(key, new_data)
       end
     end
     store.last_update = end_post
@@ -280,14 +280,17 @@ class SyncData
     data["edited_by"] = nil
     begin
       if key == "users"
-        user = User.find_by(id: data["id"])
-        data.delete("password")
-        puts "-------------------------> " + user.id.to_s + " / " + user.name
+        user = User.find_by(id: data["id"].to_s)
+        data.delete("edited_by")
+        data.delete("encrypted_password")
         if user.present?
+          data.delete("id")
           user.assign_attributes data
-          user.save! 
+          user.save!
         else
-          User.create data
+          user = User.new data
+          user.password = "cantikmart"
+          user.save!
         end 
       elsif key=="members"
         member = Member.find_by(card_number: data["card_number"])
@@ -367,7 +370,7 @@ class SyncData
       elsif key=="grocers"
           GrocerItem.create data
       end
-    rescue Exception
+    rescue =>e
       puts key
       puts "_________________________"
       puts data
