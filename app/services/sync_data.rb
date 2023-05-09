@@ -281,10 +281,10 @@ class SyncData
     begin
       if key == "users"
         user = User.find_by(id: data["id"])
-        data["password"] = "admin123"
+        data.delete("password")
         if user.present?
           user.assign_attributes data
-          user.save! if user.changed?
+          user.save! 
         else
           User.create data
         end 
