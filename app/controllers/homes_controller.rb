@@ -5,7 +5,7 @@ class HomesController < ApplicationController
   def index
     @last_backup = Backup.last
     gon.store_id = Transaction.last.store.id
-    SyncData.check_new_data_daily DateTime.now.beginning_of_day, DateTime.now.end_of_day
+    # SyncData.check_new_data_daily DateTime.now.beginning_of_day, DateTime.now.end_of_day
   end
 
   def sync_daily
