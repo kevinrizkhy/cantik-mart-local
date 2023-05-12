@@ -5,6 +5,7 @@ class HomesController < ApplicationController
   def index
     @last_backup = Backup.last
     gon.store_id = Transaction.last.store.id
+    @absents = Absent.where("created_at > ?", DateTime.now.beginning_of_day )
     # SyncData.check_new_data_daily DateTime.now.beginning_of_day, DateTime.now.end_of_day
   end
 
@@ -16,7 +17,23 @@ class HomesController < ApplicationController
       SyncData.sync_daily sync_date
     }
     return redirect_success root_path, "Sinkronisasi ( " + sync_date.to_date.to_s + " ) sedang berjalan."
-  
+  end
+
+  def get_fingerprint
+    Thread.start{
+      SyncData.get_data
+    }
+    return redirect_success root_path, "Pengambilan data absensi sedang berjalan."
+  end
+
+  def delete_fingerprint
+    Thread.start{
+      2.times do 
+        SyncData.get_data
+      end
+      SyncData.delete_data
+    }
+    return redirect_success root_path, "Pengambilan data absesni sedang berjalan."
   end
 
   def update_store

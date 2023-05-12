@@ -140,7 +140,21 @@ class SyncData
     end
   end
 
+  def self.delete_data
+    url = URI.parse('http://localhost/deleteData.php')
+    req = Net::HTTP::Get.new(url.to_s)
+    res = Net::HTTP.start(url.host, url.port) {|http|
+      http.request(req)
+    }
 
+    return false if res.code == "404"
+    
+    return false if res.body.include? "Gagal"
+
+    return "DATA FINGERPRINT TELAH DIHAPUS"
+  end
+
+  # SyncData.get_data
   def self.get_data
     url = URI.parse('http://localhost/getData.php')
     req = Net::HTTP::Get.new(url.to_s)
@@ -160,33 +174,36 @@ class SyncData
       next if user.nil?
       check_type = data["status"]
       date_time = data["waktu"]
-      next if date_time.to_date != DateTime.now.to_date
-      absent = Absent.find_by("DATE(check_in) = ? AND user_id = ?", DateTime.now.to_date, user.id)
-      absent = Absent.create user: user, check_in: date_time, store: Transaction.last.store if absent.nil? && check_type == "0"
-      if check_type == "0"
-        next if absent.check_in.present?
-        absent.check_in = date_time
-        work_hours = calculate_work_hour absent.check_in, absent.check_out
-        absent.work_hour = work_hours
+      
+      # 11 Mei check in
+      # 12 Mei check in
+      # 12 Mei check out
+      absent = checkAbsent user, check_type, date_time
+      next if absent.present?
+
+      if absent.nil? && check_type == "0"
+        absent = Absent.create user: user, check_in: date_time, store: Transaction.last.store, work_hour: "0:0:0", overtime_hour: "0:0:0" 
       elsif check_type == "1"
-        next if absent.check_out.present? || absent.check_in.nil?
+        absent = Absent.find_by("DATE(check_in) = ? AND user_id = ?", date_time.to_date, user.id) if absent.nil?
+        next if absent.nil?
         absent.check_out = date_time
         work_hours = calculate_work_hour absent.check_in, absent.check_out
         absent.work_hour = work_hours
-      elsif check_type == "4"
-        next if absent.overtime_in.present? || absent.check_out.nil?
-        absent.overtime_in = date_time
-        work_hours = calculate_work_hour absent.overtime_in, absent.overtime_out
-        absent.overtime_hour = work_hours
-      elsif check_type == "5"
-        next if absent.overtime_out.present? || absent.overtime_in.nil?
-        absent.overtime_out = date_time
-        work_hours = calculate_work_hour absent.overtime_in, absent.overtime_out
-        absent.overtime_hour = work_hours
       end
       absent.save!
     end
     return true
+  end
+
+  def self.checkAbsent user, absent_type, date_time
+    absent = nil
+    if absent_type == "0"
+      absent = Absent.find_by(user: user, check_in: date_time)
+    elsif absent_type == "1"
+      absent = Absent.find_by(user: user, check_out: date_time)
+    end
+
+    return absent
   end
 
   def self.calculate_work_hour check_in, check_out

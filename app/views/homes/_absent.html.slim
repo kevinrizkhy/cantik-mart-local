@@ -1,0 +1,23 @@
+- have_sync_access = false
+- have_sync_access = true if current_user.store.id == Transaction.last.store.id
+- if have_sync_access
+	.row
+		.col.text-center
+			a href="#{delete_fingerprint_path}" class="btn btn-danger"
+			  | HAPUS DATA 
+		.col.text-center
+			a href="#{get_fingerprint_path}" class="btn btn-dark"
+			  | TARIK DATA
+			  
+hr
+table class="table"
+	thead
+		th Nama
+		th Masuk
+		th Keluar
+	tbody
+		- @absents.each do |absent|
+			tr
+				td #{absent.user.name}
+				td #{absent.check_in}
+				td #{absent.check_out}

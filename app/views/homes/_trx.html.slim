@@ -1,0 +1,51 @@
+- have_sync_access = false
+- have_sync_access = true if current_user.store.id == Transaction.last.store.id
+- if ["super_visi", "super_admin", "finance"].include? current_user.level
+
+	.row.py-3.pl-4
+		h4
+		.col
+			.row
+				.col
+					h4 POST Terakhir : 
+				.col.text-right
+					h4 
+						b #{Transaction.last.store.last_post.strftime("%d/%m/%Y   %H:%M:%S")}
+			.row
+				.col
+					h4 UPDATE Terakhir : 
+				.col.text-right
+					h4
+						b #{Transaction.last.store.last_update.strftime("%d/%m/%Y   %H:%M:%S")}								
+
+
+	- if have_sync_access
+		= form_for :home, url: sync_daily_path, method: "POST" do |form|
+			.row.py-3.pl-4
+				.col-12
+					h4
+						b SYNC DAILY
+				.col-6
+					label Pilih Tanggal Sync
+					input type="date" class="form-control md-form" value="#{(Date.today-1.day).strftime("%m/%d/%Y")}" name="sync_date" required=true id="sync_date" onchange="getTotalCurrDate(this)"
+
+					h6 id="trx_count" Jumlah TRX : -
+					h6 id="trx_total" Nominal TRX : -
+					br
+					h6 id="trx_cloud_count" Jumlah TRX Pusat: -
+					h6 id="trx_cloud_total" Nominal TRX Pusat: -
+					h6 id="retur" 
+
+				.col-6.text-center
+					button.btn.btn-warning id="daily_sync_button" style="display: none;"
+					  | SYNC DAILY
+					br
+					br
+					br
+					h6.text-danger id="notice_sync" style="display: none;"
+						| SILAHKAN MELAKUKAN SYNC
+
+					h6.text-success id="notice_not_sync" style="display: none;"
+						| DATA TELAH SAMA DENGAN PUSAT
+
+

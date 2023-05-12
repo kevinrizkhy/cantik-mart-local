@@ -1,14 +1,14 @@
 - if (@last_backup.created.to_date + 6.days) == Date.today
-	- if ["super_visi", "super_admin", "owner"].include?  current_user.level
-	  .alert.alert-warning
-	    h4.alert-heading 
-	    	b PERINGATAN
-	    p Segera melakukan backup bulanan
-	    hr
-	    p 
-	    	| Backup terakhir 
-	    	b 
-	    		u #{@last_backup.created.strftime("%d/%m/%Y %H:%M:%S")}
+  - if ["super_visi", "super_admin", "owner"].include?  current_user.level
+    .alert.alert-warning
+      h4.alert-heading 
+        b PERINGATAN
+      p Segera melakukan backup bulanan
+      hr
+      p 
+        | Backup terakhir 
+        b 
+          u #{@last_backup.created.strftime("%d/%m/%Y %H:%M:%S")}
 
 - trx =  Transaction.where("created_at >= ? AND created_at <= ?", DateTime.now.beginning_of_day, DateTime.now.end_of_day).where(user: current_user)
 - trx_total = trx.sum(:grand_total)
@@ -18,92 +18,48 @@
 - have_sync_access = false
 - have_sync_access = true if current_user.store.id == Transaction.last.store.id
 
-	
 - if have_sync_access
-	.row
-		.col.text-center
-			a href="#{new_transaction_path}" class="btn btn-primary"
-			  | MENU KASIR
-		.col.text-center
-			a href="#{sync_now_path}" class="btn btn-warning"
-			  | Sync
-		- store_name = current_user.store.name
-		.col.text-center
-			button.btn.btn-success onclick="printShift('#{trx_total.to_i}', '#{current_user.name.upcase}', '#{DateTime.now.strftime("%d/%m/%Y %H:%M:%S")}', #{cash.to_i}, #{debit.to_i}, '#{jumlah_trx.to_i}', '#{current_user.store.id}' , '#{store_name}' )"
-			  | CETAK PENJUALAN
+  .row
+    .col.text-center
+      a href="#{new_transaction_path}" class="btn btn-primary"
+        | MENU KASIR
+    .col.text-center
+      a href="#{sync_now_path}" class="btn btn-warning"
+        | SYNC GLOBAL
+    - store_name = current_user.store.name
+    .col.text-center
+      button.btn.btn-success onclick="printShift('#{trx_total.to_i}', '#{current_user.name.upcase}', '#{DateTime.now.strftime("%d/%m/%Y %H:%M:%S")}', #{cash.to_i}, #{debit.to_i}, '#{jumlah_trx.to_i}', '#{current_user.store.id}' , '#{store_name}' )"
+        | CETAK PENJUALAN
 
-	- if !have_sync_access
-		br
-		h8.text-danger
-			| Status akun anda tidak berada di toko ini, silahkan menghubungi ADMIN untuk mengubah status toko anda.
+  - if !have_sync_access
+    br
+    h8.text-danger
+      | Status akun anda tidak berada di toko ini, silahkan menghubungi ADMIN untuk mengubah status toko anda.
+
 br
-hr
-br
+  
+.classic-tabs.mx-2
+  ul#myClassicTabOrange.nav.tabs-blue role="tablist" 
+    li.nav-item
+      a#profile-tab-classic-blue.nav-link.waves-light.active.show aria-controls="trx" aria-selected="true" data-toggle="tab" href="#trx" role="tab" 
+        i.fa.fa-sync.fa-2x.pb-2 aria-hidden="true" 
+        br
+        | SYNC 
 
-.section.mb-5
-  .card.card-cascade.narrower
-    .section
-      .row
-        .col-xl-12.col-lg-12.mr-0.pb-2
-          .view.view-cascade.gradient-card-header.light-blue.lighten-1
-            h2.h2-responsive.mb-0.font-weight-500 SYNCHRONIZATION
-          .card-body.card-body-cascade.pb-0
-						- if ["super_visi", "super_admin"].include? current_user.level
-							.row.py-3.pl-4
-								h4
-								.col
-									.row
-										.col
-											h4 POST Terakhir : 
-										.col
-											h4 
-												b #{Transaction.last.store.last_post.strftime("%d/%m/%Y   %H:%M:%S")}
-									.row
-										.col
-											h4 UPDATE Terakhir : 
-										.col
-											h4
-												b #{Transaction.last.store.last_update.strftime("%d/%m/%Y   %H:%M:%S")}
-
-								- if have_sync_access
-									/ .col
-										= form_for :home, url: update_store_path, method: "POST" do |form|
-											.row
-												.col-12
-													label Ubah Tanggal 
-													input type="date" class="form-control md-form" value="#{(Date.today-1.day).strftime("%m/%d/%Y")}" name="new_date" required=true
-												.col-12.text-center
-														button.btn.btn-danger
-														  | UBAH
-
-							
+    - if ["super_visi", "super_admin", "developer", "finance"].include? current_user.level
+      li.nav-item
+        a#profile-tab-classic-blue.nav-link.waves-light aria-controls="data" aria-selected="true" data-toggle="tab" href="#data" role="tab" 
+          i.fa.fa-users.fa-2x.pb-2 aria-hidden="true" 
+          br
+          | ABSENT 
 
 
-							- if have_sync_access
-								= form_for :home, url: sync_daily_path, method: "POST" do |form|
-									.row.py-3.pl-4
-										.col-12
-											h4
-												b SYNC DAILY
-										.col-6
-											label Pilih Tanggal Sync
-											input type="date" class="form-control md-form" value="#{(Date.today-1.day).strftime("%m/%d/%Y")}" name="sync_date" required=true id="sync_date" onchange="getTotalCurrDate(this)"
 
-											h6 id="trx_count" Jumlah TRX : -
-											h6 id="trx_total" Nominal TRX : -
-											br
-											h6 id="trx_cloud_count" Jumlah TRX Pusat: -
-											h6 id="trx_cloud_total" Nominal TRX Pusat: -
-											h6 id="retur" 
+  #myClassicTabContentOrange.tab-content.card
+    #trx.tab-pane.fade.active.show aria-labelledby="profile-tab-classic-blue" role="tabpanel" 
+      = render partial: 'trx'
 
-										.col-6.text-center
-											button.btn.btn-warning id="daily_sync_button" style="display: none;"
-											  | SYNC DAILY
-											br
-											br
-											br
-											h6.text-danger id="notice_sync" style="display: none;"
-												| SILAHKAN MELAKUKAN SYNC
-
-											h6.text-success id="notice_not_sync" style="display: none;"
-												| DATA TELAH SAMA DENGAN PUSAT
+    - if ["super_visi", "super_admin", "developer", "finance"].include? current_user.level
+      
+      #data.tab-pane.fade aria-labelledby="profile-tab-classic-blue" role="tabpanel" 
+          = render partial: 'absent'

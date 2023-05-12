@@ -46,6 +46,8 @@ Rails.application.routes.draw do
   resources :backups
 
   get "/sync/now", to:"homes#sync", as: 'sync_now'
+  get "/sync/fingerprint", to:"homes#get_fingerprint", as: 'get_fingerprint'
+  get "/delete/fingerprint", to:"homes#delete_fingerprint", as: 'delete_fingerprint'
 
   post "/sync/update_store", to:"homes#update_store", as: 'update_store'
 
