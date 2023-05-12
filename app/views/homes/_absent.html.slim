@@ -9,15 +9,15 @@
 			a href="#{get_fingerprint_path}" class="btn btn-dark"
 			  | TARIK DATA
 			  
-hr
-table class="table"
-	thead
-		th Nama
-		th Masuk
-		th Keluar
-	tbody
-		- @absents.each do |absent|
-			tr
-				td #{absent.user.name}
-				td #{absent.check_in}
-				td #{absent.check_out}
+	hr
+	table class="table"
+		thead
+			th Nama
+			th Masuk
+			th Keluar
+		tbody
+			- @absents.each do |absent|
+				tr
+					td #{absent.user.name}
+					td #{absent.check_in}
+					td #{absent.check_out}

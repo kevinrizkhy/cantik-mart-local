@@ -1,7 +1,6 @@
 - have_sync_access = false
 - have_sync_access = true if current_user.store.id == Transaction.last.store.id
-- if ["super_visi", "super_admin", "finance"].include? current_user.level
-
+- if have_sync_access && (["super_visi", "super_admin", "finance"].include? current_user.level)
 	.row.py-3.pl-4
 		h4
 		.col
@@ -47,5 +46,18 @@
 
 					h6.text-success id="notice_not_sync" style="display: none;"
 						| DATA TELAH SAMA DENGAN PUSAT
+
+- else
+  	br
+  	h3.text-danger.text-center
+	    b 
+	    	| Status 
+	    	u akun anda 
+	    	| tidak berada di toko ini.
+	    	br
+	    	| Silahkan menghubungi 
+	    	u ADMIN 
+	    	| untuk mengubah status toko anda.
+   	br
 
 

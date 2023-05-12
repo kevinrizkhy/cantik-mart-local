@@ -31,10 +31,7 @@
       button.btn.btn-success onclick="printShift('#{trx_total.to_i}', '#{current_user.name.upcase}', '#{DateTime.now.strftime("%d/%m/%Y %H:%M:%S")}', #{cash.to_i}, #{debit.to_i}, '#{jumlah_trx.to_i}', '#{current_user.store.id}' , '#{store_name}' )"
         | CETAK PENJUALAN
 
-- if !have_sync_access
-  br
-  h8.text-danger
-    | Status akun anda tidak berada di toko ini, silahkan menghubungi ADMIN untuk mengubah status toko anda.
+
 
 br
   
