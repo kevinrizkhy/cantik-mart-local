@@ -1,6 +1,26 @@
+- trx =  Transaction.where("created_at >= ? AND created_at <= ?", DateTime.now.beginning_of_day, DateTime.now.end_of_day).where(user: current_user)
+- trx_total = trx.sum(:grand_total)
+- cash = trx.where(payment_type: "CASH").sum(:grand_total)
+- debit = trx.where(payment_type: "DEBIT").sum(:grand_total)
+- jumlah_trx = trx.count
 - have_sync_access = false
 - have_sync_access = true if current_user.store.id == Transaction.last.store.id
+
+
 - if have_sync_access && (["super_visi", "super_admin", "finance"].include? current_user.level)
+
+	.row
+	    .col.text-center
+	      a href="#{new_transaction_path}" class="btn btn-primary"
+	        | MENU KASIR
+	    .col.text-center
+	      a href="#{sync_now_path}" class="btn btn-warning"
+	        | SYNC GLOBAL
+	    - store_name = current_user.store.name
+	    .col.text-center
+	      button.btn.btn-success onclick="printShift('#{trx_total.to_i}', '#{current_user.name.upcase}', '#{DateTime.now.strftime("%d/%m/%Y %H:%M:%S")}', #{cash.to_i}, #{debit.to_i}, '#{jumlah_trx.to_i}', '#{current_user.store.id}' , '#{store_name}' )"
+	        | CETAK PENJUALAN
+	hr
 	.row.py-3.pl-4
 		h4
 		.col

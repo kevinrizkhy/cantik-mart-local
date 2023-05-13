@@ -1,0 +1,40 @@
+STOCK
+
+1. Manual -> gabisa tau stock awal brapa
+
+2. Dikasi checkpoint disetiap item 
+	- tanggal last SO
+	- stok saat SO
+	- diupload oleh
+	- nama file
+
+3. Setiap bulan update checkpoint
+	- bisa tarik data per saat itu juga
+		-> misal 15Mei : sum 3 toko (StockApril + Order - Retur - Penjualan)
+	- auto generate XLSX per tanggal 1  
+		- stock global -> 20kb
+		- stock per toko -> 20kb * 3
+		- stock per departemen -> 10kb * jumlah departemen
+		- stock per toko per departemen -> 10kb * Jumlah departemen * 3
+
+
+
+$Connect = fsockopen($IP, "80", $errno, $errstr, 1);
+    if ($Connect) {
+      $soap_request = "<ClearData>
+        <ArgComKey xsi:type=\"xsd:integer\">".$Key."</ArgComKey>
+        <Arg><Value xsi:type=\"xsd:integer\">3</Value></Arg>
+      </ClearData>";
+
+      $newLine = "\r\n";
+      fputs($Connect, "POST /iWsService HTTP/1.0".$newLine);
+      fputs($Connect, "Content-Type: text/xml".$newLine);
+      fputs($Connect, "Content-Length: ".strlen($soap_request).$newLine.$newLine);
+      fputs($Connect, $soap_request.$newLine);
+      $buffer = "";
+      while($Response = fgets($Connect, 1024)) {
+        $buffer = $buffer.$Response;
+      }
+    } else echo "Koneksi Gagal";
+
+[{"pin":"","waktu":"","status":""},{"pin":"39","waktu":"2023-05-12 21:28:58","status":"1"},{"pin":"67","waktu":"2023-05-12 21:29:16","status":"1"},{"pin":"23","waktu":"2023-05-12 21:29:37","status":"1"},{"pin":"23","waktu":"2023-05-13 06:21:39","status":"0"},{"pin":"39","waktu":"2023-05-13 06:22:01","status":"0"},{"pin":"19","waktu":"2023-05-13 06:26:02","status":"0"},{"pin":"2","waktu":"2023-05-13 06:57:11","status":"0"},{"pin":"8","waktu":"2023-05-13 07:05:18","status":"0"},{"pin":"6","waktu":"2023-05-13 07:06:24","status":"0"},{"pin":"","waktu":"","status":""}]

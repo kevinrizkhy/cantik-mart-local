@@ -1,15 +1,8 @@
 - have_sync_access = false
 - have_sync_access = true if current_user.store.id == Transaction.last.store.id
 - if have_sync_access
-	.row
-		.col.text-center
-			a href="#{delete_fingerprint_path}" class="btn btn-danger"
-			  | HAPUS DATA 
-		.col.text-center
-			a href="#{get_fingerprint_path}" class="btn btn-dark"
-			  | TARIK DATA
-			  
-	hr
+	h4.text-right 
+		b #{Date.today}
 	table class="table"
 		thead
 			th Nama
@@ -19,5 +12,17 @@
 			- @absents.each do |absent|
 				tr
 					td #{absent.user.name}
-					td #{absent.check_in}
-					td #{absent.check_out}
+					td #{absent.check_in.strftime("%H:%M:%S")}
+					td 
+						- if absent.check_out.present?
+							| #{absent.check_out.strftime("%H:%M:%S")}
+
+
+	.row
+		.col.text-center
+			a href="#{delete_fingerprint_path}" class="btn btn-danger"
+			  | HAPUS DATA 
+		.col.text-center
+			a href="#{get_fingerprint_path}" class="btn btn-dark"
+			  | TARIK DATA
+			  
