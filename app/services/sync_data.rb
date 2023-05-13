@@ -146,11 +146,8 @@ class SyncData
     res = Net::HTTP.start(url.host, url.port) {|http|
       http.request(req)
     }
-
     return false if res.code == "404"
-    
     return false if res.body.include? "Gagal"
-
     return "DATA FINGERPRINT TELAH DIHAPUS"
   end
 
@@ -161,11 +158,8 @@ class SyncData
     res = Net::HTTP.start(url.host, url.port) {|http|
       http.request(req)
     }
-
     return false if res.code == "404"
-    
     return false if res.body.include? "Gagal"
-
     datas = JSON.parse(res.body)
     datas.each_with_index do |data, index|
       next if data==datas.first || data==datas.last
@@ -174,13 +168,8 @@ class SyncData
       next if user.nil?
       check_type = data["status"]
       date_time = data["waktu"]
-      
-      # 11 Mei check in
-      # 12 Mei check in
-      # 12 Mei check out
       absent = checkAbsent user, check_type, date_time
       next if absent.present?
-
       if absent.nil? && check_type == "0"
         absent = Absent.create user: user, check_in: date_time, store: Transaction.last.store, work_hour: "0:0:0", overtime_hour: "0:0:0" 
       elsif check_type == "1"
