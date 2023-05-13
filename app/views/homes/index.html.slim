@@ -1,5 +1,5 @@
 - have_sync_access = false
-- have_sync_access = true if current_user.store.id == Transaction.last.store.id
+- have_sync_access = (["super_visi", "super_admin", "finance", "developer"].include? current_user.level)
 
 - if have_sync_access
   - if (@last_backup.created.to_date + 6.days) <= Date.today
@@ -16,7 +16,7 @@
 .classic-tabs.mx-2
   ul#myClassicTabOrange.nav.tabs-blue role="tablist" 
     li.nav-item
-      a#profile-tab-classic-blue.nav-link.waves-light.active.show aria-controls="trx" aria-selected="true" data-toggle="tab" href="#trx" role="tab" 
+      a#profile-tab-classic-blue.nav-link.waves-light.active.show aria-controls="sync" aria-selected="true" data-toggle="tab" href="#sync" role="tab" 
         i.fa.fa-sync.fa-2x.pb-2 aria-hidden="true" 
         br
         | SYNC 
@@ -31,8 +31,8 @@
 
 
   #myClassicTabContentOrange.tab-content.card
-    #trx.tab-pane.fade.active.show aria-labelledby="profile-tab-classic-blue" role="tabpanel" 
-      = render partial: 'trx'
+    #sync.tab-pane.fade.active.show aria-labelledby="profile-tab-classic-blue" role="tabpanel" 
+      = render partial: 'sync'
 
     - if ["super_visi", "super_admin", "developer", "finance"].include? current_user.level
       

@@ -7,8 +7,7 @@
 - have_sync_access = true if current_user.store.id == Transaction.last.store.id
 
 
-- if have_sync_access && (["super_visi", "super_admin", "finance"].include? current_user.level)
-
+- if have_sync_access 
 	.row
 	    .col.text-center
 	      a href="#{new_transaction_path}" class="btn btn-primary"
@@ -37,8 +36,9 @@
 					h4
 						b #{Transaction.last.store.last_update.strftime("%d/%m/%Y   %H:%M:%S")}								
 
+ 
+	- if(["super_visi", "super_admin", "finance", "developer"].include? current_user.level)
 
-	- if have_sync_access
 		= form_for :home, url: sync_daily_path, method: "POST" do |form|
 			.row.py-3.pl-4
 				.col-12
