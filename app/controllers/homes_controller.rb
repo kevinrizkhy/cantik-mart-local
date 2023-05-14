@@ -5,8 +5,10 @@ class HomesController < ApplicationController
   def index
     @last_backup = Backup.last
     gon.store_id = Transaction.last.store.id
-    @absents = Absent.where("check_in >= ?", DateTime.now.beginning_of_day )
-    @absents = @absents.where(user: current_user) if !["super_admin","super_visi", "owner", "finance"].include? current_user.level
+    start_date = DateTime.now.beginning_of_month
+    end_date = start_date.end_of_month
+    @absents = Absent.where(user: current_user, check_in: start_date..end_date) 
+    
     # SyncData.check_new_data_daily DateTime.now.beginning_of_day, DateTime.now.end_of_day
   end
 

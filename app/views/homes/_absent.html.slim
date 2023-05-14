@@ -1,28 +1,25 @@
 - have_sync_access = false
 - have_sync_access = true if current_user.store.id == Transaction.last.store.id
-- if have_sync_access
-	h4.text-right 
-		b #{Date.today}
-	table class="table"
-		thead
-			th Nama
-			th Masuk
-			th Keluar
-		tbody
-			- @absents.each do |absent|
-				tr
-					td #{absent.user.name}
-					td #{absent.check_in.strftime("%H:%M:%S")}
-					td 
-						- if absent.check_out.present?
-							| #{absent.check_out.strftime("%H:%M:%S")}
 
 
-	.row
-		.col.text-center
-			a href="#{delete_fingerprint_path}" class="btn btn-danger"
-			  | HAPUS DATA 
-		.col.text-center
-			a href="#{get_fingerprint_path}" class="btn btn-dark"
-			  | TARIK DATA
-			  
+.row
+	.col
+		h5 
+			b DATA ABSENSI
+	.col.text-right 
+			h5
+				b #{Date.today.strftime("%b %Y")}
+
+hr
+table class="table"
+	thead
+		th Masuk
+		th Keluar
+	tbody
+		- @absents.each do |absent|
+			tr
+				td #{absent.check_in.strftime("%d/%m/%Y  %H:%M:%S")}
+				td #{absent.check_out.strftime("%d/%m/%Y  %H:%M:%S")}
+
+
+				  

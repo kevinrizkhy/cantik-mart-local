@@ -1,25 +1,7 @@
-- trx =  Transaction.where("created_at >= ? AND created_at <= ?", DateTime.now.beginning_of_day, DateTime.now.end_of_day).where(user: current_user)
-- trx_total = trx.sum(:grand_total)
-- cash = trx.where(payment_type: "CASH").sum(:grand_total)
-- debit = trx.where(payment_type: "DEBIT").sum(:grand_total)
-- jumlah_trx = trx.count
 - have_sync_access = false
 - have_sync_access = true if current_user.store.id == Transaction.last.store.id
 
-
-- if have_sync_access 
-	.row
-	    .col.text-center
-	      a href="#{new_transaction_path}" class="btn btn-primary"
-	        | MENU KASIR
-	    .col.text-center
-	      a href="#{sync_now_path}" class="btn btn-warning"
-	        | SYNC GLOBAL
-	    - store_name = current_user.store.name
-	    .col.text-center
-	      button.btn.btn-success onclick="printShift('#{trx_total.to_i}', '#{current_user.name.upcase}', '#{DateTime.now.strftime("%d/%m/%Y %H:%M:%S")}', #{cash.to_i}, #{debit.to_i}, '#{jumlah_trx.to_i}', '#{current_user.store.id}' , '#{store_name}' )"
-	        | CETAK PENJUALAN
-	hr
+- if have_sync_access
 	.row.py-3.pl-4
 		h4
 		.col
@@ -37,7 +19,7 @@
 						b #{Transaction.last.store.last_update.strftime("%d/%m/%Y   %H:%M:%S")}								
 
  
-	- if(["super_visi", "super_admin", "finance", "developer"].include? current_user.level)
+	- if (["super_visi", "super_admin", "finance", "developer"].include? current_user.level)
 
 		= form_for :home, url: sync_daily_path, method: "POST" do |form|
 			.row.py-3.pl-4
@@ -66,6 +48,20 @@
 
 					h6.text-success id="notice_not_sync" style="display: none;"
 						| DATA TELAH SAMA DENGAN PUSAT
+
+
+		hr
+
+		.row
+			.col-12.text-center
+				h5 SYNC ABSENSI
+				hr
+			.col.text-center
+				a href="#{delete_fingerprint_path}" class="btn btn-danger"
+				  | HAPUS DATA 
+			.col.text-center
+				a href="#{get_fingerprint_path}" class="btn btn-dark"
+				  | TARIK DATA
 
 - else
   	br

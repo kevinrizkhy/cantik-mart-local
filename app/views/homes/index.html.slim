@@ -1,40 +1,32 @@
-- have_sync_access = false
-- have_sync_access = (["super_visi", "super_admin", "finance", "developer"].include? current_user.level)
 
-- if have_sync_access
-  - if (@last_backup.created.to_date + 6.days) <= Date.today
-    .alert.alert-warning
-      h4.alert-heading 
-        b PERINGATAN
-      p Segera melakukan backup mingguan
-      hr
-      p 
-        | Backup terakhir 
-        b 
-          u #{@last_backup.created.strftime("%d/%m/%Y %H:%M:%S")}
   
 .classic-tabs.mx-2
   ul#myClassicTabOrange.nav.tabs-blue role="tablist" 
     li.nav-item
-      a#profile-tab-classic-blue.nav-link.waves-light.active.show aria-controls="sync" aria-selected="true" data-toggle="tab" href="#sync" role="tab" 
+      a#profile-tab-classic-blue.nav-link.waves-light.active.show aria-controls="trxs" aria-selected="true" data-toggle="tab" href="#trxs" role="tab" 
+        i.fa.fa-shopping-cart.fa-2x.pb-2 aria-hidden="true" 
+        br
+        | TRANSAKSI 
+    li.nav-item
+      a#profile-tab-classic-blue.nav-link.waves-light aria-controls="sync" aria-selected="true" data-toggle="tab" href="#sync" role="tab" 
         i.fa.fa-sync.fa-2x.pb-2 aria-hidden="true" 
         br
         | SYNC 
 
-    - if ["super_visi", "super_admin", "developer", "finance"].include? current_user.level
-      li.nav-item
-        a#profile-tab-classic-blue.nav-link.waves-light aria-controls="data" aria-selected="true" data-toggle="tab" href="#data" role="tab" 
-          i.fa.fa-users.fa-2x.pb-2 aria-hidden="true" 
-          br
-          | ABSENT 
+    li.nav-item
+      a#profile-tab-classic-blue.nav-link.waves-light aria-controls="data" aria-selected="true" data-toggle="tab" href="#data" role="tab" 
+        i.fa.fa-users.fa-2x.pb-2 aria-hidden="true" 
+        br
+        | ABSENSI
 
 
 
   #myClassicTabContentOrange.tab-content.card
-    #sync.tab-pane.fade.active.show aria-labelledby="profile-tab-classic-blue" role="tabpanel" 
-      = render partial: 'sync'
+    #trxs.tab-pane.fade.active.show aria-labelledby="profile-tab-classic-blue" role="tabpanel" 
+      = render partial: 'trxs'
 
-    - if ["super_visi", "super_admin", "developer", "finance"].include? current_user.level
+    #sync.tab-pane.fade aria-labelledby="profile-tab-classic-blue" role="tabpanel" 
+      = render partial: 'sync'
       
-      #data.tab-pane.fade aria-labelledby="profile-tab-classic-blue" role="tabpanel" 
-          = render partial: 'absent'
+    #data.tab-pane.fade aria-labelledby="profile-tab-classic-blue" role="tabpanel" 
+        = render partial: 'absent'
