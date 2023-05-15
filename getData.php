@@ -1,9 +1,5 @@
-<!--  
-  CIRATA : 192.168.1.220
--->
-<?php  
-
-  $IP  = "192.168.1.220";
+<?php
+  $IP  = "192.168.100.180";
   $Key = "0";
 
   $Connect = fsockopen($IP, "80", $errno, $errstr, 1);
@@ -22,21 +18,36 @@
     while($Response = fgets($Connect, 1024)) {
       $buffer = $buffer.$Response;
     }
-  } else echo "Koneksi Gagal";
+    $buffer = Parse_Data($buffer,"<GetAttLogResponse>","</GetAttLogResponse>");
+    $buffer = explode("\r\n",$buffer);
+    for ($a=0; $a<count($buffer); $a++) {
+      $data=Parse_Data($buffer[$a],"<Row>","</Row>");
 
-  $buffer = Parse_Data($buffer,"<GetAttLogResponse>","</GetAttLogResponse>");
-  $buffer = explode("\r\n",$buffer);
+      $export[$a]['pin'] = Parse_Data($data,"<PIN>","</PIN>");
+      $export[$a]['waktu'] = Parse_Data($data,"<DateTime>","</DateTime>");
+      $export[$a]['status'] = Parse_Data($data,"<Status>","</Status>");
+    }
+    echo json_encode($export);
+    
+  } else {
+    echo "Koneksi GAGAL!";
+  } 
 
-  for ($a=0; $a<count($buffer); $a++) {
-    $data=Parse_Data($buffer[$a],"<Row>","</Row>");
 
-    $export[$a]['pin'] = Parse_Data($data,"<PIN>","</PIN>");
-    $export[$a]['waktu'] = Parse_Data($data,"<DateTime>","</DateTime>");
-    $export[$a]['status'] = Parse_Data($data,"<Status>","</Status>");
+
+  function Parse_Data ($data,$p1,$p2) {
+    $data = " ".$data;
+    $hasil = "";
+    $awal = strpos($data,$p1);
+    if ($awal != "") {
+      $akhir = strpos(strstr($data,$p1),$p2);
+      if ($akhir != ""){
+        $hasil=substr($data,$awal+strlen($p1),$akhir-strlen($p1));
+      }
+    }
+    return $hasil;    
   }
 
-  echo '<pre>';
-  print_r($export);
-
-
 ?>
+
+

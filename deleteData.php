@@ -1,6 +1,6 @@
 <?php  
 
-$IP  = "192.168.1.220";
+$IP  = "192.168.100.180";
 $Key = "0";
 
 $Connect = fsockopen($IP, "80", $errno, $errstr, 1);
