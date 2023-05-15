@@ -19,7 +19,9 @@ table class="table"
 		- @absents.each do |absent|
 			tr
 				td #{absent.check_in.strftime("%d/%m/%Y  %H:%M:%S")}
-				td #{absent.check_out.strftime("%d/%m/%Y  %H:%M:%S")}
-
-
+				td 
+					- if absent.check_out.present? 
+						| #{absent.check_out.strftime("%d/%m/%Y  %H:%M:%S")}
+					- else
+						| -
 				  
