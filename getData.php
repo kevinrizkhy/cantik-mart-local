@@ -30,7 +30,7 @@
     echo json_encode($export);
     
   } else {
-    echo "Koneksi GAGAL!";
+    echo "Koneksi Gagal!";
   } 
 
 
