@@ -159,7 +159,7 @@ class SyncData
       http.request(req)
     }
     return false if res.code == "404"
-    return false if res.body.include? "Gagal"
+    return false if res.body.include? "GAGAL"
     datas = JSON.parse(res.body)
     datas.each_with_index do |data, index|
       next if data==datas.first || data==datas.last
