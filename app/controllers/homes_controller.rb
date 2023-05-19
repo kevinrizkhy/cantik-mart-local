@@ -50,7 +50,7 @@ class HomesController < ApplicationController
       end
       SyncData.delete_data
     }
-    return redirect_success root_path, "Pengambilan data absesni sedang berjalan."
+    return redirect_back_data_error root_path, "Data absensi telah dihapus"
   end
 
   def update_store
