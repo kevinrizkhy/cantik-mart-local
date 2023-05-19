@@ -5,11 +5,25 @@ class HomesController < ApplicationController
   def index
     @last_backup = Backup.last
     gon.store_id = Transaction.last.store.id
+    
+    @absents = get_monthly_absent
+    # SyncData.check_new_data_daily DateTime.now.beginning_of_day, DateTime.now.end_of_day
+  end
+
+  def get_monthly_absent
+    absents = {}
+    start_date = Date.today.beginning_of_month
+    while start_date < Date.today.end_of_month
+      absents[start_date] = [nil, nil]
+      start_date = start_date + 1.day
+    end
     start_date = DateTime.now.beginning_of_month
     end_date = start_date.end_of_month
-    @absents = Absent.where(user: current_user, check_in: start_date..end_date) 
-    
-    # SyncData.check_new_data_daily DateTime.now.beginning_of_day, DateTime.now.end_of_day
+    datas = Absent.where(user: current_user, check_in: start_date..end_date) 
+    datas.each do |data|
+      absents[data.check_in.to_date] = [data.check_in, data.check_out]
+    end
+    return absents
   end
 
   def sync_daily

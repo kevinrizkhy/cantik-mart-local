@@ -48,6 +48,9 @@ function printHTML(html) {
 function getTotalCurrDate(input_date){
   sync_date = input_date.value;
   local_data = []
+  $("#notice_sync").hide();
+  $("#notice_not_sync").hide();
+  $("#daily_sync_button").hide();
   $.ajax({
     method: "GET",
     cache: false,

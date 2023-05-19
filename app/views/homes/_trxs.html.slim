@@ -41,3 +41,15 @@
 				        | Backup terakhir 
 				        b 
 				          u #{@last_backup.created.strftime("%d/%m/%Y %H:%M:%S")}
+- else
+  	br
+  	h3.text-danger.text-center
+	    b 
+	    	| Status 
+	    	u akun anda 
+	    	| tidak berada di toko ini.
+	    	br
+	    	| Silahkan menghubungi 
+	    	u ADMIN 
+	    	| untuk mengubah status toko anda.
+   	br

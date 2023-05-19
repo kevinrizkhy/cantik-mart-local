@@ -13,15 +13,27 @@
 hr
 table class="table"
 	thead
-		th Masuk
-		th Keluar
+		th.text-center Tanggal
+		th.text-center Masuk
+		th.text-center Keluar
 	tbody
-		- @absents.each do |absent|
+		- @absents.each do |k, v|
 			tr
-				td #{absent.check_in.strftime("%d/%m/%Y  %H:%M:%S")}
-				td 
-					- if absent.check_out.present? 
-						| #{absent.check_out.strftime("%d/%m/%Y  %H:%M:%S")}
+				td.text-center
+					b #{k.to_date.strftime("%d %B %Y")}
+				td.text-center 
+					- if v[0].present? 
+						| #{v[0].strftime("%H : %M : %S")}
 					- else
-						| -
+						- if k.to_date < Date.today
+							.text-danger
+								| x
+				  
+				td.text-center
+					- if v[1].present? 
+						| #{v[1].strftime("%H : %M : %S")}
+					- else
+						- if k.to_date < Date.today
+							.text-danger
+								| x
 				  
