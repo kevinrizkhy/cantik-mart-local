@@ -4,8 +4,10 @@
 
 .row
 	.col
-		h5 
+		h4 
 			b DATA ABSENSI
+		p.text-primary
+			| * Tanggal berwarna biru = Hari Minggu
 	.col.text-right 
 			h5
 				b #{Date.today.strftime("%b %Y")}
@@ -20,7 +22,12 @@ table class="table"
 		- @absents.each do |k, v|
 			tr
 				td.text-center
-					b #{k.to_date.strftime("%d %B %Y")}
+					b 
+						-if k.to_date.sunday?
+							.text-primary
+								| #{k.to_date.strftime("%d %B %Y")}
+						- else
+							| #{k.to_date.strftime("%d %B %Y")}
 				td.text-center 
 					- if v[0].present? 
 						| #{v[0].strftime("%H : %M : %S")}
@@ -36,4 +43,7 @@ table class="table"
 						- if k.to_date < Date.today
 							.text-danger
 								| x
-				  
+
+br
+br
+		  
