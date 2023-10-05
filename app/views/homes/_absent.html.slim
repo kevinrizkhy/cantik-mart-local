@@ -30,7 +30,7 @@ table class="table"
 							| #{k.to_date.strftime("%d %B %Y")}
 				td.text-center 
 					- if v[0].present? 
-						| #{v[0].strftime("%H : %M")}
+						| #{v[0].strftime("%H.%M")}
 					- else
 						- if k.to_date < Date.today
 							.text-danger
@@ -38,7 +38,7 @@ table class="table"
 				  
 				td.text-center
 					- if v[1].present? 
-						| #{v[1].strftime("%H : %M")}
+						| #{v[1].strftime("%H.%M")}
 					- else
 						- if k.to_date < Date.today
 							.text-danger
