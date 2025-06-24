@@ -97,10 +97,10 @@ class ApisController < ApplicationController
     return render :json => json_result unless item_stores.present?
     item_stores.each do |item_store|
       item = []
-      item << item_store.item.code
-      item << item_store.item.name
-      item << item_store.item.item_cat.name
-      item << item_store.item.sell
+      item << item_id.code
+      item << item_id.name
+      item << item_id.item_cat.name
+      item << item_id.sell
       item << item_store.stock
       json_result << item
     end
@@ -130,26 +130,26 @@ class ApisController < ApplicationController
     qty = params[:qty]
 
     member = nil
-    if params[:member].present?
-      member = Member.find_by(card_number: params[:member])
-    end
-    member = nil
+    # if params[:member].present?
+    #   member = Member.find_by(card_number: params[:member])
+    # end
 
     search = params[:search].squish
     return render :json => json_result unless search.present?
     return render :json => json_result unless qty.present?
     return render :json => json_result if qty.to_f <= 0
     search = search.gsub(/\s+/, "")
-    item_id = Item.find_by(code: search)
+    item_id = Item.search_by_code(search).take
     return render :json => json_result unless item_id.present?
-    item_store = StoreItem.find_by(store_id: current_user.store.id, item: item_id)
-    return render :json => json_result unless item_store.present?
+    # item_store = StoreItem.find_by(store_id: current_user.store.id, item: item_id)
+    # return render :json => json_result unless item_store.present?
 
     item = []
-    item << item_store.item.code
-    item << item_store.item.name
-    item << item_store.item.item_cat.name
-    curr_item = item_store.item
+    item << item_id.code
+    item << item_id.name.upcase
+    item << item_id.item_cat.name.upcase
+    
+    curr_item = item_id
     qty = qty.to_i
     grocer_price = nil 
     grocer_price = curr_item.grocer_items.where("min <= ?", qty) if qty.to_i > 1

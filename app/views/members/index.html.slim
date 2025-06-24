@@ -1,27 +1,23 @@
-.row
-  .col.text-left
-    h5
-      | Daftar Member
-br
 .container-fluid
   .col-lg-12.col-md-12
-    .card-header.white-text.info-color
+    .card-header.white-text.bg-dark
         h5.font-weight-500.my-1
-          | Pencarian
+          | M E M B E R
     .card.mb-4
       .card-body
         = form_for :member, url: members_path, method: 'GET' do |form|
           .row
-            .col-12
+            .col-10
               input type="text" class="form-control md-form" id="search" name="search"
-            .col-12.text-center
+            .col-2.text-right
+              p
               button class="btn btn-rounded btn-primary"
                 | Cari
 .container-fluid
   .col-lg-12.col-md-12
-    .card-header.white-text.info-color
+    .card-header.white-text.bg-dark.text-center
         h5.font-weight-500.my-1
-          | Data
+          | D A T A
     .card.mb-4
       .card-body.table-responsive.text-nowrap
         table class="table"

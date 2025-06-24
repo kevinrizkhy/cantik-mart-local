@@ -1,70 +1,58 @@
 .container-fluid
   .col-lg-12.col-md-12
     .card.mb-4
-      .card-header.white-text.info-color
+      .card-header.white-text.bg-dark
         h5.font-weight-500.my-1
-          | Detil Barang - #{@item.name} (#{@item.code})
+          .row
+            .col
+              | #{@item.name} 
+            .col-text-right style="padding-right: 15px;"
+              | #{@item.code}
       .card-body
         = form_for :item, url: '' do |form|
-          .form-group
-            label for="code" Kode
-            = form.text_field :code, required: true, class: "form-control md-form", id: "code"
-          .form-group
-            label for="name" Nama
-            = form.text_field :name, required: true, class: "form-control md-form", id: "name"
-          form-group
-            label for="brand" Merek
-            = form.text_field :brand, required: true, class: "form-control md-form", id: "brand"
-          .form-group
-              label for="item" Kategori
-              input class="md-form form-control" value="#{@item.item_cat.name}"
-          .form-group
-            label for="buy" Harga Beli Satuan
-            = form.number_field :buy, required: true, class: "form-control md-form", id: "buy"
-          .form-group
-            label for="buy" Harga Beli Grosir
-            = form.number_field :buy_grocer, required: true, class: "form-control md-form", id: "buy"
-          .form-group.table-responsive.text-nowrap
-            label for="sell" Harga Jual
-            table class="table table-hover"
-              thead
-                th Min
-                th Max
-                th Harga
-                th Diskon
-                th
-              tbody
-                tr
-                  td 0
-                  td 1
-                  td #{@item.sell}
-                  td #{@item.discount}
-                  td
-                - item_grocers = @item.grocer_items
-                - if item_grocers.present?
-                  -item_grocers.each do |item|
-                    tr 
-                      td #{item.min}
-                      td #{item.max}
-                      td #{item.price}
-                      td #{item.discount}
-                      td.text-right
-                        a class="btn btn-rounded btn-warning" href="#{edit_grocer_item_path(id: item.id)}"
-                          |   Ubah
-                        | &nbsp&nbsp&nbsp
-                        a class="btn btn-rounded btn-danger" href="#{grocer_item_path(id: item.id)}"
-                          |   Hapus
+          .row
+            .col-6
+              .form-group
+                label for="brand" Merek
+                = form.text_field :brand, required: true, class: "form-control md-form", id: "brand", disabled: true
+            .col-6
+              .form-group
+                  label for="item" Kategori
+                  input class="md-form form-control" value="#{@item.item_cat.name}" disabled="disabled"
+            .col-12
+              hr
+            .col-6
+              .form-group
+                label for="buy" Harga Beli Satuan
+                = form.number_field :buy, required: true, class: "form-control md-form", id: "buy", disabled: true
+            .col-6
+              .form-group
+                label for="buy" Harga Beli Grosir
+                = form.number_field :buy_grocer, required: true, class: "form-control md-form", id: "buy", disabled: true
+            .col-12
+              hr
+            .col-12
+              .form-group.table-responsive.text-nowrap
+                label for="sell" Harga Jual
+                table class="table table-hover"
+                  thead.text-center
+                    th Min
+                    th Max
+                    th Harga
+                    th Diskon
+                    th
+                  tbody.text-center
+                    tr
+                      td 0
+                      td 1
+                      td #{number_with_delimiter(@item.sell, delimiter: ".")}
+                      td #{number_with_delimiter(@item.discount, delimiter: ".")}
 
-          .form-group.text-center
-            a href="#{edit_item_path(id: @item.id)}"
-              button.btn.btn-rounded.btn-warning type="button" 
-                |   Edit
-            a href="#{new_grocer_item_path(id: @item.id)}"
-              button.btn.btn-rounded.btn-info type="button" 
-                i.fas.fa-plus 
-                |   Tambah Harga
-            a href='#{item_suppliers_path(id: @item.id)}'
-              button.btn.btn-rounded.btn-primary type="button" 
-                | Supplier
-            - if !@item.store_items.present? && !@item.supplier_items.present?
-              = button_to "Hapus Barang", @item, :method=>:delete, :class=>"btn btn-rounded btn-danger"
+                    - item_grocers = @item.grocer_items
+                    - if item_grocers.present?
+                      -item_grocers.each do |item|
+                        tr 
+                          td #{item.min}
+                          td #{item.max}
+                          td #{number_with_delimiter(item.price, delimiter: ".")}
+                          td #{number_with_delimiter(item.discount, delimiter: ".")}

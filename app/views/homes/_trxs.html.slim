@@ -1,4 +1,4 @@
-- trx =  Transaction.where("created_at >= ? AND created_at <= ?", DateTime.now.beginning_of_day, DateTime.now.end_of_day).where(user: current_user)
+- trx =  Transaction.where(created_at: DateTime.now.beginning_of_day..DateTime.now.end_of_day).where(user: current_user)
 - trx_total = trx.sum(:grand_total)
 - cash = trx.where(payment_type: "CASH").sum(:grand_total)
 - debit = trx.where(payment_type: "DEBIT").sum(:grand_total)
@@ -18,14 +18,14 @@
 	   	.col-12
 	   		hr
 	    .col.text-center
-	      a href="#{new_transaction_path}" class="btn btn-primary"
+	      a href="#{new_transaction_path}" class="btn btn-primary btn-rounded"
 	        | MENU KASIR
 	    .col.text-center
-	      a href="#{sync_now_path}" class="btn btn-warning"
+	      a href="#{sync_now_path}" class="btn btn-dark btn-rounded"
 	        | SYNC GLOBAL
 	    - store_name = current_user.store.name
 	    .col.text-center
-	      button.btn.btn-success onclick="printShift('#{trx_total.to_i}', '#{current_user.name.upcase}', '#{DateTime.now.strftime("%d/%m/%Y %H:%M:%S")}', #{cash.to_i}, #{debit.to_i}, '#{jumlah_trx.to_i}', '#{current_user.store.id}' , '#{store_name}' )"
+	      button.btn.btn-success.btn-rounded onclick="printShift('#{trx_total.to_i}', '#{current_user.name.upcase}', '#{DateTime.now.strftime("%d/%m/%Y %H:%M:%S")}', #{cash.to_i}, #{debit.to_i}, '#{jumlah_trx.to_i}', '#{current_user.store.id}' , '#{store_name}' )"
 	        | CETAK PENJUALAN
 	    .col-12
 	    	br

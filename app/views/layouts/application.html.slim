@@ -1,15 +1,13 @@
 = include_gon
+doctype html
 html
   head
     title CANTIK MART
     = csrf_meta_tags
 
-    meta charset="UTF-8" /
-    meta http-equiv="X-UA-Compatible" content="chrome=1" /
-    meta name="author" content="Cantik Mart" /
-    meta name="description" content="Cantik Mart" /
-    meta name="keywords" content="pusat jual beli cirata" /
-    meta name="copyright" content="Cantik Mart" /
+    meta charset="UTF-8"  /
+    meta http-equiv="X-UA-Compatible" content="chrome=1"  /
+    meta name="copyright" content="Novia" /
     meta name="distribution" content="Global" /
     meta name="rating" content="General" /
 
@@ -17,32 +15,31 @@ html
     meta content="yes" name="apple-touch-fullscreen" /
     meta name="apple-mobile-web-app-status-bar-style" content="black" /
 
-    link rel="shortcut icon" href="images/logo.png" sizes=("16x16 24x24 32x32 48x48 64x64") /
-    
-    link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" /
+    link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" /
 
-    = stylesheet_link_tag '/dist/css/bootstrap.min.css'
+    = stylesheet_link_tag "https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
     = stylesheet_link_tag '/dist/css/mdb.min.css'
     = stylesheet_link_tag "/dist/css/application", media: "all"
+
+    css:
+      td { vertical-align: middle !important;}
     
-  / body.fixed-sn.white-skin onload="startTime()"
   body.fixed-sn.white-skin 
     - if params[:controller] != "sessions" && params[:controller] != "registers"
       header
-        #slide-out.side-nav.sn-bg-4.fixed
+        #slide-out.side-nav.fixed
           ul.custom-scrollbar
             li.logo-sn.waves-effect.py-3
               .text-center
                 a.pl-0 href="#" 
                   =image_tag("/images/logo.png", height: '100')
-                  / img src="images/logo.png" width="120px"/
             li
               ul.collapsible.collapsible-accordion
+                hr
                 li
                   a.collapsible-header.waves-effect.arrow-r href="#{root_path}"
-                    i.w-fa.fas.fa-tachometer-alt
-                    | Dashboards
-                
+                    | H O M E
+                hr
                 = render "layouts/menu/navbar"
           .sidenav-bg.mask-strong
 
@@ -55,13 +52,20 @@ html
 
     = javascript_include_tag '/dist/js/jquery-3.4.0.min.js'
     = javascript_include_tag '/dist/js/popper.min.js'
-    = javascript_include_tag '/dist/js/bootstrap.min.js'
+    = javascript_include_tag "https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
     = javascript_include_tag '/dist/js/mdb.min.js'
     = javascript_include_tag '/dist/js/application'
+    = javascript_include_tag "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/js/all.min.js"
+    = javascript_include_tag "https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"
+    = javascript_include_tag "https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap4.min.js"
+
+
     - if flash.present?
       - flash.each do |key, value|
         javascript:
           toastr.#{key}('#{value}');
+
+
     javascript:
       $(".button-collapse").sideNav();
       var container = document.querySelector('.custom-scrollbar');

@@ -1,10 +1,5 @@
-tr
+tr onclick="window.location='#{item_path(id: item.id)}'"
   td #{item.code}
-  td
-    - if item.image.present?
-      img src="#{item.image}" width="50px"
-    - else
-      =image_tag("/images/default_item.jpg", height: '70', width: '70')
   td #{item.name}
   td 
     - department = item.item_cat.department.name

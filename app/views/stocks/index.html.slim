@@ -1,33 +1,36 @@
-.row
-  .col.text-left
-    h5
-      | Daftar Stok Barang    
-br
 .container-fluid
   .col-lg-12.col-md-12
     .card.mb-4
-      .card-header.white-text.info-color
+      .card-header.white-text.bg-dark.text-center
         h5.font-weight-500.my-1
-          | Pencarian
+          | S T O K  -  B A R A N G
       .card-body
         = form_for :store_item, url: stocks_path, method: 'GET' do |form|
           .row
-            .col-12.text-center
-              input type="text" class="form-control md-form" id="search" name="search"
-            .col-12.text-center
+            .col-2
+              select[class="mdb-select md-form md-outline colorful-select dropdown-primary" id="order_by" name="search_by"]
+                option[value="code" select]
+                  | KODE
+                option[value="name"]
+                  | NAMA 
+            .col-8
+              input type="text" class="form-control md-form" id="search" name="search" value="#{@search}" placeholder="Cari NAMA / KODE Barang ..."
+            .col-2.text-right style="vertical-align= middle;"
+              p
               button class="btn btn-rounded btn-primary"
                 | Cari
+            br
+
 .container-fluid
   .col-lg-12.col-md-12
     .card.mb-4
-      .card-header.white-text.info-color
+      .card-header.white-text.bg-dark.text-center
         h5.font-weight-500.my-1
-          | Data
+          | D A T A
       .card-body.table-responsive.text-nowrap
         table class="table"
           thead
             th Kode
-            th Foto
             th Name
             th Kategori
             th Stok

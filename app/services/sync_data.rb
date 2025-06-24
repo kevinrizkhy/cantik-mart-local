@@ -1,7 +1,7 @@
 class SyncData
 	
-  @@hostname = "http://www.cantikmart.com"
-  # @@hostname = "http://localhost:3000"
+  # @@hostname = "http://www.cantikmart.com"
+  @@hostname = "http://localhost:8080"
   
 	def initialize
 	end
@@ -261,6 +261,26 @@ class SyncData
     end
   end
 
+
+  # SyncData.initialize_new_data DateTime.now.beginning_of_day-2.years, DateTime.now.end_of_day
+
+  def self.initialize_new_data sync_date, end_post
+    url = @@hostname+"/get/1"+"?from="+sync_date.to_s+"&to="+end_post.to_s
+    resp = Net::HTTP.get_response(URI.parse(url))
+    return if resp.code.to_i != 200 
+    GrocerItem.destroy_all
+    data = JSON.parse(resp.body)
+    data_keys = data.keys
+    data_keys.each do |key|
+      datas = data[key]
+      datas.each do |new_data|
+        sync_data(key, new_data)
+      end
+    end
+    puts "DATA SUDAH SELESAI - INISIASI AWAL SERVER!"
+  end
+
+
   # SyncData.check_new_data_daily DateTime.now.beginning_of_day, DateTime.now.end_of_day
   def self.check_new_data_daily sync_date, end_post
     store = Transaction.last.store
@@ -357,6 +377,7 @@ class SyncData
         else
           item = Item.create data
         end
+        binding.pry
       elsif key=="stocks"
         store_item = StoreItem.find_by(id: data["id"])
         if store_item.present?

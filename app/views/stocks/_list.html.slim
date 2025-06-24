@@ -1,15 +1,8 @@
-tr 
+tr onclick="window.location='#{item_path(id: inventory.item.id)}'"
 	td #{inventory.item.code}
-	td
-	    - if inventory.item.image.present?
-	      	img src="#{inventory.item.image}" width="50px"
-	    - else
 	td #{inventory.item.name}
 	td #{inventory.item.item_cat.name}
 	td #{inventory.stock}
 	td #{inventory.min_stock}
 	td #{inventory.item.sell}
-	td
-	  	a href='#{stock_path(id: inventory.id)}'
-	  		button.btn.btn-rounded.btn-primary type="button" 
-        		| Detil
+

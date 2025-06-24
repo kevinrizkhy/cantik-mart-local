@@ -4,64 +4,39 @@
 - if Controller.find_by(name: 'absents').controller_methods.find_by(name: 'index').user_methods.pluck(:user_level).include? user_level
   li
     a.collapsible-header.waves-effect.arrow-r href="#{absents_path}"
-      i.w-fa.fas.fa-calendar
       | Absensi
 
 
-- if Controller.find_by(name: 'users').controller_methods.find_by(name: 'index').user_methods.pluck(:user_level).include? user_level
+- if Controller.find_by(name: 'members').controller_methods.find_by(name: 'index').user_methods.pluck(:user_level).include? user_level
   li
-    a.collapsible-header.waves-effect.arrow-r
-      i.w-fa.fas.fa-users
-      | Pengguna
-      i.fas.fa-angle-down.rotate-icon
-    .collapsible-body
-      ul
-        - if Controller.find_by(name: 'users').controller_methods.find_by(name: 'index').user_methods.pluck(:user_level).include? user_level
-          li
-            a.waves-effect href="#{users_path}"  Karyawan
-
-        - if Controller.find_by(name: 'members').controller_methods.find_by(name: 'index').user_methods.pluck(:user_level).include? user_level
-          li
-            a.waves-effect href="#{members_path}"  Member
+    a.collapsible-header.waves-effect.arrow-r href="#{members_path}"
+      | Member
 
 
 - if Controller.find_by(name: 'stores').controller_methods.find_by(name: 'index').user_methods.pluck(:user_level).include? user_level
   li
     a.collapsible-header.waves-effect.arrow-r href="#{stores_path}"
-      i.w-fa.fas.fa-home
       | Toko
     
 - if Controller.find_by(name: 'items').controller_methods.find_by(name: 'index').user_methods.pluck(:user_level).include? user_level
   li
-    a.collapsible-header.waves-effect.arrow-r
-      i.w-fa.fas.fa-archive
-      | Barang
-      i.fas.fa-angle-down.rotate-icon
-    .collapsible-body
-      ul
-        - if Controller.find_by(name: 'item_cats').controller_methods.find_by(name: 'index').user_methods.pluck(:user_level).include? user_level
-          li
-            a.waves-effect href="#{departments_path}"  Departemen
-
-        - if Controller.find_by(name: 'items').controller_methods.find_by(name: 'index').user_methods.pluck(:user_level).include? user_level
-          li
-            a.waves-effect href="#{items_path}"  Daftar Barang
-
-        - if Controller.find_by(name: 'stocks').controller_methods.find_by(name: 'index').user_methods.pluck(:user_level).include? user_level
-          li
-            a.waves-effect href="#{stocks_path}"  Stok Toko
-
-
+    a.collapsible-header.waves-effect.arrow-r href="#{stocks_path}"
+      | Stok Barang
     
 
-- if Controller.find_by(name: 'transactions').controller_methods.find_by(name: 'index').user_methods.pluck(:user_level).include? user_level
-  li
-    a.collapsible-header.waves-effect.arrow-r  href="#{transactions_path}"
-      i.w-fa.fas.fa-credit-card
-      | Transaksi
+- have_sync_access = true if current_user.store.id == Transaction.last.store.id
+
+- if have_sync_access
+  hr
+  - if Controller.find_by(name: 'transactions').controller_methods.find_by(name: 'index').user_methods.pluck(:user_level).include? user_level
+    li
+      a.collapsible-header.waves-effect.arrow-r  href="#{new_transaction_path}"
+        | Transaksi
+
+  hr
+
 
 - if ["super_visi", "super_admin", "owner"].include? current_user.level
   li
     a.collapsible-header.waves-effect.arrow-r  href="#{backups_path}"
-      i.w-fa.fas.fa-history
       | Backup

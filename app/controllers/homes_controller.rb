@@ -4,7 +4,8 @@ class HomesController < ApplicationController
 
   def index
     @last_backup = Backup.last
-    gon.store_id = Transaction.last.store.id
+    gon.store_id = Transaction.last.store_id
+    
     
     @absents = get_monthly_absent
     # SyncData.check_new_data_daily DateTime.now.beginning_of_day, DateTime.now.end_of_day

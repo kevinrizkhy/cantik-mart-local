@@ -17,121 +17,149 @@
       
       <style>
          .overflow {
-         height: 65vh;
+            height: 65vh;
          }
 
          .dataTables_scrollHead {
-          font-size: large;
+            font-size: large;
          }
 
          tr{
-          font-size: medium;
+            font-size: medium;
          }
 
          label {
-          font-size: unset;
-          font-weight: unset;
-          color: unset;
+            font-size: ;font-size: unset;
+            font-weight: unset;
+            color: unset;
          }
 
          .ui.page.grid {
-         padding: 0 !important; 
+            padding: 0 !important; 
          }
-         .column {
-         height: 85vh;
+         .ui.segment {
+            padding: .15rem .5rem;
          }
          .align-right{
-         text-align: right;
+            text-align: right;
          }
          .button {
-         border-radius: 8px;
-         background-color: #4CAF50; 
-         border: none;
-         color: white;
-         padding: 16px 32px;
-         text-align: center;
-         text-decoration: none;
-         display: inline-block;
-         font-size: 16px;
-         margin: 4px 2px;
-         -webkit-transition-duration: 0.4s; 
-         transition-duration: 0.4s;
-         cursor: pointer;
+            border-radius: 8px;
+            background-color: #4CAF50; 
+            border: none;
+            color: white;
+            padding: 16px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            -webkit-transition-duration: 0.4s; 
+            transition-duration: 0.4s;
+            cursor: pointer;
          }
          .modal{
-          background: none;
-          max-height: unset;
-          bottom: unset;
+             background: none;
+             max-height: unset;
+             bottom: unset;
+        }
+
+        .ui.segment {
+            padding: .15rem .5rem .0rem .5rem !important;
+        }
+        .column{
+         margin-bottom: 0 !important;
         }
       </style>
    </head>
-   <body onload="startTime()">
-      <div class="alert alert-primary" role="alert">
-        <div class="row" style="margin-bottom: 0px;">
-            <div class="col-md-6">
-               <div style="font-size: 20px;"><%= current_user.name %></div>
-            </div>
-            <div class="col-md-6 text-right">
-                <div id="txt" style="font-size: 20px;"></div>
-            </div>
-        </div>
-      </div>
 
-      <div class="ui grid page">
-         <div class="column">
-            <div class="ui segment">
-               <div class="ui menu top">
-                  <a class="active item" data-tab="transaction">TRANSAKSI</a>
-                  <!-- <a class="item" data-tab="stock">STOK</a> -->
-                  <a class="item" data-tab="member">MEMBER</a>
+   <body onload="startTime()" class="bg-dark d-flex flex-column h-100">
+      <div style="position: sticky; top: 0; z-index: 1000;" class="bg-dark">
+         <div class=" bg-dark text-white" style="padding: 1rem 2rem; padding-bottom: 0rem !important;">
+           <div class="row" style="margin-bottom: 0px;">
+               <div class="col-3 text-left">
+                  <button id="button-remove" class="btn btn-danger">HAPUS BARANG</button>
                </div>
+
+               <div class="col-6 text-center">
+                  <div style="font-size: 20px; font-weight: 999;"><%= current_user.name %></div>
+               </div>
+               <div class="col-3 text-right">
+                   <div id="txt" style="font-size: 20px;"></div>
+               </div>
+           </div>
+         </div>
+         <div class="ui grid page">
+            <div class="column">
+               <div class="ui segment">
+                  <div class="ui tab" style="" data-tab="transaction">
+                     <div class="row">
+                       <%# <div class="col-sm-8">
+                         <div class="row">
+                          <div class="col-sm-6">
+                             <label>MEMBER</label>
+                             <input type="text" placeholder="Nomor Kartu Member ..." id="memberCard"/>
+                             <input type="text" style="display: none" disabled="disabled" id="memberName">
+                             <input type="text" style="display: none" id="member_id" name="member_id">
+                           </div>
+                           <div class="col-sm-6" style="display: none;">
+                             <label>VOUCHER</label>
+                             <input type="text" placeholder="Nomor Voucher ..." id="voucher_code"/>
+                             <input type="text" style="display: none", disabled="disabled" id="voucher_name">
+                             <input type="number" style="display: none", disabled="disabled" id="voucher_nominal">
+                           </div>
+                         </div>
+                       </div> %>
+
+                       <div class="col-6">
+                           <div class="row">
+                              <div class="col-6">
+                                 <div class="field">
+                                    <label>KODE BARANG</label>
+                                    <input type="text" placeholder="1234567..." id="itemId"/>
+                                 </div>
+                              </div>
+                              <div class="col-4">
+                                 <label>JUMLAH</label>
+                                 <input type="number" value="1" min="0.1" id="item_qty" step="0.005" />
+                              </div>
+                           </div>
+                         
+                       </div>
+
+
+
+
+                        <div class="col-2 text-center">
+                           <button data-target="modal1" class="btn btn-primary btn-large modal-trigger col-12" style="margin-top: 25px;">BAYAR</button>
+                        </div>
+                       
+                       <div class="col-4" style="text-align: right;">
+                           <label style="font-size: 60px; font-weight: 999;" id="label-total"> 0 </label>
+                       </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="ui grid page" >
+         <div class="column" style="margin-top: 0 !important;">
+            <div class="ui segment">
                <div class="ui tab" data-tab="transaction">
                   <div class="row">
-                    <div class="col-sm-8">
-                      <div class="row">
-                        <div class="col-sm-6">
-                          <label>MEMBER</label>
-                          <input type="text" placeholder="Nomor Kartu Member ..." id="memberCard"/>
-                          <input type="text" style="display: none" disabled="disabled" id="memberName">
-                          <input type="text" style="display: none" id="member_id" name="member_id">
-                        </div>
-                        <div class="col-sm-6" style="display: none;">
-                          <label>VOUCHER</label>
-                          <input type="text" placeholder="Nomor Voucher ..." id="voucher_code"/>
-                          <input type="text" style="display: none", disabled="disabled" id="voucher_name">
-                          <input type="number" style="display: none", disabled="disabled" id="voucher_nominal">
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-sm-4">
-                      <label style="font-size: 15px;">TOTAL BELANJA</label>
-                      <br>
-                      <label style="font-size: 40px; font-weight: 990;" id="label-total">0</label>
-                    </div>
-                    <div class="col-sm-4">
-                      <div class="field">
-                         <label>KODE BARANG</label>
-                         <input type="text" placeholder="Kode Barang ..." id="itemId"/>
-                      </div>
-                    </div>
-                    <div class="col-sm-4">
-                      <label>JUMLAH</label>
-                      <input type="number" value="1" min="0.1" id="item_qty" step="0.005" />
-                    </div>
-                    <div class="col-sm-4 text-right">
-                      <button data-target="modal1" class="btn btn-primary btn-large modal-trigger">BAYAR</button>
-                    </div>
-                    <div class="col-sm-12">
+
+                    <div class="col-12" style="height: 200vh;">
                       <table id="itemList">
                         <thead>
                            <tr>
-                              <th class="width10">Kode</th>
-                              <th class="width55">Nama Barang</th>
-                              <th class="width15">Kategori</th>
-                              <th class="width15">Jumlah</th>
-                              <th class="width15">Harga</th>
-                              <th class="width15">Diskon</th>
-                              <th class="width15">Total</th>
+                              <th class="width10">KODE</th>
+                              <th class="width55">ITEM</th>
+                              <th class="width15"></th>
+                              <th class="width15">QTY</th>
+                              <th class="width15">HARGA</th>
+                              <th class="width15">DISKON</th>
+                              <th class="width15">TOTAL</th>
                               <th class="width15" style="display: none;">#</th>
                            </tr>
                         </thead>
@@ -139,67 +167,13 @@
                         </tbody>
                       </table>
                     </div>
-                    <div class="col-sm-12 text-center">
-                      <button id="button-remove" class="btn btn-danger">HAPUS BARANG</button>
-                    </div>
                   </div>
                </div>
-               <div class="ui tab" data-tab="member">
-                  <div class="row">
-                    <div class="col-md-12 text-right">
-                        <a href="www.cantikmart.com/members/new"><button class="text-right btn btn-primary">+ MEMBER</button></a>
-                    </div>
-                    <div class="col-md-12">
-                      <label>CARI MEMBER</label>
-                      <input type="text" placeholder="Nama Member / No. Telp / Alamat" id="memberSearchId"/>
-                    </div>
-                  </div>
-                  <div class="one fields">
-                     <br>
-                     <div class="overflow">
-                        <table id="memberSearchList" style="width:100%">
-                           <thead>
-                              <tr> 
-                                 <th class="width50">No. Kartu</th> 
-                                 <th class="width10">Nama</th>
-                                 <th class="width15">Telepon</th>
-                              </tr>
-                           </thead>
-                           <tbody>
-                           </tbody>
-                        </table>
-                     </div>
-                  </div>
-               </div>
-               <div class="ui tab" data-tab="stock">
-                  <div class="four fields">
-                     <div class="field">
-                        <label>CARI BARANG</label>
-                        <input type="text" placeholder="Nama Barang..." id="itemSearchId"/>
-                     </div>
-                  </div>
-                  <div class="one fields">
-                     <br>
-                     <div class="overflow">
-                        <table id="itemSearchList" style="width:100%">
-                           <thead>
-                              <tr>
-                                 <th class="width10">Kode</th>
-                                 <th class="width55">Nama Barang</th>
-                                 <th class="width15">Kategori</th>
-                                 <th class="width15">Harga</th>
-                                 <th class="width15">Stok</th>
-                              </tr>
-                           </thead>
-                           <tbody>
-                           </tbody>
-                        </table>
-                     </div>
-                  </div>
-               </div>
+               
             </div>
          </div>
       </div>
+
       <!-- Modal Structure -->
       <div id="modal1" class="modal">
          <div class="modal-content">
@@ -302,6 +276,7 @@
       </div>
 
 
+   </body>
 
       <%= include_gon %>
       <%= javascript_include_tag '/dist/js/jquery.min.js' %>
@@ -329,6 +304,7 @@
              pageLength: 10,
              paging: false,
              searching: false,
+             info: false,
              columns: [{
                      "width": "10%"
                  },
@@ -428,12 +404,14 @@
            var reverse = bilangan.toString().split('').reverse().join(''),
            ribuan = reverse.match(/\d{1,3}/g);
            ribuan = ribuan.join('.').split('').reverse().join('');
-           var voucher = $('#voucher_nominal').val();
+
+           <%# var voucher = $('#voucher_nominal').val();
            var end = total -  voucher
            if(end < 0){
             end = bilangan;
            }
-           bilangan = end;
+           bilangan = end; %>
+
            reverse = bilangan.toString().split('').reverse().join(''),
            ribuan2 = reverse.match(/\d{1,3}/g);
            ribuan2= ribuan2.join('.').split('').reverse().join('');
@@ -477,8 +455,13 @@
          
          var itemId = document.getElementById('itemId');
          var itemSearchId = document.getElementById('itemSearchId');
-         var memberCard = document.getElementById('memberCard');
-         var memberSearch = document.getElementById('memberSearchId');
+
+         <%# var memberCard = document.getElementById('memberCard');
+         var memberSearch = document.getElementById('memberSearchId'); %>
+
+         var memberCard = "";
+         var memberSearchId = "";
+
          var qtyInput = document.getElementById('item_qty');
          var timeout = null;
          
@@ -517,7 +500,7 @@
            }, 600);
          };
 
-         voucher_code.onkeyup = function(e) {
+         <%# voucher_code.onkeyup = function(e) {
            clearTimeout(timeout);
            timeout = setTimeout(function() {
              var voucher = document.getElementById("voucher_code").value;
@@ -551,9 +534,9 @@
              }
              });
            }, 600);
-         };
+         }; %>
          
-         memberSearchId.onkeyup = function(e) {
+         <%# memberSearchId.onkeyup = function(e) {
            clearTimeout(timeout);
            timeout = setTimeout(function() {
              var member = document.getElementById("memberSearchId").value;
@@ -576,9 +559,9 @@
              }
              });
            }, 600);
-         };
+         }; %>
          
-         itemSearchId.onkeyup = function(e) {
+         <%# itemSearchId.onkeyup = function(e) {
            clearTimeout(timeout);
            timeout = setTimeout(function() {
            var item_id = document.getElementById("itemSearchId").value;
@@ -604,14 +587,18 @@
            }
            });
            }, 600);
-         };
+         }; %>
+
          // recall
          itemId.onkeyup = function(e) {
            clearTimeout(timeout);
            timeout = setTimeout(function() {
            var item_id = document.getElementById("itemId").value;
            var item_qty = document.getElementById("item_qty").value;
-           var member_id = document.getElementById("member_id").value;
+           
+           <%# var member_id = document.getElementById("member_id").value; %>
+           var member_id = ""
+
            $.ajax({
              method: "GET",
              cache: false,
@@ -639,12 +626,13 @@
            }
            var table = $('#itemList').DataTable();
            var result = result_arr[0];
+
            var qty = parseFloat(qtyInput.value);
            var total = parseInt(parseFloat(qty) * (parseFloat(result[3]) - parseFloat(result[4])));
            total = Math.round(total);
            var code= result[0];
            if (table.rows().count()<1) {
-            var dataSet = [code, result[1], result[2], qty, result[3], result[4], total, idx];
+            var dataSet = [code, result[1], "", qty, result[3], result[4], total, idx];
             idx+=1;
             table.row.add(dataSet).draw();
             checkPromo(result);
@@ -710,7 +698,7 @@
                    }
                  });
               }else{
-                var dataSet = [code, result[1], result[2], qty, result[3], result[4], total, idx];
+                var dataSet = [code, result[1], "", qty, result[3], result[4], total, idx];
                 idx+=1;
 
                 table.row.add(dataSet).draw();
@@ -957,5 +945,4 @@
          }
          
       </script>
-   </body>
 </html>

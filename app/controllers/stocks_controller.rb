@@ -2,13 +2,13 @@ class StocksController < ApplicationController
   before_action :require_login
   before_action :require_fingerprint
   def index
-    @inventories = StoreItem.page param_page
-    @inventories = @inventories.where(store: current_user.store)
-    if params[:search].present?
-      @search = params[:search].downcase
-      search = "%"+@search+"%"
-      items = Item.where('lower(name) like ? OR lower(code) = ?', search, @search).pluck(:id)
-      @inventories = @inventories.where(item_id: items)
+    @search = params[:search]
+    @inventories = StoreItem.where(store: current_user.store).page param_page
+
+    if params[:search_by] == "name"
+      items = Item.search_by_name(:name, @search).order(name: :asc).page param_page 
+    elsif params[:search_by] == "code"
+      items = Item.search_by_code_s(:code, @search).order(name: :asc).page param_page 
     end
 
   end

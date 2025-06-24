@@ -1,58 +1,32 @@
-.row
-  .col
-    h5
-      | Daftar Barang
-br
 .container-fluid
   .col-lg-12.col-md-12
-    .card-header.white-text.info-color
+    .card-header.white-text.bg-dark.text-center
         h5.font-weight-500.my-1
-          | Pencarian
+          | P E N C A R I A N
+          
     .card.mb-4
       .card-body
         = form_for :items, url: items_path, method: 'GET' do |form|
           .row
-            .col-12
-              input type="text" class="form-control md-form" id="search" name="search" value="#{@search}" placeholder="Cari..."
-            .col
-              select[class="mdb-select md-form md-outline colorful-select dropdown-primary" id="order_by" name="order_by"]
+            .col-2
+              select[class="mdb-select md-form md-outline colorful-select dropdown-primary" id="order_by" name="search_by"]
                 option[value="code" select]
-                  | urutkan KODE
+                  | KODE
                 option[value="name"]
-                  | urutkan NAMA
-                option[value="brand"]
-                  | urutkan MEREK
-                option[value="category_id"]
-                  | urutkan KATEGORI
-                option[value="sell"]
-                  | urutkan HARGA
-            .col
-              select[class="mdb-select md-form md-outline colorful-select dropdown-primary" id="order_type" name="order_type"]
-                option[value="asc"]
-                  | secara A - Z
-                option[value="desc"]
-                  | secara Z - A
-            .col-12.text-center
+                  | NAMA 
+            .col-8
+              input type="text" class="form-control md-form" id="search" name="search" value="#{@search}" placeholder="Cari NAMA / KODE Barang ..."
+            .col-2.text-right style="vertical-align= middle;"
+              p
               button class="btn btn-rounded btn-primary"
                 | Cari
             br
-        - if @search.present?
-          .col-md-12.text-center.grey-text
-            | Pencarian "
-            b
-              | #{@search}
-            | " berdasarkan 
-            b
-              | #{@order_by} 
-            | secara 
-            b
-              | #{@order_type} 
         
 .container-fluid
   .col-lg-12.col-md-12
-    .card-header.white-text.info-color
+    .card-header.white-text.bg-dark.text-center
           h5.font-weight-500.my-1
-            | Data
+            | D A T A
     .card.mb-4 
       .card-body.table-responsive.text-nowrap
         table class="table"
