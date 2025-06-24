@@ -1,20 +1,21 @@
-.row
-  .col.text-left
-    h5
-      - if @search_id.nil?
-        | Daftar Absensi Pengguna Sistem  
-        - if !@bool_status
-          .text-danger
-            | #{@status}
-      - else
-        - user = User.find @search_id
-        | Absensi #{user.name}
+
 br
 .container-fluid
   .col-lg-12.col-md-12
-    .card-header.white-text.info-color
+    .card-header.white-text.bg-dark
         h5.font-weight-500.my-1
-          | Data
+          - if @search_id.nil?
+            | DAFTAR ABSENSI
+            - if !@bool_status
+              .text-danger
+                | #{@status}
+          - else
+            - user = User.find @search_id
+            .row
+              .col
+                | ABSENSI 
+              .col.text-right
+                | #{user.name}
     .card.mb-4
       .card-body.table-responsive.text-nowrap
         table class="table"

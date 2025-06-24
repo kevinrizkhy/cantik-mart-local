@@ -13,20 +13,46 @@
 			h3
 				b #{current_user.name.upcase}
 			h5 #{current_user.store.name.upcase}
+
+
 	    .col-3.text-right
 	    	h4 #{Date.today}
+
+
 	   	.col-12
 	   		hr
-	    .col.text-center
-	      a href="#{new_transaction_path}" class="btn btn-primary btn-rounded"
-	        | MENU KASIR
-	    .col.text-center
-	      a href="#{sync_now_path}" class="btn btn-dark btn-rounded"
-	        | SYNC GLOBAL
+
+
+	    .col-4.text-center
+	      a href="#{new_transaction_path}" class="btn btn-success col-9" style="border-radius: 1em;" 
+	      	
+	      	h1
+	      		i.fas.fa-cart-plus
+	      	br
+	        h4 
+	        	| MENU KASIR
+
+
+	    .col-4.text-center
+	      a href="#{sync_now_path}" class="btn col-9 btn-danger" style="border-radius: 1em;" 
+	      	
+	      	h1
+	      		i.fas.fa-refresh
+	      	br
+	        h4 
+	        	| SYNC GLOBAL
+
+
 	    - store_name = current_user.store.name
-	    .col.text-center
-	      button.btn.btn-success.btn-rounded onclick="printShift('#{trx_total.to_i}', '#{current_user.name.upcase}', '#{DateTime.now.strftime("%d/%m/%Y %H:%M:%S")}', #{cash.to_i}, #{debit.to_i}, '#{jumlah_trx.to_i}', '#{current_user.store.id}' , '#{store_name}' )"
-	        | CETAK PENJUALAN
+	    .col-4.text-center
+	      button.btn.btn-primary.col-9 style="border-radius: 1em; " onclick="printShift('#{trx_total.to_i}', '#{current_user.name.upcase}', '#{DateTime.now.strftime("%d/%m/%Y %H:%M:%S")}', #{cash.to_i}, #{debit.to_i}, '#{jumlah_trx.to_i}', '#{current_user.store.id}' , '#{store_name}' )"
+	      	
+	      	h1
+	      		i.fas.fa-print
+	      	br
+	        h4 CETAK SHIFT
+
+
 	    .col-12
 	    	br
 	    	br
